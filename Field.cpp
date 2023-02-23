@@ -23,7 +23,9 @@ RECT Field::SetRect(RECT _rect) {
 
 BOOL Field::IsPtInBorders(POINT _pt) {
 	RECT r = GetRect();
-	return (_pt.x > 50 && _pt.x < r.right - 50 && _pt.y > 50 && _pt.y < r.bottom - 50);
+	BOOL result = (_pt.x > 60 && _pt.x < r.right - 60 && _pt.y > 60 && _pt.y < r.bottom - 60);
+	OutputDebugStringA(to_string(result).c_str());
+	return result;
 }
 
 void Field::FieldRegister(void) {

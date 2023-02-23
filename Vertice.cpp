@@ -1,10 +1,12 @@
 ﻿#include "Vertice.h"
+#include "Field.h"
 #include "Main.h"::GetLocalCoordinates
 
 
 extern vector<Vertice> vertices;
 extern BOOL isRMBPressed;
 extern BOOL isLMBPressed;
+extern Field FieldInstance;
 
 
 Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
@@ -150,32 +152,32 @@ void Vertice::VerticeUnregister(void)
 	UnregisterClass(VERTICE_WC, NULL);
 }
 
-void MakeItWhite(HWND hWnd, HDC hdc) {
-	RECT			r;
-	HBRUSH		hBrush = CreateSolidBrush(RGB(255, 255, 255));
-	HPEN			hPen = CreatePen(PS_SOLID, 0, RGB(255, 255, 255));
-
-	GetClientRect(hWnd, &r);
-
-	SelectObject(hdc, hBrush);
-	SelectObject(hdc, hPen);
-
-	Rectangle(hdc, r.left, r.top, r.right, r.bottom);
-
-	DeleteObject(hPen);
-	DeleteObject(hBrush);
-}
+//void MakeItWhite(HWND hWnd, HDC hdc) {
+//	RECT			r;
+//	HBRUSH		hBrush = CreateSolidBrush(RGB(255, 255, 255));
+//	HPEN			hPen = CreatePen(PS_SOLID, 0, RGB(255, 255, 255));
+//
+//	GetClientRect(hWnd, &r);
+//
+//	SelectObject(hdc, hBrush);
+//	SelectObject(hdc, hPen);
+//
+//	Rectangle(hdc, r.left, r.top, r.right, r.bottom);
+//
+//	DeleteObject(hPen);
+//	DeleteObject(hBrush);
+//}
 
 HDC hdc = { };
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	
 	switch (uMsg) {
 
-		case WM_ERASEBKGND:
-		{
-			MakeItWhite(hWnd, hdc);
-			break;
-		}
+		//case WM_ERASEBKGND:
+		//{
+		//	MakeItWhite(hWnd, hdc);
+		//	break;
+		//}
 
 
 		case WM_PAINT:
@@ -214,8 +216,13 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 		case WM_NCHITTEST: 
 		{
+			POINT pt;
+			pt.x = GET_X_LPARAM(lParam);
+			pt.y = GET_Y_LPARAM(lParam);
 			LRESULT hit = DefWindowProc(hWnd, uMsg, wParam, lParam);
-			if (hit == HTCLIENT) hit = HTCAPTION;
+			if (hit == HTCLIENT)
+				if (FieldInstance.IsPtInBorders(GetLocalCoordinates(hWnd))) hit = HTCAPTION;
+
 			return hit;
 		}
 
