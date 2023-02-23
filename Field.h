@@ -13,8 +13,13 @@
 class Field {
 private:
 	static LRESULT CALLBACK FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	HWND hWnd;
 public:
-	Field();
+	Field(HWND _hWnd);
+
+	void SetWindow(HWND& _hWnd);
+
 	static void FieldRegister(void);
 	static void FieldUnregister(void);
 };

@@ -9,3 +9,5 @@
 #include <math.h>
 #include <tchar.h>
 #include <shellapi.h>
+
+using namespace std;

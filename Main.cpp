@@ -31,6 +31,7 @@ HWND WeightWnd = { };
 
 
 // OTHER
+Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
 BOOL isRMBPressed = false;
 //vector<Vertice> vertices = { };
@@ -45,7 +46,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 		LoadIcon(NULL, IDI_QUESTION), L"MainWndClass", MainWndProc);
 
 	if (!RegisterClassW(&MainWndClass)) { return -1; }
-	Field::FieldRegister();
+	FieldInstance.FieldRegister();
 
 	MSG MainWndMessage = { 0 };
 
@@ -117,8 +118,10 @@ void MainWndAddWidgets(HWND hWnd) {
 	RECT r;
 	HWND nhwnd;
 	INT y = 11;
+
 	GetClientRect(hWnd, &r);
 	FieldWnd = CreateWindow(FIELD_WC, NULL, WS_CHILD | WS_VISIBLE, 10, 10, r.right - 250, r.bottom - 20, hWnd, (HMENU)FieldID, NULL, NULL);
+	FieldInstance.SetWindow(FieldWnd);
 
 	nhwnd = CreateWindowA("static", "Инспектор", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y, 218, 28, hWnd, NULL, NULL, NULL);
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)titlef, 0);
