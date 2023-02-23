@@ -1,6 +1,8 @@
 #include "Field.h"
+#include "Vertice.h"
 
 extern Field FieldInstance;
+extern vector<Vertice> vertices;
 
 Field::Field(HWND _hWnd) {
 	hWnd = _hWnd;
@@ -14,7 +16,7 @@ void Field::FieldRegister(void) {
 	WNDCLASS wc = { 0 };
 
 	wc.style = CS_GLOBALCLASS | CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = FieldInstance.FieldWndProc;
+	wc.lpfnWndProc = Field::FieldWndProc;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.lpszClassName = FIELD_WC;
 	RegisterClass(&wc);
@@ -47,7 +49,22 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 		case WM_LBUTTONDOWN:
 		{
-			OutputDebugStringA("LMB Pressed\n");
+			POINT pt = {};
+			pt.x = GET_X_LPARAM(lParam);
+			pt.y = GET_Y_LPARAM(lParam);
+			RECT r;
+			GetClientRect(hWnd, &r);
+			if (vertices.size() < 30 && pt.x > 50 && pt.x < r.right - 50 && pt.y > 50 && pt.y < r.bottom - 50)
+			{
+				for (Vertice v : vertices) {
+					POINT vpt = v.GetPT();
+					if (sqrt(pow(abs(vpt.x - pt.x), 2) + pow(abs(vpt.y - pt.y), 2)) > 100) continue;
+					else return 0;
+				}
+				UINT new_id = Vertice::GenerateID();
+				vertices.push_back(Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x - 50, pt.y - 50, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
+				//OutputDebugStringA("Вершина создана!\n");
+			}
 			break;
 		}
 

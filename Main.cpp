@@ -1,5 +1,6 @@
-﻿#include "Field.h"
-#include "Main.h"
+﻿#include "Main.h"
+#include "Field.h"
+#include "Vertice.h"
 
 
 
@@ -34,8 +35,8 @@ HWND WeightWnd = { };
 Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
 BOOL isRMBPressed = false;
-//vector<Vertice> vertices = { };
-//UINT selectedVerticeID = { };
+vector<Vertice> vertices = { };
+UINT selectedVerticeID = { };
 
 
 
@@ -46,7 +47,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 		LoadIcon(NULL, IDI_QUESTION), L"MainWndClass", MainWndProc);
 
 	if (!RegisterClassW(&MainWndClass)) { return -1; }
-	FieldInstance.FieldRegister();
+	Field::FieldRegister();
+	Vertice::VerticeRegister();
 
 	MSG MainWndMessage = { 0 };
 

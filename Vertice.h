@@ -23,6 +23,7 @@ private:
 	BOOL						isSelected;
 public:
 									Vertice(UINT _id, HWND _hWnd, POINT _pt);
+	static UINT				GenerateID();
 	UINT						GetID();
 	UINT						SetID(UINT _id);
 	FLOAT						GetWeight();
