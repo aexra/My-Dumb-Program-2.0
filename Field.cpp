@@ -13,6 +13,19 @@ void Field::SetWindow(HWND& _hWnd) {
 	hWnd = _hWnd;
 }
 
+RECT Field::GetRect() {
+	return rect;
+}
+RECT Field::SetRect(RECT _rect) {
+	rect = _rect;
+	return rect;
+}
+
+BOOL Field::IsPtInBorders(POINT _pt) {
+	RECT r = GetRect();
+	return (_pt.x > 50 && _pt.x < r.right - 50 && _pt.y > 50 && _pt.y < r.bottom - 50);
+}
+
 void Field::FieldRegister(void) {
 	WNDCLASS wc = { 0 };
 
@@ -54,8 +67,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			pt.x = GET_X_LPARAM(lParam);
 			pt.y = GET_Y_LPARAM(lParam);
 			RECT r;
-			GetClientRect(hWnd, &r);
-			if (vertices.size() < 30 && pt.x > 50 && pt.x < r.right - 50 && pt.y > 50 && pt.y < r.bottom - 50)
+			if (vertices.size() < 30 && FieldInstance.IsPtInBorders(pt))
 			{
 				for (Vertice v : vertices) {
 					POINT vpt = v.GetPT();
@@ -64,7 +76,6 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				}
 				UINT new_id = Vertice::GenerateID();
 				vertices.push_back(Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x - 50, pt.y - 50, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
-				//OutputDebugStringA("Вершина создана!\n");
 			}
 			break;
 		}
@@ -84,6 +95,14 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 		case WM_DESTROY:
 		{
 			DestroyWindow(hWnd);
+			break;
+		}
+
+		case WM_CREATE:
+		{
+			RECT r;
+			GetClientRect(hWnd, &r);
+			FieldInstance.SetRect(r);
 			break;
 		}
 
