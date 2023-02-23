@@ -132,31 +132,36 @@ void Vertice::VerticeUnregister(void)
 
 
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	
+	HDC hdc = GetDC(hWnd);
+	
 	switch (uMsg) {
+
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;
-			HDC hdc;
 			HDC memDC;
 			HPEN hPen;
 			RECT r;
 
-			//InvalidateRect(hWnd, NULL, RDW_ERASE);
+			// щя будет двойная буферизация
 
 			GetClientRect(hWnd, &r);
-			hdc = BeginPaint(hWnd, &ps);
+			memDC = BeginPaint(hWnd, &ps);
 
 			hPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
-			SelectObject(hdc, hPen);
-			Ellipse(hdc, 12, 12, 88, 88);
+			SelectObject(memDC, hPen);
+			Ellipse(memDC, 12, 12, 88, 88);
 
 			hPen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
-			SelectObject(hdc, GetStockObject(HOLLOW_BRUSH));
-			SelectObject(hdc, hPen);
-			SetTextColor(hdc, RGB(0, 0, 0));
+			SelectObject(memDC, GetStockObject(HOLLOW_BRUSH));
+			SelectObject(memDC, hPen);
+			SetTextColor(memDC, RGB(0, 0, 0));
 
-			Ellipse(hdc, 5, 5, 95, 95);
-			DrawTextA(hdc, (std::to_string(GetWindowLongA(hWnd, GWL_ID) - 100) + "\n").c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+			Ellipse(memDC, 5, 5, 95, 95);
+			DrawTextA(memDC, (std::to_string(GetWindowLongA(hWnd, GWL_ID) - 100) + "\n").c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+
+			BitBlt(hdc, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
 			EndPaint(hWnd, &ps);
 
@@ -167,7 +172,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 		case WM_CREATE:
 		{
-			//OutputDebugStringA("Вершина создана!\n");
 			break;
 		}
 
