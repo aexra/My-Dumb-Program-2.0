@@ -137,6 +137,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			PAINTSTRUCT ps;
 			HDC hdc;
+			HDC memDC;
 			HPEN hPen;
 			RECT r;
 
@@ -166,7 +167,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 		case WM_CREATE:
 		{
-			//OutputDebugStringA("Вершина реально создана!\n");
+			//OutputDebugStringA("Вершина создана!\n");
 			break;
 		}
 
