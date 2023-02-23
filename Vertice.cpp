@@ -8,6 +8,8 @@ extern UINT selectedVerticeID;
 extern BOOL isRMBPressed;
 extern BOOL isLMBPressed;
 extern Field FieldInstance;
+extern enum selection_mode {mode1, mode2};
+extern selection_mode selmode;
 
 
 Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
@@ -17,6 +19,7 @@ Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
 	weight = 0;
 	name = to_string(_id);
 	isSelected = false;
+	isValid = true;
 }
 
 Vertice::Vertice() {
@@ -106,15 +109,21 @@ string Vertice::SetName(string _name) {
 	return name;
 }
 
-
+BOOL Vertice::IsSelected() {
+	return isSelected;
+}
 void Vertice::Select() {
-
+	isSelected = true;
+	UpdateWindow(hWnd);
+	UpdateInfoPanels();
 }
 void Vertice::Deselect() {
-
+	isSelected = false;
+	UpdateWindow(hWnd);
+	UpdateInfoPanels();
 }
 void Vertice::DeselectAll() {
-
+	for (int i = 0; i < vertices.size(); i++) if (vertices[i].IsSelected()) vertices[i].Deselect();
 }
 
 int Vertice::GetVerticeIdx(UINT __id) {
@@ -191,12 +200,12 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			DrawTextA(memDC, (std::to_string(GetWindowLongA(hWnd, GWL_ID) - 100) + "\n").c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
 			// Если эта вершина является выбранной
-			if (selectedVerticeID != NULL && selectedVerticeID == Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID)).GetID()) {
+			if (Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID)).IsSelected()) {
 				hPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
 				SelectObject(memDC, hPen);
 				SelectObject(memDC, GetStockObject(HOLLOW_BRUSH));
 
-				Ellipse(hdc, 12, 12, 88, 88);
+				Ellipse(memDC, 12, 12, 88, 88);
 			}
 
 			BitBlt(hdc, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
@@ -225,6 +234,19 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			isLMBPressed = true;
 			SetCapture(hWnd);
+			Vertice v = GetVertice(GetWindowLongA(hWnd, GWL_ID));
+			if (v.IsSelected()) {
+				if (selmode == mode1) {
+					Vertice::DeselectAll();
+				} else {
+					v.Deselect();
+				}
+			}
+			else {
+				OutputDebugStringA("just selected");
+				v.Select();
+			}
+
 			break;
 		}
 

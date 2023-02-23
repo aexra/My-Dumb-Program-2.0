@@ -31,14 +31,17 @@ HWND TransformPositionWnd = { };
 HWND WeightWnd = { };
 
 
+// ENUMERATORS
+enum selection_mode { mode1, mode2 };
+
+
 // OTHER
 Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
 BOOL isRMBPressed = false;
 vector<Vertice> vertices = { };
 UINT selectedVerticeID = { };
-
-
+selection_mode selmode = mode1;
 
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
