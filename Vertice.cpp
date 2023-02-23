@@ -1,7 +1,10 @@
 ﻿#include "Vertice.h"
+#include "Main.h"::GetLocalCoordinates
 
 
 extern vector<Vertice> vertices;
+extern BOOL isRMBPressed;
+extern BOOL isLMBPressed;
 
 
 Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
@@ -13,6 +16,13 @@ Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
 	isSelected = false;
 }
 
+Vertice::Vertice() {
+	isValid = false;
+}
+
+BOOL Vertice::IsValid() {
+	return isValid;
+}
 
 UINT Vertice::GetID() {
 	return id;
@@ -104,6 +114,16 @@ void Vertice::DeselectAll() {
 
 }
 
+int Vertice::GetVerticeIdx(UINT __id) {
+
+}
+Vertice& Vertice::GetVertice(UINT __id) {
+	for (int i = 0; i < vertices.size(); i++) {
+		if (vertices[i].GetID() == __id) {
+			return vertices[i];
+		}
+	}
+}
 
 void Vertice::DeleteSelected() {
 
@@ -130,12 +150,33 @@ void Vertice::VerticeUnregister(void)
 	UnregisterClass(VERTICE_WC, NULL);
 }
 
+void MakeItWhite(HWND hWnd, HDC hdc) {
+	RECT			r;
+	HBRUSH		hBrush = CreateSolidBrush(RGB(255, 255, 255));
+	HPEN			hPen = CreatePen(PS_SOLID, 0, RGB(255, 255, 255));
 
+	GetClientRect(hWnd, &r);
+
+	SelectObject(hdc, hBrush);
+	SelectObject(hdc, hPen);
+
+	Rectangle(hdc, r.left, r.top, r.right, r.bottom);
+
+	DeleteObject(hPen);
+	DeleteObject(hBrush);
+}
+
+HDC hdc = { };
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	
-	HDC hdc = GetDC(hWnd);
-	
 	switch (uMsg) {
+
+		case WM_ERASEBKGND:
+		{
+			MakeItWhite(hWnd, hdc);
+			break;
+		}
+
 
 		case WM_PAINT:
 		{
@@ -166,12 +207,35 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			EndPaint(hWnd, &ps);
 
 			DeleteObject(hPen);
+			DeleteObject(memDC);
 
+			break;
+		}
+
+		case WM_NCHITTEST: 
+		{
+			LRESULT hit = DefWindowProc(hWnd, uMsg, wParam, lParam);
+			if (hit == HTCLIENT) hit = HTCAPTION;
+			return hit;
+		}
+
+		case WM_LBUTTONDOWN:
+		{
+			isLMBPressed = true;
+			SetCapture(hWnd);
+			break;
+		}
+
+		case WM_LBUTTONUP:
+		{
+			isLMBPressed = false;
+			ReleaseCapture();
 			break;
 		}
 
 		case WM_CREATE:
 		{
+			hdc = GetDC(hWnd);
 			break;
 		}
 

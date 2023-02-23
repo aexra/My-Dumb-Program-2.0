@@ -21,8 +21,11 @@ private:
 	vector<UINT>			connections;
 	string						name;
 	BOOL						isSelected;
+	BOOL isValid;
 public:
+									Vertice();
 									Vertice(UINT _id, HWND _hWnd, POINT _pt);
+	BOOL						IsValid();
 	static UINT				GenerateID();
 	UINT						GetID();
 	UINT						SetID(UINT _id);

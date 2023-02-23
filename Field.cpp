@@ -3,6 +3,7 @@
 
 extern Field FieldInstance;
 extern vector<Vertice> vertices;
+extern BOOL isRMBPressed;
 
 Field::Field(HWND _hWnd) {
 	hWnd = _hWnd;
@@ -65,6 +66,18 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				vertices.push_back(Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x - 50, pt.y - 50, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
 				//OutputDebugStringA("Вершина создана!\n");
 			}
+			break;
+		}
+
+		case WM_RBUTTONDOWN:
+		{
+			isRMBPressed = true;
+			break;
+		}
+
+		case WM_RBUTTONUP:
+		{
+			isRMBPressed = false;
 			break;
 		}
 
