@@ -80,7 +80,9 @@ WNDCLASS NewWindowClass(HBRUSH BGColor, HCURSOR Cursor, HINSTANCE hInst, HICON I
 }
 
 
-
+void Missing(HWND hWnd) {
+	MessageBoxA(hWnd, "А эту фичу разраб еще не сделал.", "А где?", MB_OK);
+}
 
 
 LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -89,24 +91,81 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 
-	case WM_CREATE:
-	{
-		MainWndAddMenus(hWnd);
-		MainWndAddWidgets(hWnd);
-		break;
-	}
+		case WM_COMMAND:
+		{
+			switch (wParam)
+			{
 
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-		break;
-	}
+				case OnInfoClicked:
+				{
+					MessageBoxA(hWnd, "Донской Государственный Технический Университет\nФакультет: ИиВТ\nКафедра: ПОВТиАС (09.03.04)\nГруппа: ВПР12\nСтудент: Фомин Н. А.\n\nПредполагается, что это будет простенький редактор графов.", "Справка", MB_OK);
+					break;
+				}
 
-	default:
-	{
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
-		break;
-	}
+				case OnNewClicked:
+				{
+					Missing(hWnd);
+					break;
+				}
+
+				case OnLoadGraphClicked:
+				{
+					Missing(hWnd);
+					break;
+				}
+
+				case OnSaveClicked:
+				{
+					Missing(hWnd);
+					break;
+				}
+
+				case OnSaveAsClicked:
+				{
+					Missing(hWnd);
+					break;
+				}
+
+				case OnExitClicked:
+				{
+					PostQuitMessage(0);
+					break;
+				}
+
+				case OnGitSourceClicked:
+				{
+					ShellExecute(0, 0, L"http://github.com/EvilPrincess/My-Dumb-Program-2.0.git", 0, 0, SW_SHOW);
+					break;
+				}
+
+				case OnDeleteVerticeClicked:
+				{
+					if (selectedVerticeID) Vertice::DeleteSelected();
+				}
+
+			}
+
+			break;
+		}
+
+		case WM_CREATE:
+		{
+			MainWndAddMenus(hWnd);
+			MainWndAddWidgets(hWnd);
+			break;
+		}
+
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			break;
+		}
+
+		default:
+		{
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
+			break;
+		}
 	}
 }
 

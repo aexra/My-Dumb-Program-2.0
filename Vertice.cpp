@@ -4,6 +4,7 @@
 
 
 extern vector<Vertice> vertices;
+extern UINT selectedVerticeID;
 extern BOOL isRMBPressed;
 extern BOOL isLMBPressed;
 extern Field FieldInstance;
@@ -152,21 +153,6 @@ void Vertice::VerticeUnregister(void)
 	UnregisterClass(VERTICE_WC, NULL);
 }
 
-//void MakeItWhite(HWND hWnd, HDC hdc) {
-//	RECT			r;
-//	HBRUSH		hBrush = CreateSolidBrush(RGB(255, 255, 255));
-//	HPEN			hPen = CreatePen(PS_SOLID, 0, RGB(255, 255, 255));
-//
-//	GetClientRect(hWnd, &r);
-//
-//	SelectObject(hdc, hBrush);
-//	SelectObject(hdc, hPen);
-//
-//	Rectangle(hdc, r.left, r.top, r.right, r.bottom);
-//
-//	DeleteObject(hPen);
-//	DeleteObject(hBrush);
-//}
 
 HDC hdc = { };
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -203,6 +189,15 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 			Ellipse(memDC, 5, 5, 95, 95);
 			DrawTextA(memDC, (std::to_string(GetWindowLongA(hWnd, GWL_ID) - 100) + "\n").c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+
+			// Если эта вершина является выбранной
+			if (selectedVerticeID != NULL && selectedVerticeID == Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID)).GetID()) {
+				hPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
+				SelectObject(memDC, hPen);
+				SelectObject(memDC, GetStockObject(HOLLOW_BRUSH));
+
+				Ellipse(hdc, 12, 12, 88, 88);
+			}
 
 			BitBlt(hdc, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
