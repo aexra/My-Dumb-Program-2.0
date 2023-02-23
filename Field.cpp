@@ -2,11 +2,39 @@
 
 Field::Field() { };
 
+void Field::FieldRegister(void) {
+	WNDCLASS wc = { 0 };
+
+	wc.style = CS_GLOBALCLASS | CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = FieldWndProc;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.lpszClassName = FIELD_WC;
+	RegisterClass(&wc);
+}
+
+void Field::FieldUnregister() {
+	UnregisterClass(FIELD_WC, NULL);
+}
+
 LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 
 		case WM_PAINT:
 		{
+			HDC hdc;
+			RECT r;
+			PAINTSTRUCT ps;
+
+			GetClientRect(hWnd, &r);
+
+			hdc = BeginPaint(hWnd, &ps);
+
+			HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+			HBRUSH hBrush = CreateSolidBrush(HOLLOW_BRUSH);
+			Rectangle(hdc, 0, 0, r.right, r.bottom);
+
+			EndPaint(hWnd, &ps);
+
 			break;
 		}
 
