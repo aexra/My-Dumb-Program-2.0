@@ -12,9 +12,9 @@
 
 class Field {
 private:
-	static void FieldRegister(void);
-	static void FieldUnregister(void);
 	static LRESULT CALLBACK FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
 	Field();
+	static void FieldRegister(void);
+	static void FieldUnregister(void);
 };
