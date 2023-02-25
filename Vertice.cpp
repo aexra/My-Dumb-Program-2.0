@@ -226,14 +226,13 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			LRESULT hit = DefWindowProc(hWnd, uMsg, wParam, lParam);
 			if (hit == HTCLIENT)
 				if (FieldInstance.IsPtInBorders(GetLocalCoordinates(hWnd))) hit = HTCAPTION;
-
 			return hit;
 		}
 
 		case WM_LBUTTONDOWN:
 		{
 			isLMBPressed = true;
-			SetCapture(hWnd);
+			//SetCapture(hWnd);
 			Vertice v = GetVertice(GetWindowLongA(hWnd, GWL_ID));
 			if (v.IsSelected()) {
 				if (selmode == mode1) {
@@ -243,7 +242,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				}
 			}
 			else {
-				OutputDebugStringA("just selected");
+				OutputDebugStringA("just selected\n");
 				v.Select();
 			}
 
@@ -253,7 +252,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_LBUTTONUP:
 		{
 			isLMBPressed = false;
-			ReleaseCapture();
+			//ReleaseCapture();
 			break;
 		}
 
