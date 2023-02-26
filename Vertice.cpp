@@ -10,6 +10,12 @@ extern BOOL isLMBPressed;
 extern Field FieldInstance;
 extern enum selection_mode {mode1, mode2};
 extern selection_mode selmode;
+extern HWND GraphNameWnd;
+extern HWND IsOrientedWnd;
+extern HWND IsWeightedWnd;
+extern HWND VerticeNameWnd;
+extern HWND TransformPositionWnd;
+extern HWND WeightWnd;
 
 
 Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
@@ -17,7 +23,7 @@ Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
 	hWnd = _hWnd;
 	pt = _pt;
 	weight = 0;
-	name = to_string(_id);
+	name = to_string(_id-100);
 	isSelected = false;
 	isValid = true;
 }
@@ -114,23 +120,34 @@ BOOL Vertice::IsSelected() {
 }
 void Vertice::Select() {
 	isSelected = true;
+	selectedVerticeID = id;
 	InvalidateRect(hWnd, NULL, RDW_ERASE);
 	UpdateWindow(hWnd);
 	UpdateInfoPanels();
 }
 void Vertice::Deselect() {
 	isSelected = false;
+	if (selectedVerticeID == id)
+		selectedVerticeID = NULL;
 	InvalidateRect(hWnd, NULL, RDW_ERASE);
 	UpdateWindow(hWnd);
 	UpdateInfoPanels();
 }
 void Vertice::DeselectAll() {
-	for (int i = 0; i < vertices.size(); i++) if (vertices[i].IsSelected()) vertices[i].Deselect();
+	for (Vertice &v : vertices) 
+	{
+		v.Deselect();
+	}
 	UpdateInfoPanels();
 }
 
 int Vertice::GetVerticeIdx(UINT __id) {
-
+	for (int i = 0; i < vertices.size(); i++) {
+		if (vertices[i].GetID() == __id) {
+			return i;
+		}
+	}
+	return NULL;
 }
 Vertice* Vertice::GetVertice(UINT __id) {
 	for (int i = 0; i < vertices.size(); i++) {
@@ -138,15 +155,30 @@ Vertice* Vertice::GetVertice(UINT __id) {
 			return &vertices[i];
 		}
 	}
+	return nullptr;
 }
 
 void Vertice::DeleteSelected() {
-
+	DestroyWindow((*GetVertice(selectedVerticeID)).GetWindow());
+	vertices.erase(vertices.begin() + GetVerticeIdx(selectedVerticeID));
+	UpdateInfoPanels();
 }
 
 
 void Vertice::UpdateInfoPanels() {
+	if (!selectedVerticeID) {
+		SetWindowTextA(VerticeNameWnd, string("Обознечение: ").c_str());
+		SetWindowTextA(TransformPositionWnd, string("Позиция: ").c_str());
+		SetWindowTextA(WeightWnd, string("Вес: ").c_str());
+	
+		return;
+	}
 
+	Vertice &v = *Vertice::GetVertice(selectedVerticeID);
+
+	SetWindowTextA(VerticeNameWnd, ("Обознечение: " + v.GetName()).c_str());
+	SetWindowTextA(TransformPositionWnd, ("Позиция: (" + to_string(v.GetPT().x) + "; " + to_string(v.GetPT().y) + ")").c_str());
+	SetWindowTextA(WeightWnd, ("Вес: " + to_string(v.GetWeight())).c_str());
 }
 
 
@@ -203,15 +235,15 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			Ellipse(memDC, 5, 5, 95, 95);
 			DrawTextA(memDC, (std::to_string(GetWindowLongA(hWnd, GWL_ID) - 100) + "\n").c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
-			OutputDebugStringA(to_string(v.IsSelected()).c_str());
-			OutputDebugStringA("\n");
+			//OutputDebugStringA(to_string(v.IsSelected()).c_str());
+			//OutputDebugStringA("\n");
 
 			// Если эта вершина является выбранной
 			if (v.IsSelected()) {
 				hPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
 				SelectObject(memDC, hPen);
 				SelectObject(memDC, GetStockObject(HOLLOW_BRUSH));
-				OutputDebugStringA("just redrawn selection\n");
+				//OutputDebugStringA("just redrawn selection\n");
 				Ellipse(memDC, 12, 12, 88, 88);
 			}
 
@@ -242,7 +274,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			//SetCapture(hWnd);
 			Vertice &v = *Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID));
 			if (v.IsSelected()) {
-				OutputDebugStringA("just deselected\n");
 				if (selmode == mode1) {
 					Vertice::DeselectAll();
 				} else {
@@ -250,7 +281,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				}
 			}
 			else {
-				OutputDebugStringA("just selected\n");
 				v.Select();
 			}
 

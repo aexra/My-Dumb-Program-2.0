@@ -45,7 +45,7 @@ public:
 	void							Select();
 	void							Deselect();
 	static int					GetVerticeIdx(UINT __id);
-	static Vertice*		GetVertice(UINT __id);
+	static Vertice*			GetVertice(UINT __id);
 	static void				DeselectAll();
 	static void				DeleteSelected();
 	static void				UpdateInfoPanels();
