@@ -113,26 +113,27 @@ BOOL Vertice::IsSelected() {
 	return isSelected;
 }
 void Vertice::Select() {
-	isSelected = true;
-	UpdateWindow(hWnd);
+	this->isSelected = true;
+	UpdateWindow(this->hWnd);
 	UpdateInfoPanels();
 }
 void Vertice::Deselect() {
-	isSelected = false;
-	UpdateWindow(hWnd);
+	this->isSelected = false;
+	UpdateWindow(this->hWnd);
 	UpdateInfoPanels();
 }
 void Vertice::DeselectAll() {
 	for (int i = 0; i < vertices.size(); i++) if (vertices[i].IsSelected()) vertices[i].Deselect();
+	UpdateInfoPanels();
 }
 
 int Vertice::GetVerticeIdx(UINT __id) {
 
 }
-Vertice& Vertice::GetVertice(UINT __id) {
+Vertice* Vertice::GetVertice(UINT __id) {
 	for (int i = 0; i < vertices.size(); i++) {
 		if (vertices[i].GetID() == __id) {
-			return vertices[i];
+			return &vertices[i];
 		}
 	}
 }
@@ -181,6 +182,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			HDC memDC;
 			HPEN hPen;
 			RECT r;
+			Vertice &v = *Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID));
 
 			// щя будет двойная буферизация
 
@@ -199,13 +201,16 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			Ellipse(memDC, 5, 5, 95, 95);
 			DrawTextA(memDC, (std::to_string(GetWindowLongA(hWnd, GWL_ID) - 100) + "\n").c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
-			// Если эта вершина является выбранной
-			if (Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID)).IsSelected()) {
-				hPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
-				SelectObject(memDC, hPen);
-				SelectObject(memDC, GetStockObject(HOLLOW_BRUSH));
+			/*OutputDebugStringA(to_string(Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID)).IsSelected()).c_str());
+			OutputDebugStringA("\n");*/
 
-				Ellipse(memDC, 12, 12, 88, 88);
+			// Если эта вершина является выбранной
+			if (v.IsSelected()) {
+				hPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
+				SelectObject(hdc, hPen);
+				SelectObject(hdc, GetStockObject(HOLLOW_BRUSH));
+				OutputDebugStringA("just redrawn selection\n");
+				Ellipse(hdc, 12, 12, 88, 88);
 			}
 
 			BitBlt(hdc, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
@@ -218,7 +223,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			break;
 		}
 
-		case WM_NCHITTEST: 
+		/*case WM_NCHITTEST: 
 		{
 			POINT pt;
 			pt.x = GET_X_LPARAM(lParam);
@@ -227,14 +232,16 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			if (hit == HTCLIENT)
 				if (FieldInstance.IsPtInBorders(GetLocalCoordinates(hWnd))) hit = HTCAPTION;
 			return hit;
-		}
+		}*/
 
 		case WM_LBUTTONDOWN:
 		{
 			isLMBPressed = true;
 			//SetCapture(hWnd);
-			Vertice v = GetVertice(GetWindowLongA(hWnd, GWL_ID));
+			Vertice &v = *Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID));
+			OutputDebugStringA(to_string(v.IsSelected()).c_str());
 			if (v.IsSelected()) {
+				OutputDebugStringA("just deselected\n");
 				if (selmode == mode1) {
 					Vertice::DeselectAll();
 				} else {
