@@ -26,6 +26,7 @@ Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
 	name = to_string(_id-100);
 	isSelected = false;
 	isValid = true;
+	hdc = GetDC(hWnd);
 }
 
 Vertice::Vertice() {
@@ -115,6 +116,13 @@ string Vertice::SetName(string _name) {
 	return name;
 }
 
+void Vertice::SetHDC(HDC _hdc) {
+	hdc = _hdc;
+}
+HDC Vertice::GetHDC() {
+	return hdc;
+}
+
 BOOL Vertice::IsSelected() {
 	return isSelected;
 }
@@ -156,6 +164,9 @@ Vertice* Vertice::GetVertice(UINT __id) {
 		}
 	}
 	return nullptr;
+}
+Vertice* Vertice::GetVertice(HWND __hWnd) {
+	return GetVertice(GetWindowLongA(__hWnd, GWL_ID));
 }
 
 void Vertice::DeleteSelected() {
@@ -200,7 +211,7 @@ void Vertice::VerticeUnregister(void)
 
 HDC hdc = { };
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	
+	Vertice& v = *Vertice::GetVertice(hWnd);
 	switch (uMsg) {
 
 		//case WM_ERASEBKGND:
@@ -216,7 +227,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			HDC memDC;
 			HPEN hPen;
 			RECT r;
-			Vertice &v = *Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID));
 
 			// щя будет двойная буферизация
 
@@ -247,7 +257,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				Ellipse(memDC, 12, 12, 88, 88);
 			}
 
-			BitBlt(hdc, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
+			BitBlt(v.GetHDC(), 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
 			EndPaint(hWnd, &ps);
 
@@ -272,7 +282,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			isLMBPressed = true;
 			//SetCapture(hWnd);
-			Vertice &v = *Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID));
 			if (v.IsSelected()) {
 					v.Deselect();
 			}
@@ -294,7 +303,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 		case WM_CREATE:
 		{
-			hdc = GetDC(hWnd);
 			break;
 		}
 
