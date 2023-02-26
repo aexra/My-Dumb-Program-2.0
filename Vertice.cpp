@@ -274,13 +274,11 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			//SetCapture(hWnd);
 			Vertice &v = *Vertice::GetVertice(GetWindowLongA(hWnd, GWL_ID));
 			if (v.IsSelected()) {
-				if (selmode == mode1) {
-					Vertice::DeselectAll();
-				} else {
 					v.Deselect();
-				}
 			}
 			else {
+				if (selmode == mode1)
+					Vertice::DeselectAll();
 				v.Select();
 			}
 
