@@ -174,7 +174,9 @@ Vertice* Vertice::GetVertice(HWND __hWnd) {
 }
 
 void Vertice::DeleteSelected() {
-	DestroyWindow((*Vertice::GetVertice(selectedVerticeID)).GetWindow());
+	Vertice& v = *Vertice::GetVertice(selectedVerticeID);
+	OutputDebugStringA(to_string(v.GetID()).c_str());
+	DestroyWindow(v.GetWindow());
 	vertices.erase(vertices.begin() + GetVerticeIdx(selectedVerticeID));
 	UpdateInfoPanels();
 }
@@ -215,7 +217,8 @@ void Vertice::VerticeUnregister(void)
 
 HDC hdc = { };
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	Vertice& v = *Vertice::GetVertice(hWnd);
+	Vertice &v = *Vertice::GetVertice(hWnd);
+
 	switch (uMsg) {
 
 		//case WM_ERASEBKGND:
