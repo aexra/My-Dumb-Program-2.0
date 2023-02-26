@@ -33,6 +33,10 @@ Vertice::Vertice() {
 	isValid = false;
 }
 
+Vertice::~Vertice() {
+	DeleteObject(hWnd);
+}
+
 BOOL Vertice::IsValid() {
 	return isValid;
 }
@@ -170,7 +174,7 @@ Vertice* Vertice::GetVertice(HWND __hWnd) {
 }
 
 void Vertice::DeleteSelected() {
-	DestroyWindow((*GetVertice(selectedVerticeID)).GetWindow());
+	DestroyWindow((*Vertice::GetVertice(selectedVerticeID)).GetWindow());
 	vertices.erase(vertices.begin() + GetVerticeIdx(selectedVerticeID));
 	UpdateInfoPanels();
 }

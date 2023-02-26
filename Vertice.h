@@ -22,10 +22,11 @@ private:
 	string						name;
 	BOOL						isSelected;
 	HDC							hdc;
-	BOOL isValid;
+	BOOL						isValid;
 public:
 									Vertice();
 									Vertice(UINT _id, HWND _hWnd, POINT _pt);
+									~Vertice();
 	BOOL						IsValid();
 	static UINT				GenerateID();
 	UINT						GetID();
