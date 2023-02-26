@@ -144,6 +144,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				case OnDeleteVerticeClicked:
 				{
 					if (selectedVerticeID) Vertice::DeleteSelected();
+					break;
 				}
 
 			}

@@ -174,10 +174,15 @@ Vertice* Vertice::GetVertice(HWND __hWnd) {
 }
 
 void Vertice::DeleteSelected() {
-	Vertice& v = *Vertice::GetVertice(selectedVerticeID);
-	OutputDebugStringA(to_string(v.GetID()).c_str());
+	Vertice::DeleteVertice(selectedVerticeID);
+}
+
+void Vertice::DeleteVertice(UINT _id) {
+	Vertice& v = *Vertice::GetVertice(_id);
+	int vec_idx = Vertice::GetVerticeIdx(_id);
 	DestroyWindow(v.GetWindow());
-	vertices.erase(vertices.begin() + GetVerticeIdx(selectedVerticeID));
+	vertices.erase(vertices.begin() + vec_idx);
+	selectedVerticeID = NULL;
 	UpdateInfoPanels();
 }
 

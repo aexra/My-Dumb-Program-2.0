@@ -52,6 +52,7 @@ public:
 	static Vertice*			GetVertice(UINT __id);
 	static Vertice*			GetVertice(HWND __hWnd);
 	static void				DeselectAll();
+	static void				DeleteVertice(UINT _id);
 	static void				DeleteSelected();
 	static void				UpdateInfoPanels();
 
