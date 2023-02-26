@@ -17,6 +17,9 @@ extern HWND VerticeNameWnd;
 extern HWND TransformPositionWnd;
 extern HWND WeightWnd;
 
+int k = 0;
+
+
 
 Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
 	id = _id;
@@ -219,19 +222,12 @@ void Vertice::VerticeUnregister(void)
 	UnregisterClass(VERTICE_WC, NULL);
 }
 
-
+POINT g_ptMousePos;
 HDC hdc = { };
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	Vertice &v = *Vertice::GetVertice(hWnd);
 
 	switch (uMsg) {
-
-		//case WM_ERASEBKGND:
-		//{
-		//	MakeItWhite(hWnd, hdc);
-		//	break;
-		//}
-
 
 		case WM_PAINT:
 		{
@@ -257,15 +253,11 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			Ellipse(memDC, 5, 5, 95, 95);
 			DrawTextA(memDC, (std::to_string(GetWindowLongA(hWnd, GWL_ID) - 100) + "\n").c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
-			//OutputDebugStringA(to_string(v.IsSelected()).c_str());
-			//OutputDebugStringA("\n");
-
 			// Если эта вершина является выбранной
 			if (v.IsSelected()) {
 				hPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
 				SelectObject(memDC, hPen);
 				SelectObject(memDC, GetStockObject(HOLLOW_BRUSH));
-				//OutputDebugStringA("just redrawn selection\n");
 				Ellipse(memDC, 12, 12, 88, 88);
 			}
 
@@ -293,7 +285,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_LBUTTONDOWN:
 		{
 			isLMBPressed = true;
-			//SetCapture(hWnd);
+			SetCapture(hWnd);
 			if (v.IsSelected()) {
 					v.Deselect();
 			}
@@ -309,9 +301,47 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_LBUTTONUP:
 		{
 			isLMBPressed = false;
-			//ReleaseCapture();
+			ReleaseCapture();
 			break;
 		}
+
+		case WM_RBUTTONDOWN:
+		{
+			isRMBPressed = true;
+			SetCapture(hWnd);
+			GetCursorPos(&g_ptMousePos);
+			//SendMessage(hWnd, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+			break;
+		}
+
+		case WM_RBUTTONUP:
+		{
+			isRMBPressed = false;
+			ReleaseCapture();
+			break;
+		}
+
+		/*case WM_MOUSEMOVE:
+		{
+			if (isRMBPressed)
+			{
+				RECT rc;
+				POINT ptCursor;
+				POINT ptDelta;
+
+				GetWindowRect(hWnd, &rc);
+				GetCursorPos(&ptCursor);
+				ptDelta.x = g_ptMousePos.x - ptCursor.x;
+				ptDelta.y = g_ptMousePos.y - ptCursor.y;
+
+				MoveWindow(hWnd, rc.left - ptDelta.x, rc.top - ptDelta.y,
+					rc.right - rc.left, rc.bottom - rc.top, TRUE);
+				g_ptMousePos.x = ptCursor.x;
+				g_ptMousePos.y = ptCursor.y;
+				Vertice::UpdateInfoPanels();
+			}
+			break;
+		}*/
 
 		case WM_CREATE:
 		{
