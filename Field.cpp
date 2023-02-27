@@ -21,6 +21,16 @@ RECT Field::SetRect(RECT _rect) {
 	return rect;
 }
 
+// TRUE is returned when the collision is detected and FALSE is returned when not
+// pt is a POINT to coordinates of the chosen vertice
+BOOL	Field::CheckVerticeCollisions(POINT _pt) {
+	for (Vertice v : vertices) {
+		POINT vpt = v.GetPT();
+		if (sqrt(pow(abs(vpt.x - _pt.x), 2) + pow(abs(vpt.y - _pt.y), 2)) > 100) continue;
+		else return 1;
+	}
+	return 0;
+}
 BOOL Field::IsPtInBorders(POINT _pt) {
 	RECT r = GetRect();
 	BOOL result = (_pt.x > 60 && _pt.x < r.right - 60 && _pt.y > 60 && _pt.y < r.bottom - 60);
@@ -67,14 +77,9 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			POINT pt = {};
 			pt.x = GET_X_LPARAM(lParam) - 50;
 			pt.y = GET_Y_LPARAM(lParam) - 50;
-			RECT r;
 			if (vertices.size() < 30 && FieldInstance.IsPtInBorders(pt))
 			{
-				for (Vertice v : vertices) {
-					POINT vpt = v.GetPT();
-					if (sqrt(pow(abs(vpt.x - pt.x), 2) + pow(abs(vpt.y - pt.y), 2)) > 100) continue;
-					else return 0;
-				}
+				if (FieldInstance.CheckVerticeCollisions(pt)) return 0;
 				UINT new_id = Vertice::GenerateID();
 				vertices.push_back(Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x, pt.y, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
 			}

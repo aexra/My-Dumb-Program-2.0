@@ -16,6 +16,7 @@ extern HWND IsWeightedWnd;
 extern HWND VerticeNameWnd;
 extern HWND TransformPositionWnd;
 extern HWND WeightWnd;
+extern HWND FieldWnd;
 
 int k = 0;
 
@@ -345,8 +346,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				LONG width, length;
 
 				GetWindowRect(hWnd, &rc);
+				GetClientRect(FieldWnd, &parentRect);
 				vp = GetLocalCoordinates(hWnd);
-				parentRect = GetLocalRect(hWnd);
 
 				ptCursor.x = GET_X_LPARAM(lParam);
 				ptCursor.y = GET_Y_LPARAM(lParam);
@@ -357,8 +358,15 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				dest.x = vp.x + ptCursor.x - (length) / 2;
 				dest.y = vp.y + ptCursor.y - (width) / 2;
 
-				if (dest.x <= 0 || dest.y <= 0 || dest.x >= parentRect.right + 1 || dest.y >= parentRect.bottom + 1) {
+				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right + 1 || dest.y + length >= parentRect.bottom + 1) {
 					return DefWindowProc(hWnd, uMsg, wParam, lParam);
+				}
+
+				for (Vertice v2 : vertices) {
+					if (v.GetID() == v2.GetID()) continue;
+					POINT vpt = v2.GetPT();
+					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100) continue;
+					else return DefWindowProc(hWnd, uMsg, wParam, lParam);;
 				}
 
 				v.SetPT(dest);

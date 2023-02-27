@@ -21,6 +21,7 @@ public:
 
 	void SetWindow(HWND& _hWnd);
 	BOOL IsPtInBorders(POINT _pt);
+	BOOL CheckVerticeCollisions(POINT _pt);
 	RECT GetRect();
 	RECT SetRect(RECT _rect);
 
