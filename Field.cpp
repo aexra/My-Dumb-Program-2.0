@@ -65,8 +65,8 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 		case WM_LBUTTONDOWN:
 		{
 			POINT pt = {};
-			pt.x = GET_X_LPARAM(lParam);
-			pt.y = GET_Y_LPARAM(lParam);
+			pt.x = GET_X_LPARAM(lParam) - 50;
+			pt.y = GET_Y_LPARAM(lParam) - 50;
 			RECT r;
 			if (vertices.size() < 30 && FieldInstance.IsPtInBorders(pt))
 			{
@@ -76,7 +76,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 					else return 0;
 				}
 				UINT new_id = Vertice::GenerateID();
-				vertices.push_back(Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x - 50, pt.y - 50, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
+				vertices.push_back(Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x, pt.y, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
 			}
 			break;
 		}

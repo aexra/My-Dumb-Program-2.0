@@ -12,3 +12,4 @@ void MainWndAddWidgets(HWND);
 BOOL DrawLine(HDC hdc, int x1, int y1, int x2, int y2);
 
 POINT GetLocalCoordinates(HWND hWnd);
+RECT GetLocalRect(HWND hWnd);

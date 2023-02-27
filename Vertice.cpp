@@ -222,7 +222,7 @@ void Vertice::VerticeUnregister(void)
 	UnregisterClass(VERTICE_WC, NULL);
 }
 
-POINT g_ptMousePos;
+
 HDC hdc = { };
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	Vertice &v = *Vertice::GetVertice(hWnd);
@@ -268,6 +268,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			DeleteObject(hPen);
 			DeleteObject(memDC);
 
+			//Sleep(1000 / 6000);
 			break;
 		}
 
@@ -281,6 +282,21 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				if (FieldInstance.IsPtInBorders(GetLocalCoordinates(hWnd))) hit = HTCAPTION;
 			return hit;
 		}*/
+
+		case WM_TIMER:
+		{
+			switch (wParam)
+			{
+				case VERTICE_REFRESH_IDT:
+				{
+					InvalidateRect(hWnd, NULL, RDW_ERASE);
+					MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
+					Vertice::UpdateInfoPanels();
+					break;
+				}
+			}
+			break;
+		}
 
 		case WM_LBUTTONDOWN:
 		{
@@ -309,8 +325,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			isRMBPressed = true;
 			SetCapture(hWnd);
-			GetCursorPos(&g_ptMousePos);
-			//SendMessage(hWnd, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
 			break;
 		}
 
@@ -321,30 +335,40 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			break;
 		}
 
-		/*case WM_MOUSEMOVE:
+		case WM_MOUSEMOVE:
 		{
 			if (isRMBPressed)
 			{
 				RECT rc;
-				POINT ptCursor;
-				POINT ptDelta;
+				POINT ptCursor, vp, dest;
+				RECT parentRect;
+				LONG width, length;
 
 				GetWindowRect(hWnd, &rc);
-				GetCursorPos(&ptCursor);
-				ptDelta.x = g_ptMousePos.x - ptCursor.x;
-				ptDelta.y = g_ptMousePos.y - ptCursor.y;
+				vp = GetLocalCoordinates(hWnd);
+				parentRect = GetLocalRect(hWnd);
 
-				MoveWindow(hWnd, rc.left - ptDelta.x, rc.top - ptDelta.y,
-					rc.right - rc.left, rc.bottom - rc.top, TRUE);
-				g_ptMousePos.x = ptCursor.x;
-				g_ptMousePos.y = ptCursor.y;
-				Vertice::UpdateInfoPanels();
+				ptCursor.x = GET_X_LPARAM(lParam);
+				ptCursor.y = GET_Y_LPARAM(lParam);
+
+				length = rc.right - rc.left;
+				width = rc.bottom - rc.top;
+
+				dest.x = vp.x + ptCursor.x - (length) / 2;
+				dest.y = vp.y + ptCursor.y - (width) / 2;
+
+				if (dest.x <= 0 || dest.y <= 0 || dest.x >= parentRect.right + 1 || dest.y >= parentRect.bottom + 1) {
+					return DefWindowProc(hWnd, uMsg, wParam, lParam);
+				}
+
+				v.SetPT(dest);
 			}
 			break;
-		}*/
+		}
 
 		case WM_CREATE:
 		{
+			SetTimer(hWnd, VERTICE_REFRESH_IDT, VERTICE_REFRESH_RATE, (TIMERPROC)NULL);
 			break;
 		}
 

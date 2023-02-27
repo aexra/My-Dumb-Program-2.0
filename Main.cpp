@@ -245,7 +245,8 @@ void MainWndAddWidgets(HWND hWnd) {
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)CreateFontA(24, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Comic Sans MS"), 0);
 }
 
-POINT GetLocalCoordinates(HWND hWnd) {
+POINT GetLocalCoordinates(HWND hWnd)
+{
 	RECT Rect;
 	POINT pt;
 	GetWindowRect(hWnd, &Rect);
@@ -253,4 +254,12 @@ POINT GetLocalCoordinates(HWND hWnd) {
 	pt.x = Rect.left;
 	pt.y = Rect.top;
 	return pt;
+}
+
+RECT GetLocalRect(HWND hWnd)
+{
+	RECT Rect;
+	GetWindowRect(hWnd, &Rect);
+	MapWindowPoints(HWND_DESKTOP, GetParent(hWnd), (LPPOINT)&Rect, 2);
+	return Rect;
 }

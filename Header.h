@@ -36,3 +36,11 @@ constexpr UINT IsWeighted = 15;
 constexpr UINT VerticeName = 16;
 constexpr UINT TransformPosition = 17;
 constexpr UINT Weight = 18;
+
+
+// timers
+constexpr UINT VERTICE_REFRESH_IDT = 256;
+
+
+// refresh rates
+constexpr UINT VERTICE_REFRESH_RATE = 1000 / 60;
