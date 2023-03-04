@@ -289,7 +289,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			{
 				case VERTICE_REFRESH_IDT:
 				{
-					
+					// здесь была перерисовка вершины VERTIECE_REFRESH_RATE раз в секунду
 					break;
 				}
 			}
