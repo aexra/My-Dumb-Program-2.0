@@ -14,33 +14,33 @@ using namespace std;
 
 
 // borders of vertices' IDs
-constexpr UINT minVerticeID = 101;
-constexpr UINT maxVerticeID = 255;
+#define minVerticeID 101
+#define maxVerticeID 255
 
 // windows' IDs
-constexpr UINT OnInfoClicked = 1;
-constexpr UINT OnExitClicked = 2;
-constexpr UINT OnSaveClicked = 3;
-constexpr UINT OnLoadGraphClicked = 4;
-constexpr UINT FieldID = 5;
-constexpr UINT OnDeleteVerticeClicked = 6;
-constexpr UINT OnGitSourceClicked = 7;
-constexpr UINT OnSaveAsClicked = 8;
-constexpr UINT OnNewClicked = 9;
-constexpr UINT OnLightThemeClicked = 10;
-constexpr UINT OnDarkThemeClicked = 11;
-constexpr UINT InspectorStatic = 12;
-constexpr UINT GraphName = 13;
-constexpr UINT IsOriented = 14;
-constexpr UINT IsWeighted = 15;
-constexpr UINT VerticeName = 16;
-constexpr UINT TransformPosition = 17;
-constexpr UINT Weight = 18;
+#define OnInfoClicked 1
+#define OnExitClicked 2
+#define OnSaveClicked 3
+#define OnLoadGraphClicked 4
+#define FieldID 5
+#define OnDeleteVerticeClicked 6
+#define OnGitSourceClicked 7
+#define OnSaveAsClicked 8
+#define OnNewClicked 9
+#define OnLightThemeClicked 10
+#define OnDarkThemeClicked 11
+#define InspectorStatic 12
+#define GraphName 13
+#define IsOriented 14
+#define IsWeighted 15
+#define VerticeName 16
+#define TransformPosition 17
+#define Weight 18
 
 
 // timers
-constexpr UINT VERTICE_REFRESH_IDT = 256;
+#define VERTICE_REFRESH_IDT 256
 
 
 // refresh rates
-constexpr UINT VERTICE_REFRESH_RATE = 1000 / 60;
+#define VERTICE_REFRESH_RATE 1000 / 60
