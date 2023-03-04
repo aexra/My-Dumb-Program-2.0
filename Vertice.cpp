@@ -289,9 +289,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			{
 				case VERTICE_REFRESH_IDT:
 				{
-					InvalidateRect(hWnd, NULL, RDW_ERASE);
-					MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
-					Vertice::UpdateInfoPanels();
+					
 					break;
 				}
 			}
@@ -360,15 +358,19 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right + 1 || dest.y + length >= parentRect.bottom + 1) {
 					return DefWindowProc(hWnd, uMsg, wParam, lParam);
 				}
-
-				for (Vertice v2 : vertices) {
+				for (Vertice& v2 : vertices) {
 					if (v.GetID() == v2.GetID()) continue;
 					POINT vpt = v2.GetPT();
 					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100) continue;
 					else return DefWindowProc(hWnd, uMsg, wParam, lParam);;
 				}
 
+
 				v.SetPT(dest);
+
+				//InvalidateRect(hWnd, NULL, RDW_ERASE);
+				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
+				Vertice::UpdateInfoPanels();
 			}
 			break;
 		}
