@@ -224,7 +224,6 @@ void Vertice::VerticeUnregister(void)
 }
 
 
-HDC hdc = { };
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	Vertice &v = *Vertice::GetVertice(hWnd);
 
