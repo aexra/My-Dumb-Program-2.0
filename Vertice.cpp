@@ -269,19 +269,13 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			DeleteObject(memDC);
 
 			//Sleep(1000 / 6000);
-			break;
+			return 0;
 		}
 
-		/*case WM_NCHITTEST: 
+		case WM_ERASEBKGND:
 		{
-			POINT pt;
-			pt.x = GET_X_LPARAM(lParam);
-			pt.y = GET_Y_LPARAM(lParam);
-			LRESULT hit = DefWindowProc(hWnd, uMsg, wParam, lParam);
-			if (hit == HTCLIENT)
-				if (FieldInstance.IsPtInBorders(GetLocalCoordinates(hWnd))) hit = HTCAPTION;
-			return hit;
-		}*/
+			return 0;
+		}
 
 		case WM_TIMER:
 		{
@@ -368,8 +362,11 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 				v.SetPT(dest);
 
-				//InvalidateRect(hWnd, NULL, RDW_ERASE);
+				InvalidateRect(FieldWnd, GetLocalRect(hWnd), FALSE);
+				UpdateWindow(FieldWnd);
+
 				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
+
 				Vertice::UpdateInfoPanels();
 			}
 			break;

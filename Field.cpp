@@ -58,18 +58,30 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			HDC hdc;
 			RECT r;
 			PAINTSTRUCT ps;
+			HBRUSH hBrush;
+			HPEN hPen;
 
 			GetClientRect(hWnd, &r);
 
 			hdc = BeginPaint(hWnd, &ps);
 
-			HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
-			HBRUSH hBrush = CreateSolidBrush(HOLLOW_BRUSH);
+			hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+
+			hBrush = CreateSolidBrush(RGB(255, 255, 255));
+			//FillRect(hdc, &r, hBrush);
 			Rectangle(hdc, 0, 0, r.right, r.bottom);
 
 			EndPaint(hWnd, &ps);
 
+			DeleteObject(hdc);
+			DeleteObject(hBrush);
+			DeleteObject(hPen);
 			break;
+		}
+
+		case WM_ERASEBKGND:
+		{
+			return 0;
 		}
 
 		case WM_LBUTTONDOWN:
@@ -77,7 +89,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			POINT pt = {};
 			pt.x = GET_X_LPARAM(lParam) - 50;
 			pt.y = GET_Y_LPARAM(lParam) - 50;
-			if (vertices.size() < 30 && FieldInstance.IsPtInBorders(pt))
+			if (vertices.size() < MAX_VERTICE && FieldInstance.IsPtInBorders(pt))
 			{
 				if (FieldInstance.CheckVerticeCollisions(pt)) return 0;
 				UINT new_id = Vertice::GenerateID();

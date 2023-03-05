@@ -212,7 +212,7 @@ void MainWndAddWidgets(HWND hWnd) {
 	INT y = 11;
 
 	GetClientRect(hWnd, &r);
-	FieldWnd = CreateWindow(FIELD_WC, NULL, WS_CHILD | WS_VISIBLE, 10, 10, r.right - 250, r.bottom - 20, hWnd, (HMENU)FieldID, NULL, NULL);
+	FieldWnd = CreateWindow(FIELD_WC, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, 10, 10, r.right - 250, r.bottom - 20, hWnd, (HMENU)FieldID, NULL, NULL);
 	FieldInstance.SetWindow(FieldWnd);
 
 	nhwnd = CreateWindowA("static", "Инспектор", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y, 218, 28, hWnd, NULL, NULL, NULL);
@@ -256,10 +256,10 @@ POINT GetLocalCoordinates(HWND hWnd)
 	return pt;
 }
 
-RECT GetLocalRect(HWND hWnd)
+RECT* GetLocalRect(HWND hWnd)
 {
 	RECT Rect;
 	GetWindowRect(hWnd, &Rect);
 	MapWindowPoints(HWND_DESKTOP, GetParent(hWnd), (LPPOINT)&Rect, 2);
-	return Rect;
+	return &Rect;
 }

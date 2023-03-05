@@ -44,3 +44,7 @@ using namespace std;
 
 // refresh rates
 #define VERTICE_REFRESH_RATE 1000 / 60
+
+
+// MAX VERTICES AMOUNT
+#define MAX_VERTICE 30
