@@ -355,7 +355,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				for (Vertice& v2 : vertices) {
 					if (v.GetID() == v2.GetID()) continue;
 					POINT vpt = v2.GetPT();
-					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100) continue;
+					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100 + VERTICE_DISTANCE_ERROR) continue;
 					else return DefWindowProc(hWnd, uMsg, wParam, lParam);;
 				}
 
@@ -366,6 +366,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				UpdateWindow(FieldWnd);
 
 				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
+				//RedrawWindow(hWnd, NULL, NULL, RDW_ERASE);
 
 				Vertice::UpdateInfoPanels();
 			}

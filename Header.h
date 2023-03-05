@@ -38,13 +38,8 @@ using namespace std;
 #define Weight 18
 
 
-// timers
+// vertice constants
 #define VERTICE_REFRESH_IDT 256
-
-
-// refresh rates
 #define VERTICE_REFRESH_RATE 1000 / 60
-
-
-// MAX VERTICES AMOUNT
 #define MAX_VERTICE 30
+#define VERTICE_DISTANCE_ERROR 17
