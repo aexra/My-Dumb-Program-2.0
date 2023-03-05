@@ -29,6 +29,7 @@ HWND IsWeightedWnd = { };
 HWND VerticeNameWnd = { };
 HWND TransformPositionWnd = { };
 HWND WeightWnd = { };
+HWND DeleteButtonWnd = { };
 
 
 // ENUMERATORS
@@ -107,6 +108,26 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	switch (uMsg)
 	{
+		case WM_PAINT:
+		{
+			HBRUSH hBrush;
+			PAINTSTRUCT ps;
+			HDC hDC;
+			RECT r;
+
+			hDC = BeginPaint(hWnd, &ps);
+			hBrush = CreateSolidBrush(RGB(255, 255, 255));
+			GetClientRect(hWnd, &r);
+
+			Rectangle(hDC, r.right - 231, 10, r.right - 10, r.bottom - 10);
+
+			EndPaint(hWnd, &ps);
+
+			DeleteObject(hDC);
+			DeleteObject(hBrush);
+
+			break;
+		}
 
 		case WM_COMMAND:
 		{
@@ -158,6 +179,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				case OnDeleteVerticeClicked:
 				{
 					if (selectedVerticeID) Vertice::DeleteSelected();
+					SendMessageA(DeleteButtonWnd, WM_KILLFOCUS, NULL, NULL);
 					break;
 				}
 
@@ -269,7 +291,7 @@ void MainWndAddWidgets(HWND hWnd) {
 
 	y += 28;
 
-	nhwnd = CreateWindowA("button", "УДАЛИТЬ ВЕРШИНУ", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)OnDeleteVerticeClicked, NULL, NULL);
+	DeleteButtonWnd = CreateWindowA("button", "УДАЛИТЬ ВЕРШИНУ", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)OnDeleteVerticeClicked, NULL, NULL);
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)CreateFontA(24, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Comic Sans MS"), 0);
 }
 

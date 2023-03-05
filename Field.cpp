@@ -26,7 +26,7 @@ RECT Field::SetRect(RECT _rect) {
 BOOL	Field::CheckVerticeCollisions(POINT _pt) {
 	for (Vertice v : vertices) {
 		POINT vpt = v.GetPT();
-		if (sqrt(pow(abs(vpt.x - _pt.x), 2) + pow(abs(vpt.y - _pt.y), 2)) > 100) continue;
+		if (sqrt(pow(abs(vpt.x - _pt.x), 2) + pow(abs(vpt.y - _pt.y), 2)) > 100 + VERTICE_DISTANCE_ERROR) continue;
 		else return 1;
 	}
 	return 0;
