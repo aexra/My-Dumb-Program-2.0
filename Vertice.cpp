@@ -370,8 +370,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				UpdateWindow(FieldWnd);
 
 				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
-
-				//Vertice::UpdateInfoPanels();
 			}
 			break;
 		}
