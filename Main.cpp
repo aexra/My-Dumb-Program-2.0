@@ -35,6 +35,10 @@ HWND WeightWnd = { };
 enum selection_mode { mode1, mode2 };
 
 
+// THREADS HANDLES
+HANDLE hThread2;
+
+
 // OTHER
 Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
@@ -42,6 +46,7 @@ BOOL isRMBPressed = false;
 vector<Vertice> vertices = { };
 UINT selectedVerticeID = { };
 selection_mode selmode = mode1;
+CHAR BUFFER[40];
 
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
@@ -55,6 +60,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { 0 };
 
+	//hThread2 = CreateThread(NULL, 0, Thread2, (LPVOID)THREAD2, 0, NULL);
+
 
 	//CreateWindow(L"MainWndClass", L"My Dumb Program", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1600, 900, NULL, NULL, NULL, NULL);
 	MainWnd = CreateWindow(L"MainWndClass", L"My Dumb Program", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE, 100, 100, 1600, 900, NULL, NULL, NULL, NULL);
@@ -65,7 +72,14 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 }
 
 
-
+DWORD WINAPI Thread2(LPVOID lParam)
+{
+	while (true)
+	{
+		Vertice::UpdateInfoPanels();
+	}
+	return 0;
+}
 
 
 
@@ -152,10 +166,24 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 
+		case WM_TIMER:
+		{
+			switch (wParam)
+			{
+				case INFOPANEL_REFRESH_IDT:
+				{
+					Vertice::UpdateInfoPanels();
+					break;
+				}
+			}
+			break;
+		}
+
 		case WM_CREATE:
 		{
 			MainWndAddMenus(hWnd);
 			MainWndAddWidgets(hWnd);
+			SetTimer(hWnd, INFOPANEL_REFRESH_IDT, INFOPANEL_REFRESH_RATE, (TIMERPROC)NULL);
 			break;
 		}
 

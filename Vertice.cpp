@@ -17,6 +17,7 @@ extern HWND VerticeNameWnd;
 extern HWND TransformPositionWnd;
 extern HWND WeightWnd;
 extern HWND FieldWnd;
+extern CHAR BUFFER[40];
 
 int k = 0;
 
@@ -193,18 +194,34 @@ void Vertice::DeleteVertice(UINT _id) {
 
 void Vertice::UpdateInfoPanels() {
 	if (!selectedVerticeID) {
-		SetWindowTextA(VerticeNameWnd, string("Обознечение: ").c_str());
-		SetWindowTextA(TransformPositionWnd, string("Позиция: ").c_str());
-		SetWindowTextA(WeightWnd, string("Вес: ").c_str());
-	
+		
+		GetWindowTextA(VerticeNameWnd, BUFFER, 30);
+		if (string(BUFFER) != "Обознечение: ")
+			SendMessageA(VerticeNameWnd, WM_SETTEXT, NULL, (LPARAM)string("Обознечение: ").c_str());
+		
+		GetWindowTextA(TransformPositionWnd, BUFFER, 30);
+		if (string(BUFFER) != "Позиция: ")
+			SendMessageA(TransformPositionWnd, WM_SETTEXT, NULL, (LPARAM)string("Позиция: ").c_str());
+		
+		GetWindowTextA(WeightWnd, BUFFER, 30);
+		if (string(BUFFER) != "Вес: ")
+			SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: ").c_str());
 		return;
 	}
 
 	Vertice &v = *Vertice::GetVertice(selectedVerticeID);
 
-	SetWindowTextA(VerticeNameWnd, ("Обознечение: " + v.GetName()).c_str());
-	SetWindowTextA(TransformPositionWnd, ("Позиция: (" + to_string(v.GetPT().x) + "; " + to_string(v.GetPT().y) + ")").c_str());
-	SetWindowTextA(WeightWnd, ("Вес: " + to_string(v.GetWeight())).c_str());
+	GetWindowTextA(VerticeNameWnd, BUFFER, 30);
+	if (string(BUFFER) != "Обознечение: " + v.GetName())
+		SendMessageA(VerticeNameWnd, WM_SETTEXT, NULL, (LPARAM)string("Обознечение: " + v.GetName()).c_str());
+
+	GetWindowTextA(TransformPositionWnd, BUFFER, 30);
+	if (string(BUFFER) != "Позиция: (" + to_string(v.GetPT().x) + "; " + to_string(v.GetPT().y) + ")")
+		SendMessageA(TransformPositionWnd, WM_SETTEXT, NULL, (LPARAM)string("Позиция: (" + to_string(v.GetPT().x) + "; " + to_string(v.GetPT().y) + ")").c_str());
+
+	GetWindowTextA(WeightWnd, BUFFER, 30);
+	if (string(BUFFER) != "Вес: " + to_string(v.GetWeight()))
+		SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: " + to_string(v.GetWeight())).c_str());
 }
 
 
@@ -275,19 +292,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_ERASEBKGND:
 		{
 			return 0;
-		}
-
-		case WM_TIMER:
-		{
-			switch (wParam)
-			{
-				case VERTICE_REFRESH_IDT:
-				{
-					// здесь была перерисовка вершины VERTIECE_REFRESH_RATE раз в секунду
-					break;
-				}
-			}
-			break;
 		}
 
 		case WM_LBUTTONDOWN:
@@ -366,16 +370,14 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				UpdateWindow(FieldWnd);
 
 				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
-				//RedrawWindow(hWnd, NULL, NULL, RDW_ERASE);
 
-				Vertice::UpdateInfoPanels();
+				//Vertice::UpdateInfoPanels();
 			}
 			break;
 		}
 
 		case WM_CREATE:
 		{
-			SetTimer(hWnd, VERTICE_REFRESH_IDT, VERTICE_REFRESH_RATE, (TIMERPROC)NULL);
 			break;
 		}
 
