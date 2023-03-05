@@ -353,7 +353,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				dest.x = vp.x + ptCursor.x - (length) / 2;
 				dest.y = vp.y + ptCursor.y - (width) / 2;
 
-				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right + 1 || dest.y + length >= parentRect.bottom + 1) {
+				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right || dest.y + length >= parentRect.bottom) {
 					return DefWindowProc(hWnd, uMsg, wParam, lParam);
 				}
 				for (Vertice& v2 : vertices) {
