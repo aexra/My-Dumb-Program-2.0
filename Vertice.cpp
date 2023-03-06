@@ -128,8 +128,8 @@ string Vertice::SetName(string _name) {
 void Vertice::SetHDC(HDC _hdc) {
 	hdc = _hdc;
 }
-HDC Vertice::GetHDC() {
-	return hdc;
+HDC* Vertice::GetHDC() {
+	return &hdc;
 }
 
 BOOL Vertice::IsSelected() {
@@ -269,7 +269,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			SetTextColor(memDC, RGB(0, 0, 0));
 
 			Ellipse(memDC, 5, 5, 95, 95);
-			DrawTextA(memDC, (std::to_string(GetWindowLongA(hWnd, GWL_ID) - 100) + "\n").c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+			DrawTextA(memDC, (v.GetName()).c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
 			// Если эта вершина является выбранной
 			if (v.IsSelected()) {
@@ -279,7 +279,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				Ellipse(memDC, 12, 12, 88, 88);
 			}
 
-			BitBlt(v.GetHDC(), 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
+			BitBlt(*v.GetHDC(), 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
 			EndPaint(hWnd, &ps);
 

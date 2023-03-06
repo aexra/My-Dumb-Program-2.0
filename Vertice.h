@@ -44,7 +44,7 @@ public:
 	string						GetName();
 	string						SetName(string _name);
 	void							SetHDC(HDC _hdc);
-	HDC							GetHDC();
+	HDC*						GetHDC();
 	BOOL						IsSelected();
 	void							Select();
 	void							Deselect();
