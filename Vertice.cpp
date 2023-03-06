@@ -289,10 +289,10 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			return 0;
 		}
 
-		case WM_ERASEBKGND:
+		/*case WM_ERASEBKGND:
 		{
 			return 0;
-		}
+		}*/
 
 		case WM_LBUTTONDOWN:
 		{
@@ -366,8 +366,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 				v.SetPT(dest);
 
-				InvalidateRect(FieldWnd, GetLocalRect(hWnd), FALSE);
-				UpdateWindow(FieldWnd);
+				/*InvalidateRect(FieldWnd, GetLocalRect(hWnd), FALSE);
+				UpdateWindow(FieldWnd);*/
 
 				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
 			}
