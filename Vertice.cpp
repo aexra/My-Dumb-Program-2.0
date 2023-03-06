@@ -251,6 +251,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			PAINTSTRUCT ps;
 			HDC memDC;
 			HPEN hPen;
+			HBRUSH hBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 			RECT r;
 
 			// щя будет двойная буферизация
@@ -274,7 +275,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			if (v.IsSelected()) {
 				hPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
 				SelectObject(memDC, hPen);
-				SelectObject(memDC, GetStockObject(HOLLOW_BRUSH));
+				SelectObject(memDC, hBrush);
 				Ellipse(memDC, 12, 12, 88, 88);
 			}
 
@@ -283,7 +284,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			EndPaint(hWnd, &ps);
 
 			DeleteObject(hPen);
-			DeleteObject(memDC);
+			DeleteObject(hBrush);
+			DeleteDC(memDC);
 
 			//Sleep(1000 / 6000);
 			return 0;
@@ -293,6 +295,15 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			return 0;
 		}*/
+
+		case WM_MOVE:
+		{
+			RECT rect;
+			GetClientRect(hWnd, &rect);
+			InvalidateRect(hWnd, &rect, TRUE);
+			UpdateWindow(hWnd);
+			break;
+		}
 
 		case WM_LBUTTONDOWN:
 		{
