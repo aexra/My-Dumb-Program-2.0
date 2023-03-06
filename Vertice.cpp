@@ -380,7 +380,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				/*InvalidateRect(FieldWnd, GetLocalRect(hWnd), FALSE);
 				UpdateWindow(FieldWnd);*/
 
-				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, FALSE);
+				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
 			}
 			break;
 		}
