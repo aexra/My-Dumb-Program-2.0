@@ -374,7 +374,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					else return DefWindowProc(hWnd, uMsg, wParam, lParam);;
 				}
 
-
 				v.SetPT(dest);
 
 				/*InvalidateRect(FieldWnd, GetLocalRect(hWnd), FALSE);
