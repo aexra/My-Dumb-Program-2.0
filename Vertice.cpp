@@ -18,6 +18,7 @@ extern HWND TransformPositionWnd;
 extern HWND WeightWnd;
 extern HWND FieldWnd;
 extern CHAR BUFFER[40];
+extern POINT OnFieldCursorPos;
 
 int k = 0;
 

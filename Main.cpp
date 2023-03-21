@@ -48,6 +48,8 @@ vector<Vertice> vertices = { };
 UINT selectedVerticeID = { };
 selection_mode selmode = mode1;
 CHAR BUFFER[40];
+POINT OnFieldCursorPos = { };
+HPEN linePen = { };
 
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
@@ -60,6 +62,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 	Vertice::VerticeRegister();
 
 	MSG MainWndMessage = { 0 };
+
+	linePen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
 
 	hThread2 = CreateThread(NULL, 0, LineDrawerThreadProc, (LPVOID)THREAD2, 0, NULL);
 
@@ -77,7 +81,17 @@ DWORD WINAPI LineDrawerThreadProc(LPVOID lParam)
 {
 	while (true)
 	{
-		
+		if (selectedVerticeID)
+		{
+			Vertice& v = *Vertice::GetVertice(selectedVerticeID);
+			POINT vloc = v.GetPT();
+			HDC FDC = GetDC(FieldWnd);
+
+			SelectObject(FDC, linePen);
+			DrawLine(FDC, vloc.x, vloc.y, OnFieldCursorPos.x, OnFieldCursorPos.y);
+
+			ReleaseDC(FieldWnd, FDC);
+		}
 	}
 	return 0;
 }
@@ -293,6 +307,14 @@ void MainWndAddWidgets(HWND hWnd) {
 
 	DeleteButtonWnd = CreateWindowA("button", "УДАЛИТЬ ВЕРШИНУ", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)OnDeleteVerticeClicked, NULL, NULL);
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)CreateFontA(24, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Comic Sans MS"), 0);
+}
+
+BOOL DrawLine(HDC hdc, int x1, int y1, int x2, int y2) {
+	// т.к. WinAPI не предлагает функцию для рисования линии от
+	// точки до точки, а LineTo принимает конечную позицию от текущей,
+	// заданной MoveToEx(), напишем свою функцию:
+	MoveToEx(hdc, x1, y1, NULL);
+	return LineTo(hdc, x2, y2);
 }
 
 POINT GetLocalCoordinates(HWND hWnd)

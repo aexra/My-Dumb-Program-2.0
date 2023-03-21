@@ -6,7 +6,7 @@
 LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
 WNDCLASS NewWindowClass(HBRUSH, HCURSOR, HINSTANCE, HICON, LPCWSTR, WNDPROC);
 
-DWORD WINAPI Thread2(LPVOID lParam);
+DWORD WINAPI LineDrawerThreadProc(LPVOID lParam);
 
 void MainWndAddMenus(HWND);
 void MainWndAddWidgets(HWND);

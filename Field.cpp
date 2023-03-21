@@ -1,9 +1,11 @@
 #include "Field.h"
 #include "Vertice.h"
+#include "Main.h"
 
 extern Field FieldInstance;
 extern vector<Vertice> vertices;
 extern BOOL isRMBPressed;
+extern POINT OnFieldCursorPos;
 
 Field::Field(HWND _hWnd) {
 	hWnd = _hWnd;
@@ -19,6 +21,10 @@ RECT Field::GetRect() {
 RECT Field::SetRect(RECT _rect) {
 	rect = _rect;
 	return rect;
+}
+HDC Field::GetHDC()
+{
+	return GetDC(hWnd);
 }
 
 // TRUE is returned when the collision is detected and FALSE is returned when not
@@ -95,6 +101,13 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				UINT new_id = Vertice::GenerateID();
 				vertices.push_back(Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x, pt.y, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
 			}
+			break;
+		}
+
+		case WM_MOUSEMOVE:
+		{
+			OnFieldCursorPos.x = GET_X_LPARAM(lParam);
+			OnFieldCursorPos.y = GET_Y_LPARAM(wParam);
 			break;
 		}
 
