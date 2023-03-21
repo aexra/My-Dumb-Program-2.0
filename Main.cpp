@@ -61,7 +61,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { 0 };
 
-	//hThread2 = CreateThread(NULL, 0, Thread2, (LPVOID)THREAD2, 0, NULL);
+	hThread2 = CreateThread(NULL, 0, LineDrawerThreadProc, (LPVOID)THREAD2, 0, NULL);
 
 
 	//CreateWindow(L"MainWndClass", L"My Dumb Program", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1600, 900, NULL, NULL, NULL, NULL);
@@ -73,11 +73,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 }
 
 
-DWORD WINAPI Thread2(LPVOID lParam)
+DWORD WINAPI LineDrawerThreadProc(LPVOID lParam)
 {
 	while (true)
 	{
-		Vertice::UpdateInfoPanels();
+		
 	}
 	return 0;
 }
