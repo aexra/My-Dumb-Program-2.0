@@ -300,8 +300,9 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			RECT rect;
 			GetClientRect(hWnd, &rect);
-			InvalidateRect(hWnd, &rect, TRUE);
-			UpdateWindow(hWnd);
+			/*InvalidateRect(hWnd, &rect, TRUE);
+			UpdateWindow(hWnd);*/
+			RedrawWindow(hWnd, &rect, NULL, RDW_ERASE);
 			break;
 		}
 
