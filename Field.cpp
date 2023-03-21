@@ -7,6 +7,7 @@ extern vector<Vertice> vertices;
 extern UINT selectedVerticeID;
 extern BOOL isRMBPressed;
 extern BOOL isLMBPressed;
+extern HPEN linePen;
 
 Field::Field(HWND _hWnd) {
 	hWnd = _hWnd;
@@ -110,8 +111,22 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			if (isLMBPressed && selectedVerticeID)
 			{
 				Vertice& v = *Vertice::GetVertice(selectedVerticeID);
+				POINT cursor = { };
+				POINT vloc = v.GetPT();
 
+				cursor.x = GET_X_LPARAM(lParam);
+				cursor.y = GET_Y_LPARAM(lParam);
 				
+				HDC FDC = GetDC(hWnd);
+				
+
+
+				SelectObject(FDC, linePen);
+				SelectObject(*v.GetHDC(), linePen);
+				DrawLine(FDC, vloc.x+50, vloc.y+50, cursor.x, cursor.y);
+				DrawLine(*v.GetHDC(), 0, 0, cursor.x, cursor.y);
+				
+				ReleaseDC(hWnd, FDC);
 			}
 
 			break;
