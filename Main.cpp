@@ -48,7 +48,6 @@ vector<Vertice> vertices = { };
 UINT selectedVerticeID = { };
 selection_mode selmode = mode1;
 CHAR BUFFER[40];
-POINT OnFieldCursorPos = { };
 HPEN linePen = { };
 
 
@@ -65,7 +64,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	linePen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
 
-	hThread2 = CreateThread(NULL, 0, LineDrawerThreadProc, (LPVOID)THREAD2, 0, NULL);
+	//hThread2 = CreateThread(NULL, 0, LineDrawerThreadProc, (LPVOID)THREAD2, 0, NULL);
 
 
 	//CreateWindow(L"MainWndClass", L"My Dumb Program", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1600, 900, NULL, NULL, NULL, NULL);
@@ -77,24 +76,30 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 }
 
 
-DWORD WINAPI LineDrawerThreadProc(LPVOID lParam)
-{
-	while (true)
-	{
-		if (selectedVerticeID)
-		{
-			Vertice& v = *Vertice::GetVertice(selectedVerticeID);
-			POINT vloc = v.GetPT();
-			HDC FDC = GetDC(FieldWnd);
-
-			SelectObject(FDC, linePen);
-			DrawLine(FDC, vloc.x, vloc.y, OnFieldCursorPos.x, OnFieldCursorPos.y);
-
-			ReleaseDC(FieldWnd, FDC);
-		}
-	}
-	return 0;
-}
+//DWORD WINAPI LineDrawerThreadProc(LPVOID lParam)
+//{
+//	while (true)
+//	{
+//		if (selectedVerticeID)
+//		{
+//			OutputDebugStringA("");
+//
+//			Vertice& v = *Vertice::GetVertice(selectedVerticeID);
+//			POINT vloc = v.GetPT();
+//			HDC FDC = GetDC(FieldWnd);
+//
+//			//OutputDebugStringA((to_string(vloc.x) + ", " + to_string(vloc.y) + " -> " + to_string(OnFieldCursorPos.x) + ", " + to_string(OnFieldCursorPos.y) + "\n").c_str());
+//
+//			SelectObject(FDC, linePen);
+//			SelectObject(*v.GetHDC(), linePen);
+//			DrawLine(FDC, vloc.x+50, vloc.y+50, OnFieldCursorPos.x, OnFieldCursorPos.y+500);
+//			DrawLine(*v.GetHDC(), 0, 0, OnFieldCursorPos.x, OnFieldCursorPos.y);
+//
+//			ReleaseDC(FieldWnd, FDC);
+//		}
+//	}
+//	return 0;
+//}
 
 
 
@@ -225,6 +230,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case WM_DESTROY:
 		{
+			selectedVerticeID = NULL;
 			PostQuitMessage(0);
 			break;
 		}

@@ -4,8 +4,9 @@
 
 extern Field FieldInstance;
 extern vector<Vertice> vertices;
+extern UINT selectedVerticeID;
 extern BOOL isRMBPressed;
-extern POINT OnFieldCursorPos;
+extern BOOL isLMBPressed;
 
 Field::Field(HWND _hWnd) {
 	hWnd = _hWnd;
@@ -106,8 +107,13 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 		case WM_MOUSEMOVE:
 		{
-			OnFieldCursorPos.x = GET_X_LPARAM(lParam);
-			OnFieldCursorPos.y = GET_Y_LPARAM(wParam);
+			if (isLMBPressed && selectedVerticeID)
+			{
+				Vertice& v = *Vertice::GetVertice(selectedVerticeID);
+
+				
+			}
+
 			break;
 		}
 
