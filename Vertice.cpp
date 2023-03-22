@@ -394,7 +394,6 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					v.Select();
 				POINT cursor = { };
 				POINT vloc = v.GetPT();
-				POINT vertPT = { }; // точка на границе окна вершины
 
 				cursor.x = GET_X_LPARAM(lParam);
 				cursor.y = GET_Y_LPARAM(lParam);
@@ -406,7 +405,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				SelectObject(FDC, linePen);
 				SelectObject(VDC, linePen);
 				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
-				//DrawLine(VDC, 50, 50, vertPT.x, vertPT.y);
+				DrawLine(VDC, 50, 50, cursor.x, cursor.y);
 
 				ReleaseDC(hWnd, FDC);
 				ReleaseDC(v.GetWindow(), VDC);
