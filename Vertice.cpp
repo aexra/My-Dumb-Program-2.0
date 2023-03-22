@@ -1,6 +1,7 @@
 ﻿#include "Vertice.h"
 #include "Field.h"
 #include "Main.h"::GetLocalCoordinates
+#include "Vector2.h"
 
 
 extern vector<Vertice> vertices;
@@ -310,7 +311,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_LBUTTONDOWN:
 		{
 			isLMBPressed = true;
-			SetCapture(hWnd);
+			//SetCapture(hWnd);
 			if (v.IsSelected()) {
 					v.Deselect();
 			}
@@ -326,7 +327,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_LBUTTONUP:
 		{
 			isLMBPressed = false;
-			ReleaseCapture();
+			//ReleaseCapture();
 			break;
 		}
 

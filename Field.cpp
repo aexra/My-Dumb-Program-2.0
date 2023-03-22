@@ -113,6 +113,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				Vertice& v = *Vertice::GetVertice(selectedVerticeID);
 				POINT cursor = { };
 				POINT vloc = v.GetPT();
+				POINT vertPT = { }; // точка на границе окна вершины
 
 				cursor.x = GET_X_LPARAM(lParam);
 				cursor.y = GET_Y_LPARAM(lParam);
@@ -124,7 +125,25 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				SelectObject(FDC, linePen);
 				SelectObject(*v.GetHDC(), linePen);
 				DrawLine(FDC, vloc.x+50, vloc.y+50, cursor.x, cursor.y);
-				DrawLine(*v.GetHDC(), 0, 0, cursor.x, cursor.y);
+
+				int _Y = cursor.y - vloc.y;
+				int _X = cursor.x - vloc.x;
+
+				double _Tg = _Y / _X;
+
+				// поиск Y
+				if (_Y = 50 + _Tg * (100 - 50) == 0)
+					vertPT.y = _Y;
+				else if (_Y = 50 + _Tg * (0 - 50) == 0)
+					vertPT.y = _Y;
+
+				// поиск ’
+				if (_X = (100 - 50) / _Tg + 50 == 0)
+					vertPT.x = _X;
+				else if (_X = (0 - 50) / _Tg + 50 == 0)
+					vertPT.x = _X;
+
+				DrawLine(*v.GetHDC(), 50, 50, vertPT.x, vertPT.y);
 				
 				ReleaseDC(hWnd, FDC);
 			}
