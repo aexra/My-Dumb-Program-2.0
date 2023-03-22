@@ -21,7 +21,6 @@ private:
 	vector<UINT>			connections;
 	string						name;
 	BOOL						isSelected;
-	HDC							hdc;
 	BOOL						isValid;
 public:
 									Vertice();
@@ -43,8 +42,6 @@ public:
 	UINT						Disconnect(UINT _id);
 	string						GetName();
 	string						SetName(string _name);
-	void							SetHDC(HDC _hdc);
-	HDC*						GetHDC();
 	BOOL						IsSelected();
 	void							Select();
 	void							Deselect();

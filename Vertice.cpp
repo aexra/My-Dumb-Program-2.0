@@ -20,6 +20,7 @@ extern HWND WeightWnd;
 extern HWND FieldWnd;
 extern CHAR BUFFER[40];
 extern POINT OnFieldCursorPos;
+extern HPEN linePen;
 
 int k = 0;
 
@@ -33,7 +34,6 @@ Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
 	name = to_string(_id-100);
 	isSelected = false;
 	isValid = true;
-	hdc = GetDC(hWnd);
 }
 
 Vertice::Vertice() {
@@ -125,13 +125,6 @@ string Vertice::GetName() {
 string Vertice::SetName(string _name) {
 	name = _name;
 	return name;
-}
-
-void Vertice::SetHDC(HDC _hdc) {
-	hdc = _hdc;
-}
-HDC* Vertice::GetHDC() {
-	return &hdc;
 }
 
 BOOL Vertice::IsSelected() {
@@ -251,7 +244,9 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;
+			PAINTSTRUCT vps;
 			HDC memDC;
+			HDC VDC;
 			HPEN hPen;
 			HBRUSH hBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 			RECT r;
@@ -260,6 +255,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 			GetClientRect(hWnd, &r);
 			memDC = BeginPaint(hWnd, &ps);
+			VDC = BeginPaint(v.GetWindow(), &vps);
+
 
 			hPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
 			SelectObject(memDC, hPen);
@@ -281,9 +278,10 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				Ellipse(memDC, 12, 12, 88, 88);
 			}
 
-			BitBlt(*v.GetHDC(), 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
+			BitBlt(VDC, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
 			EndPaint(hWnd, &ps);
+			EndPaint(v.GetWindow(), &vps);
 
 			DeleteObject(hPen);
 			DeleteObject(hBrush);
@@ -310,7 +308,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_LBUTTONDOWN:
 		{
 			isLMBPressed = true;
-			//SetCapture(hWnd);
+			SetCapture(hWnd);
 			if (v.IsSelected()) {
 					v.Deselect();
 			}
@@ -326,7 +324,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_LBUTTONUP:
 		{
 			isLMBPressed = false;
-			//ReleaseCapture();
+			ReleaseCapture();
 			break;
 		}
 
@@ -346,6 +344,9 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 		case WM_MOUSEMOVE:
 		{
+			//
+			//		Правая мышб
+			//
 			if (isRMBPressed)
 			{
 				RECT rc;
@@ -384,6 +385,33 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
 
 			}
+			//
+			//		Левая мышб
+			//
+			if (isLMBPressed)
+			{
+				v.Select();
+				POINT cursor = { };
+				POINT vloc = v.GetPT();
+				POINT vertPT = { }; // точка на границе окна вершины
+
+				cursor.x = GET_X_LPARAM(lParam);
+				cursor.y = GET_Y_LPARAM(lParam);
+
+				HDC FDC = GetDC(FieldWnd);
+				HDC VDC = GetDC(v.GetWindow());
+
+
+				SelectObject(FDC, linePen);
+				SelectObject(VDC, linePen);
+				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x, cursor.y);
+				DrawLine(VDC, 50, 50, vertPT.x, vertPT.y);
+
+				ReleaseDC(hWnd, FDC);
+				ReleaseDC(v.GetWindow(), VDC);
+			}
+
+
 			break;
 		}
 
