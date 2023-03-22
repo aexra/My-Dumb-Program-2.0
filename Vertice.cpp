@@ -134,7 +134,7 @@ BOOL Vertice::IsSelected() {
 }
 BOOL Vertice::IsNear(const POINT _pt)
 {
-	return (sqrt(pow(pt.x + _pt.x, 2) + pow(pt.y + _pt.y, 2)) <= VERTICE_LINKING_RANGE);
+	return (sqrt(pow(pt.x - _pt.x, 2) + pow(pt.y - _pt.y, 2)) <= VERTICE_LINKING_RANGE);
 }
 void Vertice::Select() {
 	isSelected = true;
@@ -411,8 +411,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				POINT cursor = { };
 				POINT vloc = v.GetPT();
 
-				cursor.x = GET_X_LPARAM(lParam);
-				cursor.y = GET_Y_LPARAM(lParam);
+				cursor.x = GET_X_LPARAM(lParam) + vloc.x;;
+				cursor.y = GET_Y_LPARAM(lParam) + vloc.y;
 
 				if (cursor == lastHit) return DefWindowProc(hWnd, uMsg, wParam, lParam);
 				else lastHit = cursor;
@@ -430,7 +430,26 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 				SelectObject(FDC, linePen);
 				SelectObject(VDC, linePen);
-				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
+
+				for (Vertice& v1 : vertices)
+				{
+					if (v1.IsNear(cursor))
+					{
+						OutputDebugStringA("AAAAA\n");
+
+						POINT pt1 = v1.GetPT();
+
+						DrawLine(FDC, vloc.x + 50, vloc.y + 50, pt1.x, pt1.y);
+						DrawLine(VDC, 50, 50, pt1.x, pt1.y);
+						
+						ReleaseDC(FieldWnd, FDC);
+						ReleaseDC(hWnd, VDC);
+
+						return DefWindowProc(hWnd, uMsg, wParam, lParam);
+					}
+				}
+
+				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x, cursor.y);
 				DrawLine(VDC, 50, 50, cursor.x, cursor.y);
 
 				ReleaseDC(FieldWnd, FDC);
