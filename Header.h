@@ -41,6 +41,7 @@ using namespace std;
 // vertice constants
 #define MAX_VERTICE 30
 #define VERTICE_DISTANCE_ERROR 17
+#define VERTICE_LINKING_RANGE 30
 
 // TIMERS
 #define VERTICE_REFRESH_IDT 256

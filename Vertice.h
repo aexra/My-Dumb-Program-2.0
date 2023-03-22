@@ -43,6 +43,7 @@ public:
 	string						GetName();
 	string						SetName(string _name);
 	BOOL						IsSelected();
+	BOOL						IsNear(const POINT _pt);
 	void							Select();
 	void							Deselect();
 	static int					GetVerticeIdx(UINT __id);

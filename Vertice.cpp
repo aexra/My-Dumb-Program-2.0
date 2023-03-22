@@ -132,6 +132,10 @@ string Vertice::SetName(string _name) {
 BOOL Vertice::IsSelected() {
 	return isSelected;
 }
+BOOL Vertice::IsNear(const POINT _pt)
+{
+	return (sqrt(pow(pt.x + _pt.x, 2) + pow(pt.y + _pt.y, 2)) <= VERTICE_LINKING_RANGE);
+}
 void Vertice::Select() {
 	isSelected = true;
 	selectedVerticeID = id;
@@ -245,19 +249,21 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 		case WM_PAINT:
 		{
-			PAINTSTRUCT ps;
-			PAINTSTRUCT vps;
-			HDC VDC;
-			HDC memDC;
-			HBITMAP memBM;
-			HPEN hPen;
-			HBRUSH hBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
-			RECT r;
+			PAINTSTRUCT		ps;
+			PAINTSTRUCT		vps;
+			HDC							VDC;
+			HDC							memDC;
+			HBITMAP					memBM;
+			HPEN						hPen;
+			HBRUSH					hBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
+			RECT						r;
 
 			// щя будет двойная буферизация
 
 			GetClientRect(hWnd, &r);
+
 			VDC = BeginPaint(hWnd, &vps);
+
 			memDC = CreateCompatibleDC(VDC);
 			memBM = CreateCompatibleBitmap(VDC, 100, 100);
 			SelectObject(memDC, memBM);
@@ -297,10 +303,10 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			return 0;
 		}
 
-		case WM_ERASEBKGND:
+		/*case WM_ERASEBKGND:
 		{
 			return 0;
-		}
+		}*/
 
 		case WM_MOVE:
 		{
@@ -355,7 +361,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_MOUSEMOVE:
 		{
 			//
-			//		Правая мышб
+			//		Правая мышб для перемещения
 			//
 			if (isRMBPressed)
 			{
@@ -396,7 +402,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 			}
 			//
-			//		Левая мышб
+			//		Левая мышб для выделения и соединения
 			//
 			if (isLMBPressed)
 			{
@@ -408,11 +414,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				cursor.x = GET_X_LPARAM(lParam);
 				cursor.y = GET_Y_LPARAM(lParam);
 
-				/*if (cursor == lastHit) return DefWindowProc(hWnd, uMsg, wParam, lParam);
-				else lastHit = cursor;*/
-
-				HDC FDC = GetDC(FieldWnd);
-				HDC VDC = GetDC(v.GetWindow());
+				if (cursor == lastHit) return DefWindowProc(hWnd, uMsg, wParam, lParam);
+				else lastHit = cursor;
 
 				// обновляем поле чтобы стереть прошлую линию
 				InvalidateRect(FieldWnd, NULL, FALSE);
@@ -422,13 +425,16 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				InvalidateRect(hWnd, NULL, FALSE);
 				UpdateWindow(hWnd);
 
+				HDC FDC = GetDC(FieldWnd);
+				HDC VDC = GetDC(hWnd);
+
 				SelectObject(FDC, linePen);
 				SelectObject(VDC, linePen);
 				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
 				DrawLine(VDC, 50, 50, cursor.x, cursor.y);
 
-				ReleaseDC(hWnd, FDC);
-				ReleaseDC(v.GetWindow(), VDC);
+				ReleaseDC(FieldWnd, FDC);
+				ReleaseDC(hWnd, VDC);
 			}
 
 
