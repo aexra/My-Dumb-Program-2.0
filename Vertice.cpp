@@ -255,7 +255,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 			GetClientRect(hWnd, &r);
 			memDC = BeginPaint(hWnd, &ps);
-			VDC = BeginPaint(v.GetWindow(), &vps);
+			VDC = BeginPaint(hWnd, &vps);
 
 
 			hPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
@@ -395,12 +395,16 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				POINT cursor = { };
 				POINT vloc = v.GetPT();
 
-				cursor.x = GET_X_LPARAM(lParam);
-				cursor.y = GET_Y_LPARAM(lParam);
-
 				HDC FDC = GetDC(FieldWnd);
 				HDC VDC = GetDC(v.GetWindow());
+				
+				InvalidateRect(FieldWnd, NULL, FALSE);
+				UpdateWindow(FieldWnd);
 
+				
+
+				cursor.x = GET_X_LPARAM(lParam);
+				cursor.y = GET_Y_LPARAM(lParam);
 
 				SelectObject(FDC, linePen);
 				SelectObject(VDC, linePen);
