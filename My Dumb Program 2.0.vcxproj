@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ExtraOverloads.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="Main.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="Vertice.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ExtraOverloads.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Vector2.cpp" />

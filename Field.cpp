@@ -106,6 +106,12 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			break;
 		}
 
+		case WM_LBUTTONUP:
+		{
+
+			break;
+		}
+
 		case WM_MOUSEMOVE:
 		{
 			

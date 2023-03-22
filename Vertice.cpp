@@ -2,6 +2,7 @@
 #include "Field.h"
 #include "Main.h"::GetLocalCoordinates
 #include "Vector2.h"
+#include "ExtraOverloads.h"
 
 
 extern vector<Vertice> vertices;
@@ -24,6 +25,7 @@ extern HPEN linePen;
 
 int k = 0;
 
+POINT lastHit = { };
 
 
 Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
@@ -245,8 +247,9 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			PAINTSTRUCT ps;
 			PAINTSTRUCT vps;
-			HDC memDC;
 			HDC VDC;
+			HDC memDC;
+			HBITMAP memBM;
 			HPEN hPen;
 			HBRUSH hBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 			RECT r;
@@ -254,12 +257,15 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			// щя будет двойная буферизация
 
 			GetClientRect(hWnd, &r);
-			memDC = BeginPaint(hWnd, &ps);
 			VDC = BeginPaint(hWnd, &vps);
-
+			memDC = CreateCompatibleDC(VDC);
+			memBM = CreateCompatibleBitmap(VDC, 100, 100);
+			SelectObject(memDC, memBM);
 
 			hPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
 			SelectObject(memDC, hPen);
+
+			Rectangle(memDC, 0, 0, r.right, r.bottom);
 			Ellipse(memDC, 12, 12, 88, 88);
 
 			hPen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
@@ -280,21 +286,21 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 			BitBlt(VDC, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
-			EndPaint(hWnd, &ps);
-			EndPaint(v.GetWindow(), &vps);
+			EndPaint(hWnd, &vps);
 
 			DeleteObject(hPen);
 			DeleteObject(hBrush);
+			DeleteObject(memBM);
 			DeleteDC(memDC);
 
 			//Sleep(1000 / 6000);
 			return 0;
 		}
 
-		/*case WM_ERASEBKGND:
+		case WM_ERASEBKGND:
 		{
 			return 0;
-		}*/
+		}
 
 		case WM_MOVE:
 		{
@@ -324,7 +330,11 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		case WM_LBUTTONUP:
 		{
 			isLMBPressed = false;
-			ReleaseCapture();
+			InvalidateRect(FieldWnd, NULL, FALSE);
+			UpdateWindow(FieldWnd);
+			InvalidateRect(hWnd, NULL, FALSE);
+			UpdateWindow(hWnd);
+			ReleaseCapture();	
 			break;
 		}
 
@@ -395,16 +405,22 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				POINT cursor = { };
 				POINT vloc = v.GetPT();
 
+				cursor.x = GET_X_LPARAM(lParam);
+				cursor.y = GET_Y_LPARAM(lParam);
+
+				/*if (cursor == lastHit) return DefWindowProc(hWnd, uMsg, wParam, lParam);
+				else lastHit = cursor;*/
+
 				HDC FDC = GetDC(FieldWnd);
 				HDC VDC = GetDC(v.GetWindow());
-				
+
+				// обновляем поле чтобы стереть прошлую линию
 				InvalidateRect(FieldWnd, NULL, FALSE);
 				UpdateWindow(FieldWnd);
 
-				
-
-				cursor.x = GET_X_LPARAM(lParam);
-				cursor.y = GET_Y_LPARAM(lParam);
+				// обновляем вершину для того же самого
+				InvalidateRect(hWnd, NULL, FALSE);
+				UpdateWindow(hWnd);
 
 				SelectObject(FDC, linePen);
 				SelectObject(VDC, linePen);
