@@ -390,7 +390,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			//
 			if (isLMBPressed)
 			{
-				v.Select();
+				if (!v.IsSelected())
+					v.Select();
 				POINT cursor = { };
 				POINT vloc = v.GetPT();
 				POINT vertPT = { }; // точка на границе окна вершины
@@ -404,8 +405,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 				SelectObject(FDC, linePen);
 				SelectObject(VDC, linePen);
-				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x, cursor.y);
-				DrawLine(VDC, 50, 50, vertPT.x, vertPT.y);
+				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
+				//DrawLine(VDC, 50, 50, vertPT.x, vertPT.y);
 
 				ReleaseDC(hWnd, FDC);
 				ReleaseDC(v.GetWindow(), VDC);
