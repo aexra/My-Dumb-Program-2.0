@@ -133,15 +133,27 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 				// поиск Y
 				if (_Y = 50 + _Tg * (100 - 50) == 0)
+				{
 					vertPT.y = _Y;
+					//OutputDebugStringA(to_string(_Y).c_str());
+				}
 				else if (_Y = 50 + _Tg * (0 - 50) == 0)
+				{
+					//OutputDebugStringA(to_string(_Y).c_str());
 					vertPT.y = _Y;
+				}
 
 				// поиск Х
 				if (_X = (100 - 50) / _Tg + 50 == 0)
+				{
 					vertPT.x = _X;
+					//OutputDebugStringA(to_string(_X).c_str());
+				}
 				else if (_X = (0 - 50) / _Tg + 50 == 0)
+				{
 					vertPT.x = _X;
+					//OutputDebugStringA(to_string(_X).c_str());
+				}
 
 				DrawLine(*v.GetHDC(), 50, 50, vertPT.x, vertPT.y);
 				
