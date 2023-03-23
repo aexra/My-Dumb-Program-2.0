@@ -147,7 +147,7 @@ void Vertice::Deselect() {
 	isSelected = false;
 	if (selectedVerticeID == id)
 		selectedVerticeID = NULL;
-	InvalidateRect(hWnd, NULL, RDW_ERASE);
+	InvalidateRect(hWnd, NULL, FALSE);
 	UpdateWindow(hWnd);
 	UpdateInfoPanels();
 }
