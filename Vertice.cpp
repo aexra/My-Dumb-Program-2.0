@@ -117,7 +117,6 @@ HWND&	 Vertice::SetWindow(HWND& _hWnd) {
 }
 
 
-// TODO
 vector<UINT> Vertice::GetConnections() {
 	return connections;
 }
@@ -126,11 +125,12 @@ vector<UINT> Vertice::SetConnections(vector<UINT> cons) {
 }
 
 
-// TODO
 UINT Vertice::Connect(UINT _id) {
+	this->connections.push_back(_id);
 	return _id;
 }
 UINT Vertice::Disconnect(UINT _id) {
+	this->connections.erase(find(connections.begin(), connections.end(), _id));
 	return _id;
 }
 
@@ -364,8 +364,10 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			if (prelinkedVertice != nullptr)
 			{
 				// ВРЕМЕННОЕ РЕШЕНИЕ - TODO: СОЕДИНЕНИЕ ВЕРШИН
-				InvalidateRect(prelinkedVertice->GetWindow(), NULL, FALSE);
-				UpdateWindow(prelinkedVertice->GetWindow());
+				InvalidateRect(prelinkedVertice -> GetWindow(), NULL, FALSE);
+				UpdateWindow(prelinkedVertice -> GetWindow());
+				/*if ((find(v.GetConnections().begin(), v.GetConnections().end(), prelinkedVertice -> GetID()) == v.GetConnections().end())) v.Connect(prelinkedVertice->GetID());
+				OutputDebugStringA(to_string(v.GetConnections().size()).c_str());*/
 				prelinkedVertice = nullptr;
 			}
 			ReleaseCapture();	
