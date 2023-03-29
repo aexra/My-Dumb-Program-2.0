@@ -87,11 +87,20 @@ FLOAT	 Vertice::SetWeight(FLOAT _weight) {
 	return weight;
 }
 
-
+POINT Vertice::GetCenter()
+{
+	POINT _pt = { };
+	_pt.x = pt.x + 50;
+	_pt.y = pt.y + 50;
+	return _pt;
+}
 POINT	 Vertice::GetPT() {
 	return pt;
 }
 POINT	 Vertice::SetPT(POINT _pt) {
+	POINT _cent;
+	_cent.x = _pt.x + 50;
+	_cent.y = _pt.y + 50;
 	pt = _pt;
 	return pt;
 }
@@ -137,7 +146,7 @@ BOOL Vertice::IsSelected() {
 }
 BOOL Vertice::IsNear(const POINT _pt)
 {
-	return (sqrt(pow(this->pt.x - _pt.x, 2) + pow(this->pt.y - _pt.y, 2)) <= VERTICE_LINKING_RANGE);
+	return (sqrt(pow(this->pt.x + 50 - _pt.x, 2) + pow(this->pt.y + 50 - _pt.y, 2)) <= VERTICE_LINKING_RANGE);
 }
 void Vertice::Select() {
 	isSelected = true;
@@ -458,23 +467,37 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				SelectObject(memFDC, linePen);
 				SelectObject(memVDC, linePen);
 
-				/*for (Vertice& v1 : vertices)
+				// Проверим возможность соединиться
+				for (Vertice& v1 : vertices)
 				{
-					if (v1.IsNear(cursor))
+					if (v1 == v) continue;
+					/*OutputDebugStringA((to_string(cursor.x + vloc.x) + " - " + to_string(cursor.y + vloc.y) + "\t\t").c_str());
+					OutputDebugStringA((to_string(v1.GetPT().x + 50) + " - " + to_string(v1.GetPT().y + 50) + "\t\t").c_str());
+					OutputDebugStringA((to_string(v1.IsNear(cursor + vloc)) + "\n").c_str());*/
+					if (v1.IsNear(cursor + vloc))
 					{
-						OutputDebugStringA("AAAAA\n");
+						// Получим координаты центра другой вершины
+						POINT pt1 = v1.GetCenter();
 
-						POINT pt1 = v1.GetPT();
-
-						DrawLine(FDC, vloc.x + 50, vloc.y + 50, pt1.x, pt1.y);
-						DrawLine(VDC, 50, 50, pt1.x, pt1.y);
+						// Отрисуем линию до другой вершины
+						DrawLine(memFDC, vloc.x + 50, vloc.y + 50, pt1.x, pt1.y);
+						DrawLine(memVDC, 50, 50, pt1.x - vloc.x, pt1.y - vloc.y);
 						
+						// Перенесем изображения
+						BitBlt(FDC, 0, 0, fr.right, fr.bottom, memFDC, 0, 0, SRCCOPY);
+						BitBlt(VDC, 0, 0, vr.right, vr.bottom, memVDC, 0, 0, SRCCOPY);
+
+						// Уничтожим использованные объекты
 						ReleaseDC(FieldWnd, FDC);
 						ReleaseDC(hWnd, VDC);
+						DeleteDC(memFDC);
+						DeleteDC(memVDC);
+						DeleteBitmap(memFBM);
+						DeleteBitmap(memVBM);
 
 						return DefWindowProc(hWnd, uMsg, wParam, lParam);
 					}
-				}*/
+				}
 
 				// Отрисуем линию
 				DrawLine(memFDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
@@ -513,4 +536,9 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		}
 	}
+}
+
+BOOL operator == (Vertice& _Left, Vertice& _Right)
+{
+	return (_Left.GetID() == _Right.GetID());
 }

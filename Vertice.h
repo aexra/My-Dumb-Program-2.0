@@ -17,6 +17,7 @@ private:
 	UINT						id;
 	FLOAT						weight;
 	POINT						pt;
+	POINT						center;
 	HWND						hWnd;
 	vector<UINT>			connections;
 	string						name;
@@ -32,6 +33,7 @@ public:
 	UINT						SetID(UINT _id);
 	FLOAT						GetWeight();
 	FLOAT						SetWeight(FLOAT _weight);
+	POINT						GetCenter();
 	POINT						GetPT();
 	POINT						SetPT(POINT _pt);
 	HWND&					GetWindow();
@@ -59,3 +61,5 @@ public:
 	static void				VerticeRegister(void);
 	static void				VerticeUnregister(void);
 };
+
+BOOL operator == (Vertice& _Left, Vertice& _Right);
