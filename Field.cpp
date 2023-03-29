@@ -2,12 +2,15 @@
 #include "Vertice.h"
 #include "Main.h"
 
-extern Field FieldInstance;
-extern vector<Vertice> vertices;
-extern UINT selectedVerticeID;
-extern BOOL isRMBPressed;
-extern BOOL isLMBPressed;
-extern HPEN linePen;
+extern Field						FieldInstance;
+extern vector<Vertice>		vertices;
+extern UINT					selectedVerticeID;
+extern BOOL					isRMBPressed;
+extern BOOL					isLMBPressed;
+extern HPEN					linePen;
+
+HPEN								fPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+HBRUSH							fBrush = CreateSolidBrush(RGB(255, 255, 255));
 
 Field::Field(HWND _hWnd) {
 	hWnd = _hWnd;
@@ -43,6 +46,12 @@ BOOL Field::IsPtInBorders(POINT _pt) {
 	RECT r = GetRect();
 	BOOL result = (_pt.x > 60 && _pt.x < r.right - 60 && _pt.y > 60 && _pt.y < r.bottom - 60);
 	return result;
+}
+void Field::DrawField(HDC _mDC)
+{
+	SelectObject(_mDC, fPen);
+	SelectObject(_mDC, fBrush);
+	Rectangle(_mDC, 0, 0, rect.right + 1, rect.bottom + 1);
 }
 
 void Field::FieldRegister(void) {

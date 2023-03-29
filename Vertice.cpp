@@ -406,29 +406,36 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			//
 			if (isLMBPressed)
 			{
+				// Если вершина не выделена, выделяем (решение бага с лишним deselect-ом)
 				if (!v.IsSelected())
 					v.Select();
 				POINT cursor = { };
-				POINT vloc = v.GetPT();
+				POINT vloc = v.GetPT();	// координаты вершины на поле
 
+				// Получим координаты положения курсора на ВЕРШИНЕ
 				cursor.x = GET_X_LPARAM(lParam);
 				cursor.y = GET_Y_LPARAM(lParam);
 
+				// Если последнее положение соответствует текущему, нам не нужно его перерисовывать.
 				if (cursor == lastHit) break;
 				else lastHit = cursor;
 
-				// обновляем поле чтобы стереть прошлую линию
-				InvalidateRect(FieldWnd, NULL, FALSE);
-				UpdateWindow(FieldWnd);
-
-				// обновляем вершину для того же самого
-				InvalidateRect(hWnd, NULL, FALSE);
-				UpdateWindow(hWnd);
-
+				// Получим контексты девайсов
 				HDC FDC = GetDC(FieldWnd);
 				HDC VDC = GetDC(hWnd);
 
-				SelectObject(FDC, linePen);
+				// Подготовим всё необходимое для рисования линии
+				// Испульзуем двойную буферизацию для исключения мерцания
+				RECT r = FieldInstance.GetRect();
+				HDC memFDC = CreateCompatibleDC(FDC);
+				HBITMAP memFBM = CreateCompatibleBitmap(FDC, r.right, r.bottom);
+				SelectObject(memFDC, memFBM);
+
+				// Отрисуем пустое поле
+				FieldInstance.DrawField(memFDC);
+
+				// Выберем перо для рисования линии
+				SelectObject(memFDC, linePen);
 				SelectObject(VDC, linePen);
 
 				/*for (Vertice& v1 : vertices)
@@ -449,11 +456,18 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					}
 				}*/
 
-				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
+				// Отрисуем линию
+				DrawLine(memFDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
 				DrawLine(VDC, 50, 50, cursor.x, cursor.y);
 
+				// Перенесем изображения
+				BitBlt(FDC, 0, 0, r.right, r.bottom, memFDC, 0, 0, SRCCOPY);
+
+				// Уничтожим использованные объекты
 				ReleaseDC(FieldWnd, FDC);
 				ReleaseDC(hWnd, VDC);
+				DeleteDC(memFDC);
+				DeleteBitmap(memFBM);
 			}
 
 
