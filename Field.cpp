@@ -92,6 +92,20 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			return 0;
 		}
 
+		/*case WM_TIMER:
+		{
+			switch (wParam)
+			{
+				case FIELD_REFRESH_IDT:
+				{
+					InvalidateRect(hWnd, NULL, FALSE);
+					UpdateWindow(hWnd);
+					break;
+				}
+			}
+			break;
+		}*/
+
 		case WM_LBUTTONDOWN:
 		{
 			POINT pt = {};
@@ -141,6 +155,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			RECT r;
 			GetClientRect(hWnd, &r);
 			FieldInstance.SetRect(r);
+			//SetTimer(hWnd, FIELD_REFRESH_IDT, FIELD_REFRESH_RATE, NULL);
 			break;
 		}
 
