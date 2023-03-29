@@ -134,7 +134,7 @@ BOOL Vertice::IsSelected() {
 }
 BOOL Vertice::IsNear(const POINT _pt)
 {
-	return (sqrt(pow(pt.x - _pt.x, 2) + pow(pt.y - _pt.y, 2)) <= VERTICE_LINKING_RANGE);
+	return (sqrt(pow(this->pt.x - _pt.x, 2) + pow(this->pt.y - _pt.y, 2)) <= VERTICE_LINKING_RANGE);
 }
 void Vertice::Select() {
 	isSelected = true;

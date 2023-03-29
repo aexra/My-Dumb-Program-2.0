@@ -42,8 +42,8 @@ public:
 	UINT						Disconnect(UINT _id);
 	string						GetName();
 	string						SetName(string _name);
-	BOOL						IsSelected();
 	BOOL						IsNear(const POINT _pt);
+	BOOL						IsSelected();
 	void							Select();
 	void							Deselect();
 	static int					GetVerticeIdx(UINT __id);
