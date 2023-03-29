@@ -23,6 +23,9 @@ extern CHAR BUFFER[40];
 extern POINT OnFieldCursorPos;
 extern HPEN linePen;
 
+HPEN vPen = { };
+HBRUSH vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
+
 int k = 0;
 
 POINT lastHit = { };
@@ -192,6 +195,38 @@ void Vertice::DeleteVertice(UINT _id) {
 	UpdateInfoPanels();
 }
 
+RECT Vertice::GetRect()
+{
+	RECT r; 
+	GetClientRect(hWnd, &r);
+	return r;
+}
+
+void Vertice::DrawVertice(HDC _mDC, Vertice& v)
+{
+	RECT r = v.GetRect();
+	vPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
+	SelectObject(_mDC, vPen);
+
+	Rectangle(_mDC, 0, 0, r.right, r.bottom);
+	Ellipse(_mDC, 12, 12, 88, 88);
+
+	vPen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
+	SelectObject(_mDC, GetStockObject(HOLLOW_BRUSH));
+	SelectObject(_mDC, vPen);
+	SetTextColor(_mDC, RGB(0, 0, 0));
+
+	Ellipse(_mDC, 5, 5, 95, 95);
+	DrawTextA(_mDC, (v.GetName()).c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+
+	// Если эта вершина является выбранной
+	if (v.IsSelected()) {
+		vPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
+		SelectObject(_mDC, vPen);
+		SelectObject(_mDC, vBrush);
+		Ellipse(_mDC, 12, 12, 88, 88);
+	}
+}
 
 void Vertice::UpdateInfoPanels() {
 	if (!selectedVerticeID) {
@@ -249,13 +284,10 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 		case WM_PAINT:
 		{
-			PAINTSTRUCT		ps;
 			PAINTSTRUCT		vps;
 			HDC							VDC;
 			HDC							memDC;
 			HBITMAP					memBM;
-			HPEN						hPen;
-			HBRUSH					hBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 			RECT						r;
 
 			// щя будет двойная буферизация
@@ -268,34 +300,12 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			memBM = CreateCompatibleBitmap(VDC, 100, 100);
 			SelectObject(memDC, memBM);
 
-			hPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
-			SelectObject(memDC, hPen);
-
-			Rectangle(memDC, 0, 0, r.right, r.bottom);
-			Ellipse(memDC, 12, 12, 88, 88);
-
-			hPen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
-			SelectObject(memDC, GetStockObject(HOLLOW_BRUSH));
-			SelectObject(memDC, hPen);
-			SetTextColor(memDC, RGB(0, 0, 0));
-
-			Ellipse(memDC, 5, 5, 95, 95);
-			DrawTextA(memDC, (v.GetName()).c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-
-			// Если эта вершина является выбранной
-			if (v.IsSelected()) {
-				hPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
-				SelectObject(memDC, hPen);
-				SelectObject(memDC, hBrush);
-				Ellipse(memDC, 12, 12, 88, 88);
-			}
+			Vertice::DrawVertice(memDC, v);
 
 			BitBlt(VDC, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
 			EndPaint(hWnd, &vps);
 
-			DeleteObject(hPen);
-			DeleteObject(hBrush);
 			DeleteObject(memBM);
 			DeleteDC(memDC);
 
@@ -424,19 +434,29 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				HDC FDC = GetDC(FieldWnd);
 				HDC VDC = GetDC(hWnd);
 
-				// Подготовим всё необходимое для рисования линии
+				// Подготовим всё необходимое для рисования линии на ПОЛЕ
 				// Испульзуем двойную буферизацию для исключения мерцания
-				RECT r = FieldInstance.GetRect();
+				RECT fr = FieldInstance.GetRect();
 				HDC memFDC = CreateCompatibleDC(FDC);
-				HBITMAP memFBM = CreateCompatibleBitmap(FDC, r.right, r.bottom);
+				HBITMAP memFBM = CreateCompatibleBitmap(FDC, fr.right, fr.bottom);
 				SelectObject(memFDC, memFBM);
 
 				// Отрисуем пустое поле
 				FieldInstance.DrawField(memFDC);
 
+				// Подготовим всё необходимое для рисования линии на ВЕРШИНЕ
+				// Испульзуем двойную буферизацию для исключения мерцания
+				RECT vr = v.GetRect();
+				HDC memVDC = CreateCompatibleDC(VDC);
+				HBITMAP memVBM = CreateCompatibleBitmap(VDC, vr.right, vr.bottom);
+				SelectObject(memVDC, memVBM);
+
+				// Отрисуем вершину
+				Vertice::DrawVertice(memVDC, v);
+
 				// Выберем перо для рисования линии
 				SelectObject(memFDC, linePen);
-				SelectObject(VDC, linePen);
+				SelectObject(memVDC, linePen);
 
 				/*for (Vertice& v1 : vertices)
 				{
@@ -458,16 +478,19 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 				// Отрисуем линию
 				DrawLine(memFDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
-				DrawLine(VDC, 50, 50, cursor.x, cursor.y);
+				DrawLine(memVDC, 50, 50, cursor.x, cursor.y);
 
 				// Перенесем изображения
-				BitBlt(FDC, 0, 0, r.right, r.bottom, memFDC, 0, 0, SRCCOPY);
+				BitBlt(FDC, 0, 0, fr.right, fr.bottom, memFDC, 0, 0, SRCCOPY);
+				BitBlt(VDC, 0, 0, vr.right, vr.bottom, memVDC, 0, 0, SRCCOPY);
 
 				// Уничтожим использованные объекты
 				ReleaseDC(FieldWnd, FDC);
 				ReleaseDC(hWnd, VDC);
 				DeleteDC(memFDC);
+				DeleteDC(memVDC);
 				DeleteBitmap(memFBM);
+				DeleteBitmap(memVBM);
 			}
 
 

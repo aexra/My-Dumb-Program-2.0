@@ -36,6 +36,7 @@ public:
 	POINT						SetPT(POINT _pt);
 	HWND&					GetWindow();
 	HWND&					SetWindow(HWND& _hWnd);
+	RECT						GetRect();
 	vector<UINT>			GetConnections();
 	vector<UINT>			SetConnections(vector<UINT> cons);
 	UINT						Connect(UINT _id);
@@ -46,6 +47,7 @@ public:
 	BOOL						IsSelected();
 	void							Select();
 	void							Deselect();
+	static void				DrawVertice(HDC _mDC, Vertice& v);
 	static int					GetVerticeIdx(UINT __id);
 	static Vertice*			GetVertice(UINT __id);
 	static Vertice*			GetVertice(HWND __hWnd);
