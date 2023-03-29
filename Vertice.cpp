@@ -411,10 +411,10 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				POINT cursor = { };
 				POINT vloc = v.GetPT();
 
-				cursor.x = GET_X_LPARAM(lParam) + vloc.x;;
-				cursor.y = GET_Y_LPARAM(lParam) + vloc.y;
+				cursor.x = GET_X_LPARAM(lParam);
+				cursor.y = GET_Y_LPARAM(lParam);
 
-				if (cursor == lastHit) return DefWindowProc(hWnd, uMsg, wParam, lParam);
+				if (cursor == lastHit) break;
 				else lastHit = cursor;
 
 				// обновляем поле чтобы стереть прошлую линию
@@ -431,7 +431,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				SelectObject(FDC, linePen);
 				SelectObject(VDC, linePen);
 
-				for (Vertice& v1 : vertices)
+				/*for (Vertice& v1 : vertices)
 				{
 					if (v1.IsNear(cursor))
 					{
@@ -447,9 +447,9 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 						return DefWindowProc(hWnd, uMsg, wParam, lParam);
 					}
-				}
+				}*/
 
-				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x, cursor.y);
+				DrawLine(FDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
 				DrawLine(VDC, 50, 50, cursor.x, cursor.y);
 
 				ReleaseDC(FieldWnd, FDC);
