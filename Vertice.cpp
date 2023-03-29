@@ -26,6 +26,8 @@ extern HPEN linePen;
 HPEN vPen = { };
 HBRUSH vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 
+Vertice* prelinkedVertice = nullptr;
+
 int k = 0;
 
 POINT lastHit = { };
@@ -151,7 +153,7 @@ BOOL Vertice::IsNear(const POINT _pt)
 void Vertice::Select() {
 	isSelected = true;
 	selectedVerticeID = id;
-	InvalidateRect(hWnd, NULL, RDW_ERASE);
+	InvalidateRect(hWnd, NULL, FALSE);
 	UpdateWindow(hWnd);
 	UpdateInfoPanels();
 }
@@ -359,6 +361,13 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			UpdateWindow(FieldWnd);
 			InvalidateRect(hWnd, NULL, FALSE);
 			UpdateWindow(hWnd);
+			if (prelinkedVertice != nullptr)
+			{
+				// ВРЕМЕННОЕ РЕШЕНИЕ - TODO: СОЕДИНЕНИЕ ВЕРШИН
+				InvalidateRect(prelinkedVertice->GetWindow(), NULL, FALSE);
+				UpdateWindow(prelinkedVertice->GetWindow());
+				prelinkedVertice = nullptr;
+			}
 			ReleaseCapture();	
 			break;
 		}
@@ -430,6 +439,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					v.Select();
 				POINT cursor = { };
 				POINT vloc = v.GetPT();	// координаты вершины на поле
+				POINT startpos = { 50, 50 };
 
 				// Получим координаты положения курсора на ВЕРШИНЕ
 				cursor.x = GET_X_LPARAM(lParam);
@@ -476,26 +486,48 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					OutputDebugStringA((to_string(v1.IsNear(cursor + vloc)) + "\n").c_str());*/
 					if (v1.IsNear(cursor + vloc))
 					{
+						prelinkedVertice = &v1;
+
 						// Получим координаты центра другой вершины
 						POINT pt1 = v1.GetCenter();
 
-						// Отрисуем линию до другой вершины
+						// Подготовим всё необходимое для рисования линии на ВЕРШИНЕ1
+						// Испульзуем двойную буферизацию для исключения мерцания
+						RECT vr1 = v1.GetRect();
+						HDC VDC1 = GetDC(v1.GetWindow());
+						HDC memVDC1 = CreateCompatibleDC(VDC1);
+						HBITMAP memVBM1 = CreateCompatibleBitmap(VDC1, vr1.right, vr1.bottom);
+						SelectObject(memVDC1, memVBM1);
+
+						// Отрисуем другую вершину
+						v1.DrawVertice(memVDC1);
+
+						// Отрисуем линию
 						DrawLine(memFDC, vloc.x + 50, vloc.y + 50, pt1.x, pt1.y);
 						DrawLine(memVDC, 50, 50, pt1.x - vloc.x, pt1.y - vloc.y);
+						DrawLine(memVDC1, 50, 50, vloc.x - pt1.x + 50 + 50, vloc.y - pt1.y + 50 + 50);
 						
 						// Перенесем изображения
 						BitBlt(FDC, 0, 0, fr.right, fr.bottom, memFDC, 0, 0, SRCCOPY);
 						BitBlt(VDC, 0, 0, vr.right, vr.bottom, memVDC, 0, 0, SRCCOPY);
+						BitBlt(VDC1, 0, 0, vr.right, vr.bottom, memVDC1, 0, 0, SRCCOPY);
 
 						// Уничтожим использованные объекты
 						ReleaseDC(FieldWnd, FDC);
 						ReleaseDC(hWnd, VDC);
+						ReleaseDC(v1.GetWindow(), VDC1);
 						DeleteDC(memFDC);
 						DeleteDC(memVDC);
+						DeleteDC(memVDC1);
 						DeleteBitmap(memFBM);
 						DeleteBitmap(memVBM);
+						DeleteBitmap(memVBM1);
 
 						return DefWindowProc(hWnd, uMsg, wParam, lParam);
+					}
+					else {
+						InvalidateRect(v1.GetWindow(), NULL, FALSE);
+						UpdateWindow(v1.GetWindow());
 					}
 				}
 
