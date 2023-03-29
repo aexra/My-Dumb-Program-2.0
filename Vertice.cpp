@@ -211,9 +211,9 @@ RECT Vertice::GetRect()
 	return r;
 }
 
-void Vertice::DrawVertice(HDC _mDC, Vertice& v)
+void Vertice::DrawVertice(HDC _mDC)
 {
-	RECT r = v.GetRect();
+	RECT r = GetRect();
 	vPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
 	SelectObject(_mDC, vPen);
 
@@ -226,10 +226,10 @@ void Vertice::DrawVertice(HDC _mDC, Vertice& v)
 	SetTextColor(_mDC, RGB(0, 0, 0));
 
 	Ellipse(_mDC, 5, 5, 95, 95);
-	DrawTextA(_mDC, (v.GetName()).c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	DrawTextA(_mDC, (GetName()).c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
 	// Если эта вершина является выбранной
-	if (v.IsSelected()) {
+	if (IsSelected()) {
 		vPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
 		SelectObject(_mDC, vPen);
 		SelectObject(_mDC, vBrush);
@@ -309,7 +309,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			memBM = CreateCompatibleBitmap(VDC, 100, 100);
 			SelectObject(memDC, memBM);
 
-			Vertice::DrawVertice(memDC, v);
+			v.DrawVertice(memDC);
 
 			BitBlt(VDC, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
@@ -461,7 +461,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				SelectObject(memVDC, memVBM);
 
 				// Отрисуем вершину
-				Vertice::DrawVertice(memVDC, v);
+				v.DrawVertice(memVDC);
 
 				// Выберем перо для рисования линии
 				SelectObject(memFDC, linePen);
