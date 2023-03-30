@@ -20,8 +20,8 @@ public:
 	Field(HWND _hWnd);
 
 	void SetWindow(HWND& _hWnd);
-	BOOL IsPtInBorders(POINT _pt);
-	BOOL CheckVerticeCollisions(POINT _pt);
+	BOOL IsPtInBorders(const POINT& _pt);
+	BOOL CheckVerticeCollisions(const POINT& _pt);
 	RECT GetRect();
 	RECT SetRect(RECT _rect);
 	void DrawField(HDC _mDC);
