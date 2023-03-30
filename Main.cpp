@@ -142,7 +142,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			EndPaint(hWnd, &ps);
 
-			DeleteObject(hDC);
 			DeleteObject(hBrush);
 
 			break;

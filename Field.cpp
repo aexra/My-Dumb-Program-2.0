@@ -28,10 +28,6 @@ RECT Field::SetRect(RECT _rect) {
 	rect = _rect;
 	return rect;
 }
-HDC Field::GetHDC()
-{
-	return GetDC(hWnd);
-}
 
 // TRUE is returned when the collision is detected and FALSE is returned when not
 // pt is a POINT to coordinates of the chosen vertice
@@ -91,7 +87,6 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 			EndPaint(hWnd, &ps);
 
-			DeleteObject(hdc);
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
 			break;
