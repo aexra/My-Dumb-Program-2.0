@@ -1,6 +1,6 @@
 ﻿#include "Vertice.h"
 #include "Field.h"
-#include "Main.h"::GetLocalCoordinates
+#include "Main.h"
 #include "Vector2.h"
 #include "ExtraOverloads.h"
 
@@ -44,7 +44,15 @@ Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
 }
 
 Vertice::Vertice() {
-	isValid = false;
+	id = NULL;
+	weight = NULL;
+	pt = { };
+	center = { };
+	hWnd = { };
+	connections = { };
+	name = "MissingName";
+	isSelected = FALSE;
+	isValid = FALSE;
 }
 
 Vertice::~Vertice() {

@@ -14,6 +14,7 @@ HBRUSH							fBrush = CreateSolidBrush(RGB(255, 255, 255));
 
 Field::Field(HWND _hWnd) {
 	hWnd = _hWnd;
+	GetClientRect(hWnd, &rect);
 };
 
 void Field::SetWindow(HWND& _hWnd) {
