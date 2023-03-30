@@ -286,6 +286,14 @@ void Vertice::VerticeUnregister(void)
 {
 	UnregisterClass(VERTICE_WC, NULL);
 }
+//inline void Vertice::OnLeftMouseMove()
+//{
+//	
+//}
+//inline void Vertice::OnRightMouseMove()
+//{
+//
+//}
 
 
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -488,6 +496,11 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					OutputDebugStringA((to_string(v1.IsNear(cursor + vloc)) + "\n").c_str());*/
 					if (v1.IsNear(cursor + vloc))
 					{
+						if (prelinkedVertice != nullptr && prelinkedVertice != &v1) 
+						{
+							InvalidateRect(prelinkedVertice->GetWindow(), NULL, FALSE);
+							UpdateWindow(prelinkedVertice->GetWindow());
+						}
 						prelinkedVertice = &v1;
 
 						// Получим координаты центра другой вершины

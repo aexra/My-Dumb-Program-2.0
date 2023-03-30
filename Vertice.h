@@ -60,6 +60,9 @@ public:
 
 	static void				VerticeRegister(void);
 	static void				VerticeUnregister(void);
+
+	//	static void inline		OnLeftMouseMove(void);
+	//	static void inline		OnRightMouseMove(void);
 };
 
 BOOL operator == (Vertice& _Left, Vertice& _Right);
