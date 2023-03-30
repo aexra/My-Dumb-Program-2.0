@@ -53,6 +53,8 @@ HPEN linePen = { };
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	WNDCLASS MainWndClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst,
 		LoadIcon(NULL, IDI_QUESTION), L"MainWndClass", MainWndProc);
 
@@ -230,6 +232,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_DESTROY:
 		{
 			selectedVerticeID = NULL;
+			_CrtDumpMemoryLeaks();
 			PostQuitMessage(0);
 			break;
 		}
