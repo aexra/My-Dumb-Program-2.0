@@ -496,11 +496,15 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					OutputDebugStringA((to_string(v1.IsNear(cursor + vloc)) + "\n").c_str());*/
 					if (v1.IsNear(cursor + vloc))
 					{
+
+						// Фикс бага отображения линии при быстрой смене фокуса
 						if (prelinkedVertice != nullptr && prelinkedVertice != &v1) 
 						{
 							InvalidateRect(prelinkedVertice->GetWindow(), NULL, FALSE);
 							UpdateWindow(prelinkedVertice->GetWindow());
 						}
+
+						// Запоминаем вершину на которой висит фокус (пригодится)
 						prelinkedVertice = &v1;
 
 						// Получим координаты центра другой вершины
@@ -540,7 +544,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 						return DefWindowProc(hWnd, uMsg, wParam, lParam);
 					}
-					else {
+					else 
+					{
 						InvalidateRect(v1.GetWindow(), NULL, FALSE);
 						UpdateWindow(v1.GetWindow());
 					}
