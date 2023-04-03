@@ -47,3 +47,7 @@ void intersectionPoints(POINT _CirPT, double r, double A, double B, double C, PO
 // Нереальная лучшая гениальнейшая авторская оригинальная 100% бесплатная без смс и регистрации
 // функция для расчета точек пересечения отрезка и окружности
 vector<POINT> intersectionPoints(POINT _PtA, POINT _PtB, POINT _PtC, double R);
+
+
+// Расстояние между поинтами
+double PointDistance(const POINT& _Pt1, const POINT& _Pt2);

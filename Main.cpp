@@ -429,3 +429,8 @@ void calculateLineCoefficients(POINT _Pt1, POINT _Pt2, double& _A, double& _B, d
 	_B = _Pt1.x - _Pt2.x;
 	_C = _Pt2.x * _Pt1.y - _Pt1.x * _Pt2.y;
 }
+
+double PointDistance(const POINT& _Pt1, const POINT& _Pt2)
+{
+	return sqrt(pow(_Pt1.x - _Pt2.x, 2) + pow(_Pt1.y - _Pt2.y, 2));
+}

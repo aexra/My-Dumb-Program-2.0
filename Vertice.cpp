@@ -598,7 +598,12 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 				// Отрисуем линию
 				DrawLine(memFDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
-				DrawLine(memVDC, 50, 50, cursor.x, cursor.y);
+
+				if (PointDistance(POINT{ 50, 50 }, cursor) > 48)
+				{
+					POINT start = intersectionPoints(POINT{ 50, 50 }, cursor, POINT{ 50, 50 }, 48)[0];
+					DrawLine(memVDC, start.x, start.y, cursor.x, cursor.y);
+				}
 
 				// Перенесем изображения
 				BitBlt(FDC, 0, 0, fr.right, fr.bottom, memFDC, 0, 0, SRCCOPY);
