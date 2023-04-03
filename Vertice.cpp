@@ -226,9 +226,9 @@ void Vertice::DeleteSelected() {
 }
 
 void Vertice::DeleteVertice(UINT _id) {
-	Vertice& v = *Vertice::GetVertice(_id);
+	Vertice* v = Vertice::GetVertice(_id);
 	int vec_idx = Vertice::GetVerticeIdx(_id);
-	DestroyWindow(v.GetWindow());
+	DestroyWindow(v -> GetWindow());
 	vertices.erase(vertices.begin() + vec_idx);
 	selectedVerticeID = NULL;
 	UpdateInfoPanels();
