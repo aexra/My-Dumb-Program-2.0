@@ -38,7 +38,7 @@ Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
 	hWnd = _hWnd;
 	pt = _pt;
 	weight = 0;
-	name = to_string(_id-100);
+	name = to_string(Vertice::GetLastAvailableNumAsVerticeName());
 	isSelected = false;
 	isValid = true;
 }
@@ -88,7 +88,27 @@ UINT Vertice::GenerateID() {
 		}
 	}
 }
-
+UINT Vertice::GetLastAvailableNumAsVerticeName()
+{
+	UINT lastFound = 1;
+	BOOL changed = false;
+	while (TRUE)
+	{
+		for (Vertice& v : vertices)
+		{
+			string vName = v.GetName();
+			if (is_int(vName))
+				if (stoi(vName) == lastFound)
+				{
+					lastFound++;
+					changed = true;
+				}
+		}
+		if (!changed) break;
+		else changed = false;
+	}
+	return lastFound;
+}
 FLOAT	 Vertice::GetWeight() {
 	return weight;
 }

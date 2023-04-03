@@ -365,3 +365,18 @@ RECT* GetLocalRect(HWND hWnd)
 	MapWindowPoints(HWND_DESKTOP, GetParent(hWnd), (LPPOINT)&Rect, 2);
 	return &Rect;
 }
+
+BOOL is_int(string str)
+{
+	if (str.length() < 1) return false;
+	if (str.length() > 9) return false;
+
+	if (count(str.begin(), str.end(), '-') > 0 && str[0] != '-') return false;
+	if (count(str.begin(), str.end(), '-') > 1) return false;
+
+	for (char c : str) {
+		if (!('0' <= c && c <= '9' || c == '-')) return false;
+	}
+
+	return true;
+}

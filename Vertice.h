@@ -29,6 +29,7 @@ public:
 									~Vertice();
 	BOOL						IsValid();
 	static UINT				GenerateID();
+	static UINT				GetLastAvailableNumAsVerticeName();
 	UINT						GetID();
 	UINT						SetID(UINT _id);
 	FLOAT						GetWeight();
