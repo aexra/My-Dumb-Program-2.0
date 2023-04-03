@@ -381,11 +381,11 @@ BOOL is_int(string str)
 	return true;
 }
 
-void intersectionPoints(double a, double b, double r, double A, double B, double C, double& x1, double& y1, double& x2, double& y2) {
-	double discriminant = pow(A * B * (C - a), 2) - (pow(A, 2) + pow(B, 2)) * (pow(C, 2) + pow(b, 2) - pow(r, 2));
+void intersectionPoints(POINT _CirPT, double r, double A, double B, double C, double& x1, double& y1, double& x2, double& y2) {
+	double discriminant = pow(A * B * (C - _CirPT.x), 2) - (pow(A, 2) + pow(B, 2)) * (pow(C, 2) + pow(_CirPT.y, 2) - pow(r, 2));
 	if (discriminant >= 0) {
-		y1 = (-A * B * (C - a) + sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
-		y2 = (-A * B * (C - a) - sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
+		y1 = (-A * B * (C - _CirPT.x) + sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
+		y2 = (-A * B * (C - _CirPT.x) - sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
 		x1 = -(B * y1 + C) / A;
 		x2 = -(B * y2 + C) / A;
 	}
@@ -394,9 +394,9 @@ void intersectionPoints(double a, double b, double r, double A, double B, double
 	}
 }
 
-void calculateLineCoefficients(double x1, double y1, double x2, double y2, double& a, double& b, double& c)
+void calculateLineCoefficients(POINT _Pt1, POINT _Pt2, double& _A, double& _B, double& _C)
 {
-	a = y2 - y1;
-	b = x1 - x2;
-	c = x2 * y1 - x1 * y2;
+	_A = _Pt2.y - _Pt1.y;
+	_B = _Pt1.x - _Pt2.x;
+	_C = _Pt2.x * _Pt1.y - _Pt1.x * _Pt2.y;
 }

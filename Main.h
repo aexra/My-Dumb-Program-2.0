@@ -37,8 +37,8 @@ BOOL is_int(string str);
 
 // Нереальная лучшая гениальнейшая авторская оригинальная 100% бесплатная без смс и регистрации
 // функция для расчета точек пересечения прямо и окружности
-void intersectionPoints(double a, double b, double r, double A, double B, double C, double& x1, double& y1, double& x2, double& y2);
+void intersectionPoints(POINT _CirPT, double r, double A, double B, double C, double& x1, double& y1, double& x2, double& y2);
 
 
 // Функция расчета коэффициентов прямой a*x + b*y + c = 0
-void calculateLineCoefficients(double x1, double y1, double x2, double y2, double& a, double& b, double& c);
+void calculateLineCoefficients(POINT _Pt1, POINT _Pt2, double& _A, double& _B, double& _C);
