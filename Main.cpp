@@ -380,3 +380,16 @@ BOOL is_int(string str)
 
 	return true;
 }
+
+void intersectionPoints(double a, double b, double r, double A, double B, double C, double& x1, double& y1, double& x2, double& y2) {
+	double discriminant = pow(A * B * (C - a), 2) - (pow(A, 2) + pow(B, 2)) * (pow(C, 2) + pow(b, 2) - pow(r, 2));
+	if (discriminant >= 0) {
+		y1 = (-A * B * (C - a) + sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
+		y2 = (-A * B * (C - a) - sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
+		x1 = -(B * y1 + C) / A;
+		x2 = -(B * y2 + C) / A;
+	}
+	else {
+		x1 = x2 = y1 = y2 = NAN;
+	}
+}
