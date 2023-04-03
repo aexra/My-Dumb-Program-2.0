@@ -26,7 +26,8 @@ HWND FieldWnd = { };
 HWND GraphNameWnd = { };
 HWND IsOrientedWnd = { };
 HWND IsWeightedWnd = { };
-HWND VerticeNameWnd = { };
+HWND VerticeNameStaticWnd = { };
+HWND VerticeNameEditWnd = { };
 HWND TransformPositionWnd = { };
 HWND WeightWnd = { };
 HWND DeleteButtonWnd = { };
@@ -151,6 +152,27 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case WM_COMMAND:
 		{
+			switch (HIWORD(wParam))
+			{
+				case EN_UPDATE:
+				{
+					switch(LOWORD(wParam))
+					{
+						case VerticeName:
+						{
+							Vertice* v = Vertice::GetSelected();
+							if (v == nullptr) break;
+							GetWindowTextA(VerticeNameEditWnd, BUFFER, 40);
+							v->SetName(BUFFER);
+							InvalidateRect(v->GetWindow(), NULL, FALSE);
+							UpdateWindow(v->GetWindow());
+							break;
+						}
+					}
+					break;
+				}
+			}
+
 			switch (wParam)
 			{
 
@@ -202,13 +224,12 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					SendMessageA(DeleteButtonWnd, WM_KILLFOCUS, NULL, NULL);
 					break;
 				}
-
 			}
 
 			break;
 		}
 
-		case WM_TIMER:
+		/*case WM_TIMER:
 		{
 			switch (wParam)
 			{
@@ -219,13 +240,13 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			break;
-		}
+		}*/
 
 		case WM_CREATE:
 		{
 			MainWndAddMenus(hWnd);
 			MainWndAddWidgets(hWnd);
-			SetTimer(hWnd, INFOPANEL_REFRESH_IDT, INFOPANEL_REFRESH_RATE, (TIMERPROC)NULL);
+			//SetTimer(hWnd, INFOPANEL_REFRESH_IDT, INFOPANEL_REFRESH_RATE, (TIMERPROC)NULL);
 			break;
 		}
 
@@ -302,8 +323,9 @@ void MainWndAddWidgets(HWND hWnd) {
 	nhwnd = CreateWindowA("static", "Вершина", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, NULL, NULL, NULL);
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)titlef, 0);
 
-	VerticeNameWnd = CreateWindowA("static", "Обозначение: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)VerticeName, NULL, NULL);
-	SendMessageA(VerticeNameWnd, WM_SETFONT, (WPARAM)textf, 0);
+	VerticeNameStaticWnd = CreateWindowA("static", "Обозначение: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 109, 28, hWnd, NULL, NULL, NULL);
+	VerticeNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE, r.right - 229 + 109, y, 109, 28, hWnd, (HMENU)VerticeName, NULL, NULL);
+	SendMessageA(VerticeNameStaticWnd, WM_SETFONT, (WPARAM)textf, 0);
 
 	TransformPositionWnd = CreateWindowA("static", "Позиция: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)TransformPosition, NULL, NULL);
 	SendMessageA(TransformPositionWnd, WM_SETFONT, (WPARAM)textf, 0);

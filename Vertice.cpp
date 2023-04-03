@@ -15,7 +15,7 @@ extern selection_mode selmode;
 extern HWND GraphNameWnd;
 extern HWND IsOrientedWnd;
 extern HWND IsWeightedWnd;
-extern HWND VerticeNameWnd;
+extern HWND VerticeNameEditWnd;
 extern HWND TransformPositionWnd;
 extern HWND WeightWnd;
 extern HWND FieldWnd;
@@ -250,9 +250,12 @@ void Vertice::DrawVertice(HDC _mDC)
 void Vertice::UpdateInfoPanels() {
 	if (!selectedVerticeID) {
 		
-		GetWindowTextA(VerticeNameWnd, BUFFER, 30);
-		if (string(BUFFER) != "Обознечение: ")
-			SendMessageA(VerticeNameWnd, WM_SETTEXT, NULL, (LPARAM)string("Обознечение: ").c_str());
+		GetWindowTextA(VerticeNameEditWnd, BUFFER, 30);
+		if (string(BUFFER) != "")
+		{
+			SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)string("").c_str());
+			SetWindowLongPtrA(VerticeNameEditWnd, GWL_STYLE, WS_CHILD | WS_VISIBLE | WS_DISABLED);
+		}
 		
 		GetWindowTextA(TransformPositionWnd, BUFFER, 30);
 		if (string(BUFFER) != "Позиция: ")
@@ -266,9 +269,12 @@ void Vertice::UpdateInfoPanels() {
 
 	Vertice &v = *Vertice::GetVertice(selectedVerticeID);
 
-	GetWindowTextA(VerticeNameWnd, BUFFER, 30);
-	if (string(BUFFER) != "Обознечение: " + v.GetName())
-		SendMessageA(VerticeNameWnd, WM_SETTEXT, NULL, (LPARAM)string("Обознечение: " + v.GetName()).c_str());
+	GetWindowTextA(VerticeNameEditWnd, BUFFER, 30);
+	if (string(BUFFER) != v.GetName())
+	{
+		SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v.GetName().c_str());
+		SetWindowLongPtrA(VerticeNameEditWnd, GWL_STYLE, WS_CHILD | WS_VISIBLE);
+	}
 
 	GetWindowTextA(TransformPositionWnd, BUFFER, 30);
 	if (string(BUFFER) != "Позиция: (" + to_string(v.GetPT().x) + "; " + to_string(v.GetPT().y) + ")")
@@ -277,6 +283,11 @@ void Vertice::UpdateInfoPanels() {
 	GetWindowTextA(WeightWnd, BUFFER, 30);
 	if (string(BUFFER) != "Вес: " + to_string(v.GetWeight()))
 		SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: " + to_string(v.GetWeight())).c_str());
+}
+
+Vertice* Vertice::GetSelected()
+{
+	return Vertice::GetVertice(selectedVerticeID);
 }
 
 
