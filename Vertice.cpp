@@ -5,7 +5,7 @@
 #include "ExtraOverloads.h"
 
 
-extern vector<Vertice> vertices;
+extern vector<Vertice*> vertices;
 extern UINT selectedVerticeID;
 extern BOOL isRMBPressed;
 extern BOOL isLMBPressed;
@@ -72,8 +72,8 @@ UINT Vertice::SetID(UINT _id) {
 }
 UINT Vertice::GenerateID() {
 	vector<UINT> ids;
-	for (Vertice v : vertices) {
-		ids.push_back(v.GetID());
+	for (Vertice* v : vertices) {
+		ids.push_back(v -> GetID());
 	}
 	for (int i = minVerticeID; i < maxVerticeID; i++) {
 		BOOL isFound = false;
@@ -94,9 +94,9 @@ UINT Vertice::GetLastAvailableNumAsVerticeName()
 	BOOL changed = false;
 	while (TRUE)
 	{
-		for (Vertice& v : vertices)
+		for (Vertice* v : vertices)
 		{
-			string vName = v.GetName();
+			string vName = v -> GetName();
 			if (is_int(vName))
 				if (stoi(vName) == lastFound)
 				{
@@ -194,16 +194,16 @@ void Vertice::Deselect() {
 	UpdateInfoPanels();
 }
 void Vertice::DeselectAll() {
-	for (Vertice &v : vertices) 
+	for (Vertice* v : vertices) 
 	{
-		v.Deselect();
+		v -> Deselect();
 	}
 	UpdateInfoPanels();
 }
 
 int Vertice::GetVerticeIdx(UINT __id) {
 	for (int i = 0; i < vertices.size(); i++) {
-		if (vertices[i].GetID() == __id) {
+		if (vertices[i] -> GetID() == __id) {
 			return i;
 		}
 	}
@@ -211,8 +211,8 @@ int Vertice::GetVerticeIdx(UINT __id) {
 }
 Vertice* Vertice::GetVertice(UINT __id) {
 	for (int i = 0; i < vertices.size(); i++) {
-		if (vertices[i].GetID() == __id) {
-			return &vertices[i];
+		if (vertices[i] -> GetID() == __id) {
+			return vertices[i];
 		}
 	}
 	return nullptr;
@@ -463,9 +463,9 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right || dest.y + length >= parentRect.bottom) {
 					return DefWindowProc(hWnd, uMsg, wParam, lParam);
 				}
-				for (Vertice& v2 : vertices) {
-					if (v -> GetID() == v2.GetID()) continue;
-					POINT vpt = v2.GetPT();
+				for (Vertice* v2 : vertices) {
+					if (v -> GetID() == v2 -> GetID()) continue;
+					POINT vpt = v2 -> GetPT();
 					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100 + VERTICE_DISTANCE_ERROR) continue;
 					else return DefWindowProc(hWnd, uMsg, wParam, lParam);;
 				}
@@ -527,38 +527,38 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				SelectObject(memVDC, linePen);
 
 				// Проверим возможность соединиться
-				for (Vertice& v1 : vertices)
+				for (Vertice* v1 : vertices)
 				{
-					if (v1 == *v) continue;
+					if (*v1 == *v) continue;
 					/*OutputDebugStringA((to_string(cursor.x + vloc.x) + " - " + to_string(cursor.y + vloc.y) + "\t\t").c_str());
 					OutputDebugStringA((to_string(v1.GetPT().x + 50) + " - " + to_string(v1.GetPT().y + 50) + "\t\t").c_str());
 					OutputDebugStringA((to_string(v1.IsNear(cursor + vloc)) + "\n").c_str());*/
-					if (v1.IsNear(cursor + vloc))
+					if (v1 -> IsNear(cursor + vloc))
 					{
 
 						// Фикс бага отображения линии при быстрой смене фокуса
-						if (prelinkedVertice != nullptr && prelinkedVertice != &v1) 
+						if (prelinkedVertice != nullptr && prelinkedVertice != v1) 
 						{
 							InvalidateRect(prelinkedVertice->GetWindow(), NULL, FALSE);
 							UpdateWindow(prelinkedVertice->GetWindow());
 						}
 
 						// Запоминаем вершину на которой висит фокус (пригодится)
-						prelinkedVertice = &v1;
+						prelinkedVertice = v1;
 
 						// Получим координаты центра другой вершины
-						POINT pt1 = v1.GetCenter();
+						POINT pt1 = v1 -> GetCenter();
 
 						// Подготовим всё необходимое для рисования линии на ВЕРШИНЕ1
 						// Испульзуем двойную буферизацию для исключения мерцания
-						RECT vr1 = v1.GetRect();
-						HDC VDC1 = GetDC(v1.GetWindow());
+						RECT vr1 = v1 -> GetRect();
+						HDC VDC1 = GetDC(v1 -> GetWindow());
 						HDC memVDC1 = CreateCompatibleDC(VDC1);
 						HBITMAP memVBM1 = CreateCompatibleBitmap(VDC1, vr1.right, vr1.bottom);
 						SelectObject(memVDC1, memVBM1);
 
 						// Отрисуем другую вершину
-						v1.DrawVertice(memVDC1);
+						v1 -> DrawVertice(memVDC1);
 
 						// Линия под вершинами между ними
 						DrawLine(memFDC, vloc.x + 50, vloc.y + 50, pt1.x, pt1.y);										
@@ -579,7 +579,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 						// Уничтожим использованные объекты
 						ReleaseDC(FieldWnd, FDC);
 						ReleaseDC(hWnd, VDC);
-						ReleaseDC(v1.GetWindow(), VDC1);
+						ReleaseDC(v1 -> GetWindow(), VDC1);
 						DeleteDC(memFDC);
 						DeleteDC(memVDC);
 						DeleteDC(memVDC1);
@@ -591,8 +591,8 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					}
 					else 
 					{
-						InvalidateRect(v1.GetWindow(), NULL, FALSE);
-						UpdateWindow(v1.GetWindow());
+						InvalidateRect(v1 -> GetWindow(), NULL, FALSE);
+						UpdateWindow(v1 -> GetWindow());
 					}
 				}
 

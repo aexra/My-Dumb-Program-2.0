@@ -3,7 +3,7 @@
 #include "Main.h"
 
 extern Field						FieldInstance;
-extern vector<Vertice>		vertices;
+extern vector<Vertice*>	vertices;
 extern UINT					selectedVerticeID;
 extern BOOL					isRMBPressed;
 extern BOOL					isLMBPressed;
@@ -32,8 +32,8 @@ RECT Field::SetRect(RECT _rect) {
 // TRUE is returned when the collision is detected and FALSE is returned when not
 // pt is a POINT to coordinates of the chosen vertice
 BOOL	Field::CheckVerticeCollisions(const POINT& _pt) {
-	for (Vertice& v : vertices) {
-		POINT vpt = v.GetPT();
+	for (Vertice* v : vertices) {
+		POINT vpt = v -> GetPT();
 		if (sqrt(pow(abs(vpt.x - _pt.x), 2) + pow(abs(vpt.y - _pt.y), 2)) > 100 + VERTICE_DISTANCE_ERROR) continue;
 		else return 1;
 	}
@@ -120,7 +120,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			{
 				if (FieldInstance.CheckVerticeCollisions(pt)) return 0;
 				UINT new_id = Vertice::GenerateID();
-				vertices.push_back(Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x, pt.y, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
+				vertices.push_back(new Vertice(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x, pt.y, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
 			}
 			break;
 		}

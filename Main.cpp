@@ -45,7 +45,7 @@ HANDLE hThread2;
 Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
 BOOL isRMBPressed = false;
-vector<Vertice> vertices = { };
+vector<Vertice*> vertices = { };
 UINT selectedVerticeID = { };
 selection_mode selmode = mode1;
 CHAR BUFFER[40];
