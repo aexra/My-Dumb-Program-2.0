@@ -381,17 +381,46 @@ BOOL is_int(string str)
 	return true;
 }
 
-void intersectionPoints(POINT _CirPT, double r, double A, double B, double C, double& x1, double& y1, double& x2, double& y2) {
+void intersectionPoints(POINT _CirPT, double r, double A, double B, double C, POINT& _Pt1, POINT& _Pt2)
+{
 	double discriminant = pow(A * B * (C - _CirPT.x), 2) - (pow(A, 2) + pow(B, 2)) * (pow(C, 2) + pow(_CirPT.y, 2) - pow(r, 2));
 	if (discriminant >= 0) {
-		y1 = (-A * B * (C - _CirPT.x) + sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
-		y2 = (-A * B * (C - _CirPT.x) - sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
-		x1 = -(B * y1 + C) / A;
-		x2 = -(B * y2 + C) / A;
+		_Pt1.x = (-A * B * (C - _CirPT.x) + sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
+		_Pt2.y = (-A * B * (C - _CirPT.x) - sqrt(discriminant)) / (pow(A, 2) + pow(B, 2));
+		_Pt1.x = -(B * _Pt1.y + C) / A;
+		_Pt2.x = -(B * _Pt2.y + C) / A;
 	}
 	else {
-		x1 = x2 = y1 = y2 = NAN;
+		_Pt1.x = _Pt2.x = _Pt1.y = _Pt2.y = NULL;
 	}
+}
+
+vector<POINT> intersectionPoints(POINT _PtA, POINT _PtB, POINT _PtC, double R) 
+{
+	vector<POINT> intersections;
+	double dx = _PtB.x - _PtA.x;
+	double dy = _PtB.y - _PtA.y;
+	double A = dx * dx + dy * dy;
+	double B = 2 * (dx * (_PtA.x - _PtC.x) + dy * (_PtA.y - _PtC.y));
+	double C = (_PtA.x - _PtC.x) * (_PtA.x - _PtC.x) + (_PtA.y - _PtC.y) * (_PtA.y - _PtC.y) - R * R;
+	double D = B * B - 4 * A * C;
+	if (D >= 0) {
+		double t1 = (-B + sqrt(D)) / (2 * A);
+		double t2 = (-B - sqrt(D)) / (2 * A);
+		if (t1 >= 0 && t1 <= 1) {
+			POINT pt = { };
+			pt.x = _PtA.x + t1 * dx;
+			pt.y = _PtA.y + t1 * dy;
+			intersections.push_back(pt);
+		}
+		if (D > 0 && t2 >= 0 && t2 <= 1) {
+			POINT pt = { };
+			pt.x = _PtA.x + t2 * dx;
+			pt.y = _PtA.y + t2 * dy;
+			intersections.push_back(pt);
+		}
+	}
+	return intersections;
 }
 
 void calculateLineCoefficients(POINT _Pt1, POINT _Pt2, double& _A, double& _B, double& _C)

@@ -561,9 +561,9 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 						v1.DrawVertice(memVDC1);
 
 						// Отрисуем линию
-						DrawLine(memFDC, vloc.x + 50, vloc.y + 50, pt1.x, pt1.y);
-						DrawLine(memVDC, 50, 50, pt1.x - vloc.x, pt1.y - vloc.y);
-						DrawLine(memVDC1, 50, 50, vloc.x - pt1.x + 50 + 50, vloc.y - pt1.y + 50 + 50);
+						DrawLine(memFDC, vloc.x + 50, vloc.y + 50, pt1.x, pt1.y);										// линия под вершинами между ними
+						DrawLine(memVDC, 50, 50, pt1.x - vloc.x, pt1.y - vloc.y);										// линия на первой вершине
+						DrawLine(memVDC1, 50, 50, vloc.x - pt1.x + 50 + 50, vloc.y - pt1.y + 50 + 50);		// линия на второй вершине
 						
 						// Перенесем изображения
 						BitBlt(FDC, 0, 0, fr.right, fr.bottom, memFDC, 0, 0, SRCCOPY);
