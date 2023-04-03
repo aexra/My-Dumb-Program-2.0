@@ -336,7 +336,7 @@ void Vertice::VerticeUnregister(void)
 
 
 LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	Vertice &v = *Vertice::GetVertice(hWnd);
+	Vertice* v = Vertice::GetVertice(hWnd);
 
 	switch (uMsg) {
 
@@ -358,7 +358,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			memBM = CreateCompatibleBitmap(VDC, 100, 100);
 			SelectObject(memDC, memBM);
 
-			v.DrawVertice(memDC);
+			v -> DrawVertice(memDC);
 
 			BitBlt(VDC, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
 
@@ -389,13 +389,13 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		{
 			isLMBPressed = true;
 			SetCapture(hWnd);
-			if (v.IsSelected()) {
-					v.Deselect();
+			if (v -> IsSelected()) {
+					v -> Deselect();
 			}
 			else {
 				if (selmode == mode1)
 					Vertice::DeselectAll();
-				v.Select();
+				v -> Select();
 			}
 
 			break;
@@ -464,18 +464,18 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 					return DefWindowProc(hWnd, uMsg, wParam, lParam);
 				}
 				for (Vertice& v2 : vertices) {
-					if (v.GetID() == v2.GetID()) continue;
+					if (v -> GetID() == v2.GetID()) continue;
 					POINT vpt = v2.GetPT();
 					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100 + VERTICE_DISTANCE_ERROR) continue;
 					else return DefWindowProc(hWnd, uMsg, wParam, lParam);;
 				}
 
-				v.SetPT(dest);
+				v -> SetPT(dest);
 
 				InvalidateRect(FieldWnd, GetLocalRect(hWnd), FALSE);	//		Это работает на пк
 				UpdateWindow(FieldWnd);													//
 
-				MoveWindow(hWnd, v.GetPT().x, v.GetPT().y, 100, 100, TRUE);
+				MoveWindow(hWnd, v -> GetPT().x, v -> GetPT().y, 100, 100, TRUE);
 
 			}
 			//
@@ -484,10 +484,10 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			if (isLMBPressed)
 			{
 				// Если вершина не выделена, выделяем (решение бага с лишним deselect-ом)
-				if (!v.IsSelected())
-					v.Select();
+				if (!(v -> IsSelected()))
+					v -> Select();
 				POINT cursor = { };
-				POINT vloc = v.GetPT();	// координаты вершины на поле
+				POINT vloc = v -> GetPT();	// координаты вершины на поле
 				POINT startpos = { 50, 50 };
 
 				// Получим координаты положения курсора на ВЕРШИНЕ
@@ -514,13 +514,13 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 				// Подготовим всё необходимое для рисования линии на ВЕРШИНЕ
 				// Испульзуем двойную буферизацию для исключения мерцания
-				RECT vr = v.GetRect();
+				RECT vr = v -> GetRect();
 				HDC memVDC = CreateCompatibleDC(VDC);
 				HBITMAP memVBM = CreateCompatibleBitmap(VDC, vr.right, vr.bottom);
 				SelectObject(memVDC, memVBM);
 
 				// Отрисуем вершину
-				v.DrawVertice(memVDC);
+				v -> DrawVertice(memVDC);
 
 				// Выберем перо для рисования линии
 				SelectObject(memFDC, linePen);
@@ -529,7 +529,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				// Проверим возможность соединиться
 				for (Vertice& v1 : vertices)
 				{
-					if (v1 == v) continue;
+					if (v1 == *v) continue;
 					/*OutputDebugStringA((to_string(cursor.x + vloc.x) + " - " + to_string(cursor.y + vloc.y) + "\t\t").c_str());
 					OutputDebugStringA((to_string(v1.GetPT().x + 50) + " - " + to_string(v1.GetPT().y + 50) + "\t\t").c_str());
 					OutputDebugStringA((to_string(v1.IsNear(cursor + vloc)) + "\n").c_str());*/
