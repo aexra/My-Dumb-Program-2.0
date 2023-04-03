@@ -393,3 +393,10 @@ void intersectionPoints(double a, double b, double r, double A, double B, double
 		x1 = x2 = y1 = y2 = NAN;
 	}
 }
+
+void calculateLineCoefficients(double x1, double y1, double x2, double y2, double& a, double& b, double& c)
+{
+	a = y2 - y1;
+	b = x1 - x2;
+	c = x2 * y1 - x1 * y2;
+}
