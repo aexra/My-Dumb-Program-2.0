@@ -26,8 +26,8 @@ using namespace std;
 
 
 // borders of vertices' IDs
-#define minVerticeID 101
-#define maxVerticeID 255
+#define minVertexID 101
+#define maxVertexID 255
 
 // windows' IDs
 #define OnInfoClicked 1
@@ -35,7 +35,7 @@ using namespace std;
 #define OnSaveClicked 3
 #define OnLoadGraphClicked 4
 #define FieldID 5
-#define OnDeleteVerticeClicked 6
+#define OnDeleteVertexClicked 6
 #define OnGitSourceClicked 7
 #define OnSaveAsClicked 8
 #define OnNewClicked 9
@@ -45,15 +45,15 @@ using namespace std;
 #define GraphName 13
 #define IsOriented 14
 #define IsWeighted 15
-#define VerticeName 16
+#define VertexName 16
 #define TransformPosition 17
 #define Weight 18
 
 
 // vertice constants
-#define MAX_VERTICE 30
-#define VERTICE_DISTANCE_ERROR 17
-#define VERTICE_LINKING_RANGE 100
+#define MAX_VERTICES 30
+#define VERTICES_DISTANCE_ERROR 17
+#define VERTICES_LINKING_RANGE 100
 
 // TIMERS
 #define VERTICE_REFRESH_IDT 256

@@ -26,8 +26,8 @@ HWND FieldWnd = { };
 HWND GraphNameWnd = { };
 HWND IsOrientedWnd = { };
 HWND IsWeightedWnd = { };
-HWND VerticeNameStaticWnd = { };
-HWND VerticeNameEditWnd = { };
+HWND VertexNameStaticWnd = { };
+HWND VertexNameEditWnd = { };
 HWND TransformPositionWnd = { };
 HWND WeightWnd = { };
 HWND DeleteButtonWnd = { };
@@ -46,7 +46,7 @@ Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
 BOOL isRMBPressed = false;
 vector<Vertex*> vertices = { };
-UINT selectedVerticeID = { };
+UINT selectedVertexID = { };
 selection_mode selmode = mode1;
 CHAR BUFFER[40];
 HPEN linePen = { };
@@ -61,7 +61,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	if (!RegisterClassW(&MainWndClass)) { return -1; }
 	Field::FieldRegister();
-	Vertex::VerticeRegister();
+	Vertex::VertexRegister();
 
 	MSG MainWndMessage = { 0 };
 
@@ -158,11 +158,11 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				{
 					switch(LOWORD(wParam))
 					{
-						case VerticeName:
+						case VertexName:
 						{
 							Vertex* v = Vertex::GetSelected();
 							if (v == nullptr) break;
-							GetWindowTextA(VerticeNameEditWnd, BUFFER, 8);
+							GetWindowTextA(VertexNameEditWnd, BUFFER, 8);
 							v->SetName(BUFFER);
 							InvalidateRect(v->GetWindow(), NULL, FALSE);
 							UpdateWindow(v->GetWindow());
@@ -218,9 +218,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					break;
 				}
 
-				case OnDeleteVerticeClicked:
+				case OnDeleteVertexClicked:
 				{
-					if (selectedVerticeID) Vertex::DeleteSelected();
+					if (selectedVertexID) Vertex::DeleteSelected();
 					SendMessageA(DeleteButtonWnd, WM_KILLFOCUS, NULL, NULL);
 					break;
 				}
@@ -252,7 +252,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case WM_DESTROY:
 		{
-			selectedVerticeID = NULL;
+			selectedVertexID = NULL;
 			_CrtDumpMemoryLeaks();
 			PostQuitMessage(0);
 			break;
@@ -323,9 +323,9 @@ void MainWndAddWidgets(HWND hWnd) {
 	nhwnd = CreateWindowA("static", "Вершина", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, NULL, NULL, NULL);
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)titlef, 0);
 
-	VerticeNameStaticWnd = CreateWindowA("static", "Обозначение: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 109, 28, hWnd, NULL, NULL, NULL);
-	VerticeNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 229 + 109, y, 109, 28, hWnd, (HMENU)VerticeName, NULL, NULL);
-	SendMessageA(VerticeNameStaticWnd, WM_SETFONT, (WPARAM)textf, 0);
+	VertexNameStaticWnd = CreateWindowA("static", "Обозначение: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 109, 28, hWnd, NULL, NULL, NULL);
+	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 229 + 109, y, 109, 28, hWnd, (HMENU)VertexName, NULL, NULL);
+	SendMessageA(VertexNameStaticWnd, WM_SETFONT, (WPARAM)textf, 0);
 
 	TransformPositionWnd = CreateWindowA("static", "Позиция: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)TransformPosition, NULL, NULL);
 	SendMessageA(TransformPositionWnd, WM_SETFONT, (WPARAM)textf, 0);
@@ -335,7 +335,7 @@ void MainWndAddWidgets(HWND hWnd) {
 
 	y += 28;
 
-	DeleteButtonWnd = CreateWindowA("button", "УДАЛИТЬ ВЕРШИНУ", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)OnDeleteVerticeClicked, NULL, NULL);
+	DeleteButtonWnd = CreateWindowA("button", "УДАЛИТЬ ВЕРШИНУ", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)OnDeleteVertexClicked, NULL, NULL);
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)CreateFontA(24, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Comic Sans MS"), 0);
 }
 

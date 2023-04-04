@@ -7,13 +7,13 @@
 #define VERTICE_H
 
 /* Window class */
-#define VERTICE_WC  _T("CustomControl")
+#define VERTEX_WC  _T("CustomControl")
 
 #endif
 
 class Vertex {
 private:
-	static LRESULT CALLBACK VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	UINT						id;
 	FLOAT						weight;
 	POINT						pt;
@@ -29,7 +29,7 @@ public:
 									~Vertex();
 	BOOL						IsValid();
 	static UINT				GenerateID();
-	static UINT				GetLastAvailableNumAsVerticeName();
+	static UINT				GetLastAvailableNumAsVertexName();
 	UINT						GetID();
 	UINT						SetID(UINT _id);
 	FLOAT						GetWeight();
@@ -50,18 +50,18 @@ public:
 	BOOL						IsSelected();
 	void							Select();
 	void							Deselect();
-	void							DrawVertice(HDC _mDC);
-	static int					GetVerticeIdx(UINT __id);
-	static Vertex*			GetVertice(UINT __id);
-	static Vertex*			GetVertice(HWND __hWnd);
+	void							DrawVertex(HDC _mDC);
+	static int					GetVertexIdx(UINT __id);
+	static Vertex*			GetVertex(UINT __id);
+	static Vertex*			GetVertex(HWND __hWnd);
 	static Vertex*			GetSelected();
 	static void				DeselectAll();
-	static void				DeleteVertice(UINT _id);
+	static void				DeleteVertex(UINT _id);
 	static void				DeleteSelected();
 	static void				UpdateInfoPanels();
 
-	static void				VerticeRegister(void);
-	static void				VerticeUnregister(void);
+	static void				VertexRegister(void);
+	static void				VertexUnregister(void);
 
 	//	static void inline		OnLeftMouseMove(void);
 	//	static void inline		OnRightMouseMove(void);

@@ -4,7 +4,7 @@
 
 extern Field						FieldInstance;
 extern vector<Vertex*>	vertices;
-extern UINT					selectedVerticeID;
+extern UINT					selectedVertexID;
 extern BOOL					isRMBPressed;
 extern BOOL					isLMBPressed;
 extern HPEN					linePen;
@@ -15,7 +15,7 @@ HBRUSH							fBrush = CreateSolidBrush(RGB(255, 255, 255));
 Field::Field(HWND _hWnd) {
 	hWnd = _hWnd;
 	GetClientRect(hWnd, &rect);
-};
+}
 
 void Field::SetWindow(HWND& _hWnd) {
 	hWnd = _hWnd;
@@ -31,10 +31,10 @@ RECT Field::SetRect(RECT _rect) {
 
 // TRUE is returned when the collision is detected and FALSE is returned when not
 // pt is a POINT to coordinates of the chosen vertice
-BOOL	Field::CheckVerticeCollisions(const POINT& _pt) {
+BOOL	Field::CheckVertexCollision(const POINT& _pt) {
 	for (Vertex* v : vertices) {
 		POINT vpt = v -> GetPT();
-		if (sqrt(pow(abs(vpt.x - _pt.x), 2) + pow(abs(vpt.y - _pt.y), 2)) > 100 + VERTICE_DISTANCE_ERROR) continue;
+		if (sqrt(pow(abs(vpt.x - _pt.x), 2) + pow(abs(vpt.y - _pt.y), 2)) > 100 + VERTICES_DISTANCE_ERROR) continue;
 		else return 1;
 	}
 	return 0;
@@ -116,11 +116,11 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			POINT pt = {};
 			pt.x = GET_X_LPARAM(lParam) - 50;
 			pt.y = GET_Y_LPARAM(lParam) - 50;
-			if (vertices.size() < MAX_VERTICE && FieldInstance.IsPtInBorders(pt))
+			if (vertices.size() < MAX_VERTICES && FieldInstance.IsPtInBorders(pt))
 			{
-				if (FieldInstance.CheckVerticeCollisions(pt)) return 0;
+				if (FieldInstance.CheckVertexCollision(pt)) return 0;
 				UINT new_id = Vertex::GenerateID();
-				vertices.push_back(new Vertex(new_id, CreateWindow(VERTICE_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x, pt.y, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
+				vertices.push_back(new Vertex(new_id, CreateWindow(VERTEX_WC, NULL, WS_CHILD | WS_VISIBLE, pt.x, pt.y, 100, 100, hWnd, (HMENU)new_id, NULL, NULL), pt));
 			}
 			break;
 		}

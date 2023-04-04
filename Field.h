@@ -21,7 +21,7 @@ public:
 
 	void SetWindow(HWND& _hWnd);
 	BOOL IsPtInBorders(const POINT& _pt);
-	BOOL CheckVerticeCollisions(const POINT& _pt);
+	BOOL CheckVertexCollision(const POINT& _pt);
 	RECT GetRect();
 	RECT SetRect(RECT _rect);
 	void DrawField(HDC _mDC);
