@@ -272,16 +272,13 @@ void Vertice::UpdateInfoPanels() {
 
 	// Если не выделена ни одна вершина, все поля должны быть пустыми
 	if (!selectedVerticeID) {
-		
+		// Сделаем edit переименования неактивным
+		EnableWindow(VerticeNameEditWnd, FALSE);
 		// Проверим, не пустая ли она уже
 		GetWindowTextA(VerticeNameEditWnd, BUFFER, 30);
 		if (string(BUFFER) != "")
-		{
 			// Сделаем edit пустым
 			SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)string("").c_str());
-			// Сделаем edit неактивным
-			EnableWindow(VerticeNameEditWnd, FALSE);
-		}
 		
 		GetWindowTextA(TransformPositionWnd, BUFFER, 30);
 		if (string(BUFFER) != "Позиция: ")
@@ -293,14 +290,14 @@ void Vertice::UpdateInfoPanels() {
 		return;
 	}
 
+	// Если выше не попали, значит выделена вершина, найдем ее
 	Vertice* v = Vertice::GetSelected();
 	
+	// Сделаем активным поле переименования и вот всё что выше делали
 	EnableWindow(VerticeNameEditWnd, TRUE);
 	GetWindowTextA(VerticeNameEditWnd, BUFFER, 30);
 	if (string(BUFFER) != v -> GetName())
-	{
 		SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v -> GetName().c_str());
-	}
 
 	GetWindowTextA(TransformPositionWnd, BUFFER, 30);
 	if (string(BUFFER) != "Позиция: (" + to_string(v -> GetPT().x) + "; " + to_string(v -> GetPT().y) + ")")
