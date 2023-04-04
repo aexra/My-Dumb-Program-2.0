@@ -280,7 +280,7 @@ void Vertice::UpdateInfoPanels() {
 			// Сделаем edit пустым
 			SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)string("").c_str());
 			// Сделаем edit неактивным
-			SetWindowLongPtrA(VerticeNameEditWnd, GWL_STYLE, WS_CHILD | WS_VISIBLE | WS_DISABLED);
+			EnableWindow(VerticeNameEditWnd, FALSE);
 		}
 		
 		GetWindowTextA(TransformPositionWnd, BUFFER, 30);
@@ -294,12 +294,12 @@ void Vertice::UpdateInfoPanels() {
 	}
 
 	Vertice* v = Vertice::GetSelected();
-
+	
+	EnableWindow(VerticeNameEditWnd, TRUE);
 	GetWindowTextA(VerticeNameEditWnd, BUFFER, 30);
 	if (string(BUFFER) != v -> GetName())
 	{
 		SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v -> GetName().c_str());
-		SetWindowLongPtrA(VerticeNameEditWnd, GWL_STYLE, WS_CHILD | WS_VISIBLE);
 	}
 
 	GetWindowTextA(TransformPositionWnd, BUFFER, 30);

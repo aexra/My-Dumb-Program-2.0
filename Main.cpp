@@ -162,7 +162,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						{
 							Vertice* v = Vertice::GetSelected();
 							if (v == nullptr) break;
-							GetWindowTextA(VerticeNameEditWnd, BUFFER, 40);
+							GetWindowTextA(VerticeNameEditWnd, BUFFER, 8);
 							v->SetName(BUFFER);
 							InvalidateRect(v->GetWindow(), NULL, FALSE);
 							UpdateWindow(v->GetWindow());
@@ -324,7 +324,7 @@ void MainWndAddWidgets(HWND hWnd) {
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)titlef, 0);
 
 	VerticeNameStaticWnd = CreateWindowA("static", "Обозначение: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 109, 28, hWnd, NULL, NULL, NULL);
-	VerticeNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE, r.right - 229 + 109, y, 109, 28, hWnd, (HMENU)VerticeName, NULL, NULL);
+	VerticeNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 229 + 109, y, 109, 28, hWnd, (HMENU)VerticeName, NULL, NULL);
 	SendMessageA(VerticeNameStaticWnd, WM_SETFONT, (WPARAM)textf, 0);
 
 	TransformPositionWnd = CreateWindowA("static", "Позиция: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)TransformPosition, NULL, NULL);
