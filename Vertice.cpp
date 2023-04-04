@@ -167,8 +167,9 @@ string Vertice::GetName() {
 	return name;
 }
 string Vertice::SetName(string _name) {
+	string prevname = name;
 	name = _name;
-	return name;
+	return prevname;
 }
 
 BOOL Vertice::IsSelected() {
@@ -258,7 +259,7 @@ void Vertice::DrawVertice(HDC _mDC)
 	Ellipse(_mDC, 5, 5, 95, 95);
 	DrawTextA(_mDC, (GetName()).c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
-	// Если эта вершина является выбранной
+	// Если эта вершина является выбранной, нарисуем внутри синюю окружность
 	if (IsSelected()) {
 		vPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
 		SelectObject(_mDC, vPen);
@@ -268,12 +269,17 @@ void Vertice::DrawVertice(HDC _mDC)
 }
 
 void Vertice::UpdateInfoPanels() {
+
+	// Если не выделена ни одна вершина, все поля должны быть пустыми
 	if (!selectedVerticeID) {
 		
+		// Проверим, не пустая ли она уже
 		GetWindowTextA(VerticeNameEditWnd, BUFFER, 30);
 		if (string(BUFFER) != "")
 		{
+			// Сделаем edit пустым
 			SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)string("").c_str());
+			// Сделаем edit неактивным
 			SetWindowLongPtrA(VerticeNameEditWnd, GWL_STYLE, WS_CHILD | WS_VISIBLE | WS_DISABLED);
 		}
 		
@@ -287,22 +293,22 @@ void Vertice::UpdateInfoPanels() {
 		return;
 	}
 
-	Vertice &v = *Vertice::GetVertice(selectedVerticeID);
+	Vertice* v = Vertice::GetSelected();
 
 	GetWindowTextA(VerticeNameEditWnd, BUFFER, 30);
-	if (string(BUFFER) != v.GetName())
+	if (string(BUFFER) != v -> GetName())
 	{
-		SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v.GetName().c_str());
+		SendMessageA(VerticeNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v -> GetName().c_str());
 		SetWindowLongPtrA(VerticeNameEditWnd, GWL_STYLE, WS_CHILD | WS_VISIBLE);
 	}
 
 	GetWindowTextA(TransformPositionWnd, BUFFER, 30);
-	if (string(BUFFER) != "Позиция: (" + to_string(v.GetPT().x) + "; " + to_string(v.GetPT().y) + ")")
-		SendMessageA(TransformPositionWnd, WM_SETTEXT, NULL, (LPARAM)string("Позиция: (" + to_string(v.GetPT().x) + "; " + to_string(v.GetPT().y) + ")").c_str());
+	if (string(BUFFER) != "Позиция: (" + to_string(v -> GetPT().x) + "; " + to_string(v -> GetPT().y) + ")")
+		SendMessageA(TransformPositionWnd, WM_SETTEXT, NULL, (LPARAM)string("Позиция: (" + to_string(v -> GetPT().x) + "; " + to_string(v -> GetPT().y) + ")").c_str());
 
 	GetWindowTextA(WeightWnd, BUFFER, 30);
-	if (string(BUFFER) != "Вес: " + to_string(v.GetWeight()))
-		SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: " + to_string(v.GetWeight())).c_str());
+	if (string(BUFFER) != "Вес: " + to_string(v -> GetWeight()))
+		SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: " + to_string(v -> GetWeight())).c_str());
 }
 
 Vertice* Vertice::GetSelected()
@@ -367,22 +373,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			DeleteObject(memBM);
 			DeleteDC(memDC);
 
-			//Sleep(1000 / 6000);
 			return 0;
-		}
-
-		/*case WM_ERASEBKGND:
-		{
-			return 0;
-		}*/
-
-		case WM_MOVE:
-		{
-			// это работает на ноуте
-			//RECT rect;
-			//GetClientRect(hWnd, &rect);
-			//RedrawWindow(hWnd, &rect, NULL, RDW_ERASE);
-			break;
 		}
 
 		case WM_LBUTTONDOWN:
@@ -461,13 +452,13 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				dest.y = vp.y + ptCursor.y - (width) / 2;
 
 				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right || dest.y + length >= parentRect.bottom) {
-					return DefWindowProc(hWnd, uMsg, wParam, lParam);
+					break;
 				}
 				for (Vertice* v2 : vertices) {
 					if (v -> GetID() == v2 -> GetID()) continue;
 					POINT vpt = v2 -> GetPT();
 					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100 + VERTICE_DISTANCE_ERROR) continue;
-					else return DefWindowProc(hWnd, uMsg, wParam, lParam);;
+					else break;
 				}
 
 				v -> SetPT(dest);
@@ -560,7 +551,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 						// Отрисуем другую вершину
 						v1 -> DrawVertice(memVDC1);
 
-						// Линия под вершинами между ними
+						// Линия под вершинами (на окне FieldWnd)
 						DrawLine(memFDC, vloc.x + 50, vloc.y + 50, pt1.x, pt1.y);										
 						
 						// Линия на первой вершине
@@ -587,7 +578,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 						DeleteBitmap(memVBM);
 						DeleteBitmap(memVBM1);
 
-						return DefWindowProc(hWnd, uMsg, wParam, lParam);
+						break;
 					}
 					else 
 					{
