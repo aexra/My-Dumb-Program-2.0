@@ -1,6 +1,6 @@
 ﻿#include "Main.h"
 #include "Field.h"
-#include "Vertice.h"
+#include "Vertex.h"
 
 
 
@@ -45,7 +45,7 @@ HANDLE hThread2;
 Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
 BOOL isRMBPressed = false;
-vector<Vertice*> vertices = { };
+vector<Vertex*> vertices = { };
 UINT selectedVerticeID = { };
 selection_mode selmode = mode1;
 CHAR BUFFER[40];
@@ -61,7 +61,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	if (!RegisterClassW(&MainWndClass)) { return -1; }
 	Field::FieldRegister();
-	Vertice::VerticeRegister();
+	Vertex::VerticeRegister();
 
 	MSG MainWndMessage = { 0 };
 
@@ -160,7 +160,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					{
 						case VerticeName:
 						{
-							Vertice* v = Vertice::GetSelected();
+							Vertex* v = Vertex::GetSelected();
 							if (v == nullptr) break;
 							GetWindowTextA(VerticeNameEditWnd, BUFFER, 8);
 							v->SetName(BUFFER);
@@ -220,7 +220,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case OnDeleteVerticeClicked:
 				{
-					if (selectedVerticeID) Vertice::DeleteSelected();
+					if (selectedVerticeID) Vertex::DeleteSelected();
 					SendMessageA(DeleteButtonWnd, WM_KILLFOCUS, NULL, NULL);
 					break;
 				}

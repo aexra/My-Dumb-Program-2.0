@@ -132,14 +132,14 @@
     <ClInclude Include="Header.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Vector2.h" />
-    <ClInclude Include="Vertice.h" />
+    <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ExtraOverloads.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Vector2.cpp" />
-    <ClCompile Include="Vertice.cpp" />
+    <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

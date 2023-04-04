@@ -1,11 +1,11 @@
-﻿#include "Vertice.h"
+﻿#include "Vertex.h"
 #include "Field.h"
 #include "Main.h"
 #include "Vector2.h"
 #include "ExtraOverloads.h"
 
 
-extern vector<Vertice*> vertices;
+extern vector<Vertex*> vertices;
 extern UINT selectedVerticeID;
 extern BOOL isRMBPressed;
 extern BOOL isLMBPressed;
@@ -26,24 +26,24 @@ extern HPEN linePen;
 HPEN vPen = { };
 HBRUSH vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 
-Vertice* prelinkedVertice = nullptr;
+Vertex* prelinkedVertice = nullptr;
 
 int k = 0;
 
 POINT lastHit = { };
 
 
-Vertice::Vertice(UINT _id, HWND _hWnd, POINT _pt) {
+Vertex::Vertex(UINT _id, HWND _hWnd, POINT _pt) {
 	id = _id;
 	hWnd = _hWnd;
 	pt = _pt;
 	weight = 0;
-	name = to_string(Vertice::GetLastAvailableNumAsVerticeName());
+	name = to_string(Vertex::GetLastAvailableNumAsVerticeName());
 	isSelected = false;
 	isValid = true;
 }
 
-Vertice::Vertice() {
+Vertex::Vertex() {
 	id = NULL;
 	weight = NULL;
 	pt = { };
@@ -55,24 +55,24 @@ Vertice::Vertice() {
 	isValid = FALSE;
 }
 
-Vertice::~Vertice() {
+Vertex::~Vertex() {
 	DeleteObject(hWnd);
 }
 
-BOOL Vertice::IsValid() {
+BOOL Vertex::IsValid() {
 	return isValid;
 }
 
-UINT Vertice::GetID() {
+UINT Vertex::GetID() {
 	return id;
 }
-UINT Vertice::SetID(UINT _id) {
+UINT Vertex::SetID(UINT _id) {
 	id = _id;
 	return id;
 }
-UINT Vertice::GenerateID() {
+UINT Vertex::GenerateID() {
 	vector<UINT> ids;
-	for (Vertice* v : vertices) {
+	for (Vertex* v : vertices) {
 		ids.push_back(v -> GetID());
 	}
 	for (int i = minVerticeID; i < maxVerticeID; i++) {
@@ -88,13 +88,13 @@ UINT Vertice::GenerateID() {
 		}
 	}
 }
-UINT Vertice::GetLastAvailableNumAsVerticeName()
+UINT Vertex::GetLastAvailableNumAsVerticeName()
 {
 	UINT lastFound = 1;
 	BOOL changed = false;
 	while (TRUE)
 	{
-		for (Vertice* v : vertices)
+		for (Vertex* v : vertices)
 		{
 			string vName = v -> GetName();
 			if (is_int(vName))
@@ -109,25 +109,25 @@ UINT Vertice::GetLastAvailableNumAsVerticeName()
 	}
 	return lastFound;
 }
-FLOAT	 Vertice::GetWeight() {
+FLOAT	 Vertex::GetWeight() {
 	return weight;
 }
-FLOAT	 Vertice::SetWeight(FLOAT _weight) {
+FLOAT	 Vertex::SetWeight(FLOAT _weight) {
 	weight = _weight;
 	return weight;
 }
 
-POINT Vertice::GetCenter()
+POINT Vertex::GetCenter()
 {
 	POINT _pt = { };
 	_pt.x = pt.x + 50;
 	_pt.y = pt.y + 50;
 	return _pt;
 }
-POINT	 Vertice::GetPT() {
+POINT	 Vertex::GetPT() {
 	return pt;
 }
-POINT	 Vertice::SetPT(POINT _pt) {
+POINT	 Vertex::SetPT(POINT _pt) {
 	POINT _cent;
 	_cent.x = _pt.x + 50;
 	_cent.y = _pt.y + 50;
@@ -136,57 +136,57 @@ POINT	 Vertice::SetPT(POINT _pt) {
 }
 
 
-HWND&	 Vertice::GetWindow() {
+HWND&	 Vertex::GetWindow() {
 	return hWnd;
 }
-HWND&	 Vertice::SetWindow(HWND& _hWnd) {
+HWND&	 Vertex::SetWindow(HWND& _hWnd) {
 	hWnd = _hWnd;
 	return hWnd;
 }
 
 
-vector<UINT> Vertice::GetConnections() {
+vector<UINT> Vertex::GetConnections() {
 	return connections;
 }
-vector<UINT> Vertice::SetConnections(vector<UINT> cons) {
+vector<UINT> Vertex::SetConnections(vector<UINT> cons) {
 	return connections;
 }
 
 
-UINT Vertice::Connect(UINT _id) {
+UINT Vertex::Connect(UINT _id) {
 	this->connections.push_back(_id);
 	return _id;
 }
-UINT Vertice::Disconnect(UINT _id) {
+UINT Vertex::Disconnect(UINT _id) {
 	this->connections.erase(find(connections.begin(), connections.end(), _id));
 	return _id;
 }
 
 
-string Vertice::GetName() {
+string Vertex::GetName() {
 	return name;
 }
-string Vertice::SetName(string _name) {
+string Vertex::SetName(string _name) {
 	string prevname = name;
 	name = _name;
 	return prevname;
 }
 
-BOOL Vertice::IsSelected() {
+BOOL Vertex::IsSelected() {
 	return isSelected;
 }
-BOOL Vertice::IsNear(const POINT _pt)
+BOOL Vertex::IsNear(const POINT _pt)
 {
 	return (sqrt(pow(this->pt.x + 50 - _pt.x, 2) + pow(this->pt.y + 50 - _pt.y, 2)) <= VERTICE_LINKING_RANGE);
 }
-void Vertice::Select() {
+void Vertex::Select() {
 	isSelected = true;
 	selectedVerticeID = id;
 	InvalidateRect(hWnd, NULL, FALSE);
 	UpdateWindow(hWnd);
 	UpdateInfoPanels();
 }
-void Vertice::Deselect() {
+void Vertex::Deselect() {
 	isSelected = false;
 	if (selectedVerticeID == id)
 		selectedVerticeID = NULL;
@@ -194,15 +194,15 @@ void Vertice::Deselect() {
 	UpdateWindow(hWnd);
 	UpdateInfoPanels();
 }
-void Vertice::DeselectAll() {
-	for (Vertice* v : vertices) 
+void Vertex::DeselectAll() {
+	for (Vertex* v : vertices) 
 	{
 		v -> Deselect();
 	}
 	UpdateInfoPanels();
 }
 
-int Vertice::GetVerticeIdx(UINT __id) {
+int Vertex::GetVerticeIdx(UINT __id) {
 	for (int i = 0; i < vertices.size(); i++) {
 		if (vertices[i] -> GetID() == __id) {
 			return i;
@@ -210,7 +210,7 @@ int Vertice::GetVerticeIdx(UINT __id) {
 	}
 	return NULL;
 }
-Vertice* Vertice::GetVertice(UINT __id) {
+Vertex* Vertex::GetVertice(UINT __id) {
 	for (int i = 0; i < vertices.size(); i++) {
 		if (vertices[i] -> GetID() == __id) {
 			return vertices[i];
@@ -218,31 +218,31 @@ Vertice* Vertice::GetVertice(UINT __id) {
 	}
 	return nullptr;
 }
-Vertice* Vertice::GetVertice(HWND __hWnd) {
+Vertex* Vertex::GetVertice(HWND __hWnd) {
 	return GetVertice(GetWindowLongA(__hWnd, GWL_ID));
 }
 
-void Vertice::DeleteSelected() {
-	Vertice::DeleteVertice(selectedVerticeID);
+void Vertex::DeleteSelected() {
+	Vertex::DeleteVertice(selectedVerticeID);
 }
 
-void Vertice::DeleteVertice(UINT _id) {
-	Vertice* v = Vertice::GetVertice(_id);
-	int vec_idx = Vertice::GetVerticeIdx(_id);
+void Vertex::DeleteVertice(UINT _id) {
+	Vertex* v = Vertex::GetVertice(_id);
+	int vec_idx = Vertex::GetVerticeIdx(_id);
 	DestroyWindow(v -> GetWindow());
 	vertices.erase(vertices.begin() + vec_idx);
 	selectedVerticeID = NULL;
 	UpdateInfoPanels();
 }
 
-RECT Vertice::GetRect()
+RECT Vertex::GetRect()
 {
 	RECT r; 
 	GetClientRect(hWnd, &r);
 	return r;
 }
 
-void Vertice::DrawVertice(HDC _mDC)
+void Vertex::DrawVertice(HDC _mDC)
 {
 	RECT r = GetRect();
 	vPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
@@ -268,7 +268,7 @@ void Vertice::DrawVertice(HDC _mDC)
 	}
 }
 
-void Vertice::UpdateInfoPanels() {
+void Vertex::UpdateInfoPanels() {
 
 	// Если не выделена ни одна вершина, все поля должны быть пустыми
 	if (!selectedVerticeID) {
@@ -291,7 +291,7 @@ void Vertice::UpdateInfoPanels() {
 	}
 
 	// Если выше не попали, значит выделена вершина, найдем ее
-	Vertice* v = Vertice::GetSelected();
+	Vertex* v = Vertex::GetSelected();
 	
 	// Сделаем активным поле переименования и вот всё что выше делали
 	EnableWindow(VerticeNameEditWnd, TRUE);
@@ -308,23 +308,23 @@ void Vertice::UpdateInfoPanels() {
 		SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: " + to_string(v -> GetWeight())).c_str());
 }
 
-Vertice* Vertice::GetSelected()
+Vertex* Vertex::GetSelected()
 {
-	return Vertice::GetVertice(selectedVerticeID);
+	return Vertex::GetVertice(selectedVerticeID);
 }
 
 
-void Vertice::VerticeRegister(void)
+void Vertex::VerticeRegister(void)
 {
 	WNDCLASS wc = { 0 };
 
 	wc.style = CS_GLOBALCLASS | CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = Vertice::VerticeWndProc;
+	wc.lpfnWndProc = Vertex::VerticeWndProc;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.lpszClassName = VERTICE_WC;
 	RegisterClass(&wc);
 }
-void Vertice::VerticeUnregister(void)
+void Vertex::VerticeUnregister(void)
 {
 	UnregisterClass(VERTICE_WC, NULL);
 }
@@ -338,8 +338,8 @@ void Vertice::VerticeUnregister(void)
 //}
 
 
-LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	Vertice* v = Vertice::GetVertice(hWnd);
+LRESULT CALLBACK Vertex::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	Vertex* v = Vertex::GetVertice(hWnd);
 
 	switch (uMsg) {
 
@@ -382,7 +382,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			}
 			else {
 				if (selmode == mode1)
-					Vertice::DeselectAll();
+					Vertex::DeselectAll();
 				v -> Select();
 			}
 
@@ -451,7 +451,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right || dest.y + length >= parentRect.bottom) {
 					break;
 				}
-				for (Vertice* v2 : vertices) {
+				for (Vertex* v2 : vertices) {
 					if (v -> GetID() == v2 -> GetID()) continue;
 					POINT vpt = v2 -> GetPT();
 					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100 + VERTICE_DISTANCE_ERROR) continue;
@@ -515,7 +515,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 				SelectObject(memVDC, linePen);
 
 				// Проверим возможность соединиться
-				for (Vertice* v1 : vertices)
+				for (Vertex* v1 : vertices)
 				{
 					if (*v1 == *v) continue;
 					/*OutputDebugStringA((to_string(cursor.x + vloc.x) + " - " + to_string(cursor.y + vloc.y) + "\t\t").c_str());
@@ -628,7 +628,7 @@ LRESULT CALLBACK Vertice::VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	}
 }
 
-BOOL operator == (Vertice& _Left, Vertice& _Right)
+BOOL operator == (Vertex& _Left, Vertex& _Right)
 {
 	return (_Left.GetID() == _Right.GetID());
 }

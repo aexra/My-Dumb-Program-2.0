@@ -21,7 +21,7 @@
     <ClInclude Include="Main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Vertice.h">
+    <ClInclude Include="Vertex.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Field.h">
@@ -41,7 +41,7 @@
     <ClCompile Include="Field.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
-    <ClCompile Include="Vertice.cpp">
+    <ClCompile Include="Vertex.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
     <ClCompile Include="Vector2.cpp">

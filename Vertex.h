@@ -11,7 +11,7 @@
 
 #endif
 
-class Vertice {
+class Vertex {
 private:
 	static LRESULT CALLBACK VerticeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	UINT						id;
@@ -24,9 +24,9 @@ private:
 	BOOL						isSelected;
 	BOOL						isValid;
 public:
-									Vertice();
-									Vertice(UINT _id, HWND _hWnd, POINT _pt);
-									~Vertice();
+									Vertex();
+									Vertex(UINT _id, HWND _hWnd, POINT _pt);
+									~Vertex();
 	BOOL						IsValid();
 	static UINT				GenerateID();
 	static UINT				GetLastAvailableNumAsVerticeName();
@@ -52,9 +52,9 @@ public:
 	void							Deselect();
 	void							DrawVertice(HDC _mDC);
 	static int					GetVerticeIdx(UINT __id);
-	static Vertice*			GetVertice(UINT __id);
-	static Vertice*			GetVertice(HWND __hWnd);
-	static Vertice*			GetSelected();
+	static Vertex*			GetVertice(UINT __id);
+	static Vertex*			GetVertice(HWND __hWnd);
+	static Vertex*			GetSelected();
 	static void				DeselectAll();
 	static void				DeleteVertice(UINT _id);
 	static void				DeleteSelected();
@@ -67,4 +67,4 @@ public:
 	//	static void inline		OnRightMouseMove(void);
 };
 
-BOOL operator == (Vertice& _Left, Vertice& _Right);
+BOOL operator == (Vertex& _Left, Vertex& _Right);
