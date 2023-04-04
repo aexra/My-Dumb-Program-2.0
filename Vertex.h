@@ -3,8 +3,8 @@
 #include "Header.h"
 
 
-#ifndef VERTICE_H
-#define VERTICE_H
+#ifndef VERTEX_H
+#define VERTEX_H
 
 /* Window class */
 #define VERTEX_WC  _T("CustomControl")
