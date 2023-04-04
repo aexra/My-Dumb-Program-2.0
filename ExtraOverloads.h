@@ -5,7 +5,7 @@
 //
 //					POINT OVERLOADS
 //
-BOOL operator == (_In_ const POINT& _ptl, _In_ const POINT& _ptr);
-POINT operator + (_In_ const POINT& _ptl, _In_ const POINT& _ptr);
-POINT operator + (_In_ const POINT& _ptl, _In_ const double& _val);
-POINT operator - (_In_ const POINT& _ptl, _In_ const POINT& _ptr);
+BOOL operator == (const POINT& _ptl, const POINT& _ptr);
+POINT operator + (const POINT& _ptl, const POINT& _ptr);
+POINT operator + (const POINT& _ptl, const double& _val);
+POINT operator - (const POINT& _ptl, const POINT& _ptr);
