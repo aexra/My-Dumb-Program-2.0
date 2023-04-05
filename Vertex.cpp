@@ -255,7 +255,7 @@ void Vertex::DrawVertex(HDC _mDC)
 {
 	RECT r = GetRect();
 	vPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
-	DeleteObject(SelectObject(_mDC, vPen));
+	HGDIOBJ original = SelectObject(_mDC, vPen);
 
 	Rectangle(_mDC, 0, 0, r.right, r.bottom);
 	Ellipse(_mDC, 12, 12, 88, 88);
@@ -276,6 +276,7 @@ void Vertex::DrawVertex(HDC _mDC)
 		Ellipse(_mDC, 12, 12, 88, 88);
 	}
 
+	SelectObject(_mDC, original);
 	DeleteObject(vPen);
 }
 
@@ -520,7 +521,6 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				SelectObject(memFDC, memFBM);
 
 				// Отрисуем пустое поле
-				DeleteObject(SelectObject(memFDC, fPen));
 				FieldInstance.DrawField(memFDC);
 
 				// Подготовим всё необходимое для рисования линии на ВЕРШИНЕ

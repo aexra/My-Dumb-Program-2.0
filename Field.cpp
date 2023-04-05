@@ -46,12 +46,14 @@ BOOL Field::IsPtInBorders(const POINT& _pt) {
 }
 void Field::DrawField(HDC _mDC)
 {
-	DeleteObject(SelectObject(_mDC, fPen));
-	DeleteObject(SelectObject(_mDC, fBrush));
+	HGDIOBJ orig = SelectObject(_mDC, fPen);
 	Rectangle(_mDC, 0, 0, rect.right, rect.bottom);
 
-	DeleteObject(SelectObject(_mDC, linePen));
+	SelectObject(_mDC, linePen);
 
+
+
+	SelectObject(_mDC, orig);
 }
 void Field::Redraw()
 {
