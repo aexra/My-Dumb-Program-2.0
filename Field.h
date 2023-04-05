@@ -25,6 +25,7 @@ public:
 	RECT GetRect();
 	RECT SetRect(RECT _rect);
 	void DrawField(HDC _mDC);
+	void Redraw();
 
 	static void FieldRegister(void);
 	static void FieldUnregister(void);

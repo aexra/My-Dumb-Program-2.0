@@ -159,6 +159,7 @@ UINT Vertex::Connect(UINT _id) {
 	if (find(this->connections.begin(), this->connections.end(), _id) == this->connections.end())
 	{
 		this->connections.push_back(_id);
+		FieldInstance.Redraw();
 		return _id;
 	}
 	else

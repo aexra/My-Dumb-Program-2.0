@@ -49,6 +49,24 @@ void Field::DrawField(HDC _mDC)
 	DeleteObject(SelectObject(_mDC, fPen));
 	DeleteObject(SelectObject(_mDC, fBrush));
 	Rectangle(_mDC, 0, 0, rect.right + 1, rect.bottom + 1);
+
+	DeleteObject(SelectObject(_mDC, linePen));
+
+}
+void Field::Redraw()
+{
+	HDC hDC = GetDC(hWnd);
+	HDC mDC = CreateCompatibleDC(hDC);
+	HBITMAP mBM = CreateCompatibleBitmap(hDC, rect.right, rect.bottom);
+	SelectObject(hDC, mBM);
+
+	DrawField(mDC);
+
+	BitBlt(hDC, 0, 0, rect.right, rect.bottom, mDC, 0, 0, SRCCOPY);
+
+	ReleaseDC(hWnd, hDC);
+	DeleteDC(mDC);
+	DeleteBitmap(mBM);
 }
 
 void Field::FieldRegister(void) {
