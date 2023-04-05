@@ -1,6 +1,7 @@
 #include "Field.h"
 #include "Vertex.h"
 #include "Main.h"
+#include "ExtraOverloads.h"
 
 extern Field						FieldInstance;
 extern vector<Vertex*>	vertices;
@@ -54,6 +55,45 @@ void Field::DrawField(HDC _mDC)
 
 
 	SelectObject(_mDC, orig);
+}
+void Field::DrawConnection(Vertex* _V1, Vertex* _V2)
+{
+	POINT C1 = _V1->GetCenter();
+	POINT C2 = _V2->GetCenter();
+	RECT r1 = _V1->GetRect();
+	RECT r2 = _V2->GetRect();
+	HDC VDC1 = GetDC(_V1->GetWindow());
+	HDC VDC2 = GetDC(_V2->GetWindow());
+	HDC FDC = GetDC(hWnd);
+	HDC mVDC1 = CreateCompatibleDC(VDC1);
+	HDC mVDC2 = CreateCompatibleDC(VDC2);
+	HDC mFDC = CreateCompatibleDC(FDC);
+	HBITMAP mVBM1 = CreateCompatibleBitmap(VDC1, 100, 100);
+	HBITMAP mVBM2 = CreateCompatibleBitmap(VDC2, 100, 100);
+	HBITMAP mFBM = CreateCompatibleBitmap(FDC, rect.right, rect.bottom);
+	SelectObject(mVDC1, mVBM1);
+	SelectObject(mVDC2, mVBM2);
+	SelectObject(mFDC, mFBM);
+
+	_V1->DrawVertex(mVDC1);
+	_V2->DrawVertex(mVDC2);
+	DrawField(mFDC);
+
+	POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C1, POINT{ 50, 50 }, 48)[0];
+	DrawLine(mVDC1, startv1.x, startv1.y, C2.x - C1.x, C2.y - C1.y);
+
+	POINT startv2 = intersectionPoints(POINT{ 50, 50 }, C1 - C2 + 100, POINT{ 50, 50 }, 48)[0];
+	DrawLine(mVDC2, startv2.x, startv2.y, C1.x - C2.x + 50 + 50, C1.y - C2.y + 50 + 50);
+
+	DrawLine(mFDC, C1.x, C1.y, C2.x, C2.y);
+
+	BitBlt(FDC, 0, 0, rect.right, rect.bottom, mFDC, 0, 0, SRCCOPY);
+	BitBlt(VDC1, 0, 0, r1.right, r1.bottom, mVDC1, 0, 0, SRCCOPY);
+	BitBlt(VDC2, 0, 0, r2.right, r2.bottom, mVDC2, 0, 0, SRCCOPY);
+
+	ReleaseDC(_V1->GetWindow(), VDC1);
+	ReleaseDC(_V2->GetWindow(), VDC2);
+	ReleaseDC(hWnd, FDC);
 }
 void Field::Redraw()
 {
