@@ -154,8 +154,13 @@ vector<UINT> Vertex::SetConnections(vector<UINT> cons) {
 
 
 UINT Vertex::Connect(UINT _id) {
-	this->connections.push_back(_id);
-	return _id;
+	if (find(this->connections.begin(), this->connections.end(), _id) == this->connections.end())
+	{
+		this->connections.push_back(_id);
+		return _id;
+	}
+	else
+		return 0;
 }
 UINT Vertex::Disconnect(UINT _id) {
 	this->connections.erase(find(connections.begin(), connections.end(), _id));
@@ -403,8 +408,10 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				// ВРЕМЕННОЕ РЕШЕНИЕ - TODO: СОЕДИНЕНИЕ ВЕРШИН
 				InvalidateRect(prelinkedVertex -> GetWindow(), NULL, FALSE);
 				UpdateWindow(prelinkedVertex -> GetWindow());
-				/*if ((find(v.GetConnections().begin(), v.GetConnections().end(), prelinkedVertice -> GetID()) == v.GetConnections().end())) v.Connect(prelinkedVertice->GetID());
-				OutputDebugStringA(to_string(v.GetConnections().size()).c_str());*/
+				
+				v->Connect(prelinkedVertex->GetID());
+				MessageBoxA(hWnd, ("Соединено с " + prelinkedVertex -> GetName()).c_str(), "Соединение успешно", MB_OK);
+
 				prelinkedVertex = nullptr;
 			}
 			ReleaseCapture();	
