@@ -129,6 +129,9 @@ void Field::DrawField(HDC _mDC)
 //}
 void Field::Redraw()
 {
+	InvalidateRect(hWnd, NULL, FALSE);
+	UpdateWindow(hWnd);
+
 	HDC hDC = GetDC(hWnd);
 	HDC mDC = CreateCompatibleDC(hDC);
 	HBITMAP mBM = CreateCompatibleBitmap(hDC, rect.right, rect.bottom);
