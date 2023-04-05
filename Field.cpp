@@ -50,7 +50,7 @@ void Field::DrawField(HDC _mDC)
 	HGDIOBJ orig = SelectObject(_mDC, fPen);
 	Rectangle(_mDC, 0, 0, rect.right, rect.bottom);
 
-	vector<pair<UINT, vector<UINT>>> table = Vertex::GetUniqueConnectionTable();
+	vector<pair<UINT, vector<UINT>>> table = Vertex::GetUniqueConnectionsTable();
 
 	HGDIOBJ oldf = SelectObject(_mDC, linePen);
 	for (pair<UINT, vector<UINT>> vpair : table)
@@ -193,7 +193,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 		case WM_ERASEBKGND:
 		{
-			return 0;
+			return 1;
 		}
 
 		/*case WM_TIMER:

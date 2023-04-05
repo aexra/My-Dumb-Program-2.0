@@ -321,7 +321,7 @@ void Vertex::UpdateInfoPanels() {
 		SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: " + to_string(v -> GetWeight())).c_str());
 }
 
-vector<pair<UINT, vector<UINT>>> Vertex::GetUniqueConnectionTable()
+vector<pair<UINT, vector<UINT>>> Vertex::GetUniqueConnectionsTable()
 {
 	vector<pair<UINT, vector<UINT>>> table;
 	for (Vertex* v : vertices)
@@ -329,22 +329,16 @@ vector<pair<UINT, vector<UINT>>> Vertex::GetUniqueConnectionTable()
 		table.push_back({ v->GetID(), { } });
 		for (UINT vcon : v->GetConnections())
 		{
-			BOOL toSkip = FALSE;
+			BOOL exists = FALSE;
 			for (pair<UINT, vector<UINT>> para : table)
 			{
-				BOOL toExitThis = FALSE;
-				for (UINT nvcon : para.second)
+				if (para.first == vcon)
 				{
-					if (vcon == nvcon)
-					{
-						toSkip = TRUE;
-						toExitThis = FALSE;
-						break;
-					}
+					exists = TRUE;
+					break;
 				}
-				if (toExitThis) break;
 			}
-			if (toSkip) continue;
+			if (exists) continue;
 			table.back().second.push_back(vcon);
 		}
 	}
@@ -506,7 +500,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				for (Vertex* v2 : vertices) {
 					if (v -> GetID() == v2 -> GetID()) continue;
 					POINT vpt = v2 -> GetPT();
-					if (sqrt(pow(abs(vpt.x - dest.x), 2) + pow(abs(vpt.y - dest.y), 2)) > 100 + VERTICES_DISTANCE_ERROR) continue;
+					if (PointDistance(vpt, dest) > 100 + VERTICES_DISTANCE_ERROR) continue;
 					else break;
 				}
 
@@ -516,6 +510,8 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				UpdateWindow(FieldWnd);													//
 
 				MoveWindow(hWnd, v -> GetPT().x, v -> GetPT().y, 100, 100, TRUE);
+
+				FieldInstance.Redraw();
 
 				//UpdateInfoPanels();
 			}
