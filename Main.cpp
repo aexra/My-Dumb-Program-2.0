@@ -45,6 +45,7 @@ HANDLE hThread2;
 Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
 BOOL isRMBPressed = false;
+BOOL isOrientedGraph = false;
 vector<Vertex*> vertices = { };
 UINT selectedVertexID = { };
 selection_mode selmode = mode1;
@@ -229,24 +230,24 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 
-		/*case WM_TIMER:
+		case WM_TIMER:
 		{
 			switch (wParam)
 			{
 				case INFOPANEL_REFRESH_IDT:
 				{
-					Vertice::UpdateInfoPanels();
+					Vertex::UpdateInfoPanels();
 					break;
 				}
 			}
 			break;
-		}*/
+		}
 
 		case WM_CREATE:
 		{
 			MainWndAddMenus(hWnd);
 			MainWndAddWidgets(hWnd);
-			//SetTimer(hWnd, INFOPANEL_REFRESH_IDT, INFOPANEL_REFRESH_RATE, (TIMERPROC)NULL);
+			SetTimer(hWnd, INFOPANEL_REFRESH_IDT, INFOPANEL_REFRESH_RATE, (TIMERPROC)NULL);
 			break;
 		}
 
@@ -326,6 +327,7 @@ void MainWndAddWidgets(HWND hWnd) {
 	VertexNameStaticWnd = CreateWindowA("static", "Обозначение: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 109, 28, hWnd, NULL, NULL, NULL);
 	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 229 + 109, y, 109, 28, hWnd, (HMENU)VertexName, NULL, NULL);
 	SendMessageA(VertexNameStaticWnd, WM_SETFONT, (WPARAM)textf, 0);
+	SendMessageA(VertexNameEditWnd, WM_SETFONT, (WPARAM)textf, 0);
 
 	TransformPositionWnd = CreateWindowA("static", "Позиция: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)TransformPosition, NULL, NULL);
 	SendMessageA(TransformPositionWnd, WM_SETFONT, (WPARAM)textf, 0);

@@ -9,9 +9,11 @@ extern vector<Vertex*> vertices;
 extern UINT selectedVertexID;
 extern BOOL isRMBPressed;
 extern BOOL isLMBPressed;
+extern BOOL isOrientedGraph;
 extern Field FieldInstance;
 extern enum selection_mode {mode1, mode2};
 extern selection_mode selmode;
+extern HWND MainWnd;
 extern HWND GraphNameWnd;
 extern HWND IsOrientedWnd;
 extern HWND IsWeightedWnd;
@@ -307,8 +309,9 @@ void Vertex::UpdateInfoPanels() {
 		SendMessageA(VertexNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v -> GetName().c_str());
 
 	GetWindowTextA(TransformPositionWnd, BUFFER, 30);
-	if (string(BUFFER) != "Позиция: (" + to_string(v -> GetPT().x) + "; " + to_string(v -> GetPT().y) + ")")
-		SendMessageA(TransformPositionWnd, WM_SETTEXT, NULL, (LPARAM)string("Позиция: (" + to_string(v -> GetPT().x) + "; " + to_string(v -> GetPT().y) + ")").c_str());
+	string trueLine = "Позиция: (" + to_string(v->GetPT().x) + "; " + to_string(v->GetPT().y) + ")";
+	if (string(BUFFER) != trueLine)
+		SendMessageA(TransformPositionWnd, WM_SETTEXT, NULL, (LPARAM)trueLine.c_str());
 
 	GetWindowTextA(WeightWnd, BUFFER, 30);
 	if (string(BUFFER) != "Вес: " + to_string(v -> GetWeight()))
@@ -409,9 +412,16 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				InvalidateRect(prelinkedVertex -> GetWindow(), NULL, FALSE);
 				UpdateWindow(prelinkedVertex -> GetWindow());
 				
-				v->Connect(prelinkedVertex->GetID());
-				MessageBoxA(hWnd, (v->GetName() + " соединена с " + prelinkedVertex->GetName()).c_str(), "Соединение успешно", MB_OK);
-
+				if (!isOrientedGraph)
+				{
+					UINT conres = v->Connect(prelinkedVertex->GetID());	// здесь создаю conres чтобы проверить,
+					prelinkedVertex->Connect(v->GetID());							// удалось ли соединение
+					MessageBoxA(hWnd, (conres == 0? "Ошибка соединения!" : "Соединены: " + v->GetName() + " и " + prelinkedVertex->GetName()).c_str(), "Попытка соединения вершин", MB_OK);
+				}
+				else
+				{
+					MessageBoxA(MainWnd, "У разраба еще ручки не дошли сделать ориентированный вариант графа", "Ошибка!", MB_OK);
+				}
 				prelinkedVertex = nullptr;
 			}
 			ReleaseCapture();	
@@ -474,6 +484,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 
 				MoveWindow(hWnd, v -> GetPT().x, v -> GetPT().y, 100, 100, TRUE);
 
+				//UpdateInfoPanels();
 			}
 			//
 			//		Левая мышб для выделения и соединения
