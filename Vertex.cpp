@@ -276,6 +276,17 @@ void Vertex::DrawVertex(HDC _mDC)
 		Ellipse(_mDC, 12, 12, 88, 88);
 	}
 
+	// Отрисуем все соединения
+	POINT C1 = GetCenter();
+	for (UINT idx : connections)
+	{
+		Vertex* v2 = GetVertex(idx);
+		POINT C2 = v2->GetCenter();
+		POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C1 + 50, POINT{ 50, 50 }, 48)[0];
+		SelectObject(_mDC, linePen);
+		DrawLine(_mDC, startv1.x, startv1.y, C2.x - C1.x + 50, C2.y - C1.y + 50);
+	}
+
 	SelectObject(_mDC, original);
 	DeleteObject(vPen);
 }
