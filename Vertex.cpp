@@ -410,7 +410,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				UpdateWindow(prelinkedVertex -> GetWindow());
 				
 				v->Connect(prelinkedVertex->GetID());
-				MessageBoxA(hWnd, ("Соединено с " + prelinkedVertex -> GetName()).c_str(), "Соединение успешно", MB_OK);
+				MessageBoxA(hWnd, (v->GetName() + " соединена с " + prelinkedVertex->GetName()).c_str(), "Соединение успешно", MB_OK);
 
 				prelinkedVertex = nullptr;
 			}
