@@ -51,6 +51,37 @@ void Field::DrawField(HDC _mDC)
 	Rectangle(_mDC, 0, 0, rect.right, rect.bottom);
 
 	vector<pair<UINT, vector<UINT>>> table = Vertex::GetUniqueConnectionTable();
+
+	HGDIOBJ oldf = SelectObject(_mDC, linePen);
+	for (pair<UINT, vector<UINT>> vpair : table)
+	{
+		Vertex* v1 = Vertex::GetVertex(vpair.first);
+		HDC vDC1 = GetDC(v1->GetWindow());
+		POINT C1 = v1->GetCenter();
+		HGDIOBJ old1 = SelectObject(vDC1, linePen);
+
+		for (UINT vid2 : vpair.second)
+		{
+			Vertex* v2 = Vertex::GetVertex(vid2);
+			HDC vDC2 = GetDC(v2->GetWindow());
+			HGDIOBJ old2 = SelectObject(vDC2, linePen);
+			POINT C2 = v2->GetCenter();
+
+			POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C1 + 50, POINT{ 50, 50 }, 48)[0];
+			DrawLine(vDC1, startv1.x, startv1.y, C2.x - C1.x + 50, C2.y - C1.y + 50);
+
+			POINT startv2 = intersectionPoints(POINT{ 50, 50 }, C1 - C2 + 50, POINT{ 50, 50 }, 48)[0];
+			DrawLine(vDC2, startv2.x, startv2.y, C1.x - C2.x + 50, C1.y - C2.y + 50);
+
+			DrawLine(_mDC, C1.x, C1.y, C2.x, C2.y);
+			
+			SelectObject(vDC2, old2);
+			ReleaseDC(v2->GetWindow(), vDC2);
+		}
+		SelectObject(vDC1, old1);
+		ReleaseDC(v1->GetWindow(), vDC1);
+	}
+	SelectObject(_mDC, oldf);
 }
 //void Field::DrawConnection(Vertex* _V1, Vertex* _V2, HDC mFDC)
 //{
@@ -141,15 +172,22 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			hdc = BeginPaint(hWnd, &ps);
 
 			hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
-
 			hBrush = CreateSolidBrush(RGB(255, 255, 255));
-			//FillRect(hdc, &r, hBrush);
-			Rectangle(hdc, 0, 0, r.right, r.bottom);
+			
+			HDC mDC = CreateCompatibleDC(hdc);
+			HBITMAP mBM = CreateCompatibleBitmap(hdc, r.right, r.bottom);
+			SelectObject(mDC, mBM);
+
+			FieldInstance.DrawField(mDC);
+
+			BitBlt(hdc, 0, 0, r.right, r.bottom, mDC, 0, 0, SRCCOPY);
 
 			EndPaint(hWnd, &ps);
 
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
+			DeleteDC(mDC);
+			DeleteBitmap(mBM);
 			break;
 		}
 

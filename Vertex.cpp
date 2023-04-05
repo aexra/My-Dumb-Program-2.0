@@ -457,6 +457,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				prelinkedVertex = nullptr;
 			}
 			ReleaseCapture();	
+			FieldInstance.Redraw();
 			break;
 		}
 
