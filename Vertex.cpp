@@ -321,6 +321,36 @@ void Vertex::UpdateInfoPanels() {
 		SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: " + to_string(v -> GetWeight())).c_str());
 }
 
+vector<pair<UINT, vector<UINT>>> Vertex::GetUniqueConnectionTable()
+{
+	vector<pair<UINT, vector<UINT>>> table;
+	for (Vertex* v : vertices)
+	{
+		table.push_back({ v->GetID(), { } });
+		for (UINT vcon : v->GetConnections())
+		{
+			BOOL toSkip = FALSE;
+			for (pair<UINT, vector<UINT>> para : table)
+			{
+				BOOL toExitThis = FALSE;
+				for (UINT nvcon : para.second)
+				{
+					if (vcon == nvcon)
+					{
+						toSkip = TRUE;
+						toExitThis = FALSE;
+						break;
+					}
+				}
+				if (toExitThis) break;
+			}
+			if (toSkip) continue;
+			table.back().second.push_back(vcon);
+		}
+	}
+	return table;
+}
+
 Vertex* Vertex::GetSelected()
 {
 	return Vertex::GetVertex(selectedVertexID);
@@ -419,7 +449,6 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 					UINT conres = v->Connect(prelinkedVertex->GetID());	// здесь создаю conres чтобы проверить,
 					prelinkedVertex->Connect(v->GetID());							// удалось ли соединение
 					//MessageBoxA(hWnd, (conres == 0? "Ошибка соединения!" : "Соединены: " + v->GetName() + " и " + prelinkedVertex->GetName()).c_str(), "Попытка соединения вершин", MB_OK);
-					FieldInstance.DrawConnection(v, prelinkedVertex);
 				}
 				else
 				{
