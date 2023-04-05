@@ -411,7 +411,6 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 			UpdateWindow(hWnd);
 			if (prelinkedVertex != nullptr)
 			{
-				// ВРЕМЕННОЕ РЕШЕНИЕ - TODO: СОЕДИНЕНИЕ ВЕРШИН
 				InvalidateRect(prelinkedVertex -> GetWindow(), NULL, FALSE);
 				UpdateWindow(prelinkedVertex -> GetWindow());
 				
@@ -419,7 +418,8 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				{
 					UINT conres = v->Connect(prelinkedVertex->GetID());	// здесь создаю conres чтобы проверить,
 					prelinkedVertex->Connect(v->GetID());							// удалось ли соединение
-					MessageBoxA(hWnd, (conres == 0? "Ошибка соединения!" : "Соединены: " + v->GetName() + " и " + prelinkedVertex->GetName()).c_str(), "Попытка соединения вершин", MB_OK);
+					//MessageBoxA(hWnd, (conres == 0? "Ошибка соединения!" : "Соединены: " + v->GetName() + " и " + prelinkedVertex->GetName()).c_str(), "Попытка соединения вершин", MB_OK);
+					FieldInstance.DrawConnection(v, prelinkedVertex);
 				}
 				else
 				{

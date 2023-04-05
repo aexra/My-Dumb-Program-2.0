@@ -28,3 +28,10 @@ POINT operator - (const POINT& _ptl, const POINT& _ptr)
 	_ptn.y = _ptl.y - _ptr.y;
 	return _ptn;
 }
+POINT operator - (const POINT& _ptl, const double& _val)
+{
+	POINT _ptn = { };
+	_ptn.x = _ptl.x - _val;
+	_ptn.y = _ptl.y - _val;
+	return _ptn;
+}

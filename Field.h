@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Header.h"
+#include "Vertex.h"
 
 #ifndef FIELD_H
 #define FIELD_H
