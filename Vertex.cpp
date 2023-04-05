@@ -429,10 +429,10 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 		case WM_LBUTTONUP:
 		{
 			isLMBPressed = false;
-			InvalidateRect(FieldWnd, NULL, FALSE);
-			UpdateWindow(FieldWnd);
-			InvalidateRect(hWnd, NULL, FALSE);
-			UpdateWindow(hWnd);
+			/*InvalidateRect(FieldWnd, NULL, FALSE);
+			UpdateWindow(FieldWnd);*/
+			/*InvalidateRect(hWnd, NULL, FALSE);
+			UpdateWindow(hWnd);*/
 			if (prelinkedVertex != nullptr)
 			{
 				InvalidateRect(prelinkedVertex -> GetWindow(), NULL, FALSE);
