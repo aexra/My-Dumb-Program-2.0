@@ -25,8 +25,8 @@ public:
 	BOOL CheckVertexCollision(const POINT& _pt);
 	RECT GetRect();
 	RECT SetRect(RECT _rect);
-	void DrawField(HDC _mDC);
-	void Redraw();
+	void DrawField(HDC _mDC, BOOL _RedrawVertices = TRUE);
+	void Redraw(BOOL _RedrawVertices = TRUE);
 
 	static void FieldRegister(void);
 	static void FieldUnregister(void);

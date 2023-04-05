@@ -51,6 +51,7 @@ public:
 	void							Select();
 	void							Deselect();
 	void							DrawVertex(HDC _mDC);
+	void							RedrawVertex();
 	static int					GetVertexIdx(UINT __id);
 	static Vertex*			GetVertex(UINT __id);
 	static Vertex*			GetVertex(HWND __hWnd);

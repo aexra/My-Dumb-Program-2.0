@@ -45,12 +45,22 @@ BOOL Field::IsPtInBorders(const POINT& _pt) {
 	BOOL result = (_pt.x > 60 && _pt.x < r.right - 60 && _pt.y > 60 && _pt.y < r.bottom - 60);
 	return result;
 }
-void Field::DrawField(HDC _mDC)
+void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
 {
 	HGDIOBJ orig = SelectObject(_mDC, fPen);
 	Rectangle(_mDC, 0, 0, rect.right, rect.bottom);
 
 	vector<pair<UINT, vector<UINT>>> table = Vertex::GetUniqueConnectionsTable();
+
+	if (_RedrawVertices)
+	{
+		for (Vertex* v : vertices)
+		{
+			/*InvalidateRect(v->GetWindow(), NULL, FALSE);
+			UpdateWindow(v->GetWindow());*/
+			v->RedrawVertex();
+		}
+	}
 
 	HGDIOBJ oldf = SelectObject(_mDC, linePen);
 	for (pair<UINT, vector<UINT>> vpair : table)
@@ -67,11 +77,11 @@ void Field::DrawField(HDC _mDC)
 			HGDIOBJ old2 = SelectObject(vDC2, linePen);
 			POINT C2 = v2->GetCenter();
 
-			POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C1 + 50, POINT{ 50, 50 }, 48)[0];
+			/*POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C1 + 50, POINT{ 50, 50 }, 48)[0];
 			DrawLine(vDC1, startv1.x, startv1.y, C2.x - C1.x + 50, C2.y - C1.y + 50);
 
 			POINT startv2 = intersectionPoints(POINT{ 50, 50 }, C1 - C2 + 50, POINT{ 50, 50 }, 48)[0];
-			DrawLine(vDC2, startv2.x, startv2.y, C1.x - C2.x + 50, C1.y - C2.y + 50);
+			DrawLine(vDC2, startv2.x, startv2.y, C1.x - C2.x + 50, C1.y - C2.y + 50);*/
 
 			DrawLine(_mDC, C1.x, C1.y, C2.x, C2.y);
 			
@@ -127,7 +137,7 @@ void Field::DrawField(HDC _mDC)
 //	DeleteBitmap(mVBM1);
 //	DeleteBitmap(mVBM2);
 //}
-void Field::Redraw()
+void Field::Redraw(BOOL _RedrawVertices)
 {
 	InvalidateRect(hWnd, NULL, FALSE);
 	UpdateWindow(hWnd);
@@ -137,7 +147,7 @@ void Field::Redraw()
 	HBITMAP mBM = CreateCompatibleBitmap(hDC, rect.right, rect.bottom);
 	SelectObject(hDC, mBM);
 
-	DrawField(mDC);
+	DrawField(mDC, _RedrawVertices);
 
 	BitBlt(hDC, 0, 0, rect.right, rect.bottom, mDC, 0, 0, SRCCOPY);
 

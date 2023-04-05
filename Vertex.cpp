@@ -291,6 +291,32 @@ void Vertex::DrawVertex(HDC _mDC)
 	DeleteObject(vPen);
 }
 
+void Vertex::RedrawVertex()
+{
+	HDC							VDC;
+	HDC							memDC;
+	HBITMAP					memBM;
+	RECT						r;
+
+	// щя будет двойная буферизация
+
+	GetClientRect(hWnd, &r);
+
+	VDC = GetDC(hWnd);
+
+	memDC = CreateCompatibleDC(VDC);
+	memBM = CreateCompatibleBitmap(VDC, 100, 100);
+	SelectObject(memDC, memBM);
+
+	DrawVertex(memDC);
+
+	BitBlt(VDC, 0, 0, r.right, r.bottom, memDC, 0, 0, SRCCOPY);
+
+	ReleaseDC(hWnd, VDC);
+	DeleteObject(memBM);
+	DeleteDC(memDC);
+}
+
 void Vertex::UpdateInfoPanels() {
 
 	// Если не выделена ни одна вершина, все поля должны быть пустыми
@@ -518,12 +544,12 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 
 				v -> SetPT(dest);
 
-				InvalidateRect(FieldWnd, GetLocalRect(hWnd), FALSE);	//		Это работает на пк
-				UpdateWindow(FieldWnd);													//
+				//InvalidateRect(FieldWnd, GetLocalRect(hWnd), FALSE);	//		Это работает на пк
+				//UpdateWindow(FieldWnd);													//
 
-				MoveWindow(hWnd, v -> GetPT().x, v -> GetPT().y, 100, 100, TRUE);
-
+				MoveWindow(hWnd, v -> GetPT().x, v -> GetPT().y, 100, 100, FALSE);
 				FieldInstance.Redraw();
+
 
 				//UpdateInfoPanels();
 			}
@@ -559,7 +585,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				SelectObject(memFDC, memFBM);
 
 				// Отрисуем пустое поле
-				FieldInstance.DrawField(memFDC);
+				FieldInstance.DrawField(memFDC, FALSE);
 
 				// Подготовим всё необходимое для рисования линии на ВЕРШИНЕ
 				// Испульзуем двойную буферизацию для исключения мерцания
@@ -572,8 +598,8 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				v -> DrawVertex(memVDC);
 
 				// Выберем перо для рисования линии
-				DeleteObject(SelectObject(memFDC, linePen));
-				DeleteObject(SelectObject(memVDC, linePen));
+				HGDIOBJ oldf = SelectObject(memFDC, linePen);
+				HGDIOBJ old1 = SelectObject(memVDC, linePen);
 
 				// Проверим возможность соединиться
 				for (Vertex* v1 : vertices)
@@ -588,8 +614,9 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 						// Фикс бага отображения линии при быстрой смене фокуса
 						if (prelinkedVertex != nullptr && prelinkedVertex != v1) 
 						{
-							InvalidateRect(prelinkedVertex->GetWindow(), NULL, FALSE);
-							UpdateWindow(prelinkedVertex->GetWindow());
+							/*InvalidateRect(prelinkedVertex->GetWindow(), NULL, FALSE);
+							UpdateWindow(prelinkedVertex->GetWindow());*/
+							prelinkedVertex->RedrawVertex();
 						}
 
 						// Запоминаем вершину на которой висит фокус (пригодится)
@@ -617,7 +644,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 						DrawLine(memVDC, startv.x, startv.y, pt1.x - vloc.x, pt1.y - vloc.y);										
 						
 						// Линия на второй вершине
-						DeleteObject(SelectObject(memVDC1, linePen));
+						HGDIOBJ old2 = SelectObject(memVDC1, linePen);
 						POINT startv1 = intersectionPoints(POINT{ 50, 50 }, vloc - pt1 + 100, POINT{ 50, 50 }, 48)[0];
 						DrawLine(memVDC1, startv1.x, startv1.y, vloc.x - pt1.x + 50 + 50, vloc.y - pt1.y + 50 + 50);		
 						
@@ -625,6 +652,10 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 						BitBlt(FDC, 0, 0, fr.right, fr.bottom, memFDC, 0, 0, SRCCOPY);
 						BitBlt(VDC, 0, 0, vr.right, vr.bottom, memVDC, 0, 0, SRCCOPY);
 						BitBlt(VDC1, 0, 0, vr.right, vr.bottom, memVDC1, 0, 0, SRCCOPY);
+
+						SelectObject(memFDC, oldf);
+						SelectObject(memVDC, old1);
+						SelectObject(memVDC1, old2);
 
 						// Уничтожим использованные объекты
 						ReleaseDC(FieldWnd, FDC);
@@ -641,8 +672,9 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 					}
 					else 
 					{
-						InvalidateRect(v1 -> GetWindow(), NULL, FALSE);
-						UpdateWindow(v1 -> GetWindow());
+						/*InvalidateRect(v1 -> GetWindow(), NULL, FALSE);
+						UpdateWindow(v1 -> GetWindow());*/
+						v1->RedrawVertex();
 					}
 				}
 
@@ -660,6 +692,9 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				// Перенесем изображения
 				BitBlt(FDC, 0, 0, fr.right, fr.bottom, memFDC, 0, 0, SRCCOPY);
 				BitBlt(VDC, 0, 0, vr.right, vr.bottom, memVDC, 0, 0, SRCCOPY);
+
+				SelectObject(memFDC, oldf);
+				SelectObject(memVDC, old1);
 
 				// Уничтожим использованные объекты
 				ReleaseDC(FieldWnd, FDC);
