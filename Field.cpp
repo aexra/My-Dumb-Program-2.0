@@ -48,7 +48,7 @@ void Field::DrawField(HDC _mDC)
 {
 	DeleteObject(SelectObject(_mDC, fPen));
 	DeleteObject(SelectObject(_mDC, fBrush));
-	Rectangle(_mDC, 0, 0, rect.right + 1, rect.bottom + 1);
+	Rectangle(_mDC, 0, 0, rect.right, rect.bottom);
 
 	DeleteObject(SelectObject(_mDC, linePen));
 

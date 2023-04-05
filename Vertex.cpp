@@ -24,6 +24,7 @@ extern HWND FieldWnd;
 extern CHAR BUFFER[40];
 extern POINT OnFieldCursorPos;
 extern HPEN linePen;
+extern HPEN fPen;
 
 HPEN vPen = { };
 HBRUSH vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
@@ -519,6 +520,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				SelectObject(memFDC, memFBM);
 
 				// Отрисуем пустое поле
+				DeleteObject(SelectObject(memFDC, fPen));
 				FieldInstance.DrawField(memFDC);
 
 				// Подготовим всё необходимое для рисования линии на ВЕРШИНЕ
@@ -605,6 +607,8 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 						UpdateWindow(v1 -> GetWindow());
 					}
 				}
+
+				
 
 				// Отрисуем линию
 				DrawLine(memFDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
