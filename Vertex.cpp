@@ -246,14 +246,14 @@ void Vertex::DrawVertex(HDC _mDC)
 {
 	RECT r = GetRect();
 	vPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
-	SelectObject(_mDC, vPen);
+	DeleteObject(SelectObject(_mDC, vPen));
 
 	Rectangle(_mDC, 0, 0, r.right, r.bottom);
 	Ellipse(_mDC, 12, 12, 88, 88);
 
 	vPen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
-	SelectObject(_mDC, GetStockObject(HOLLOW_BRUSH));
-	SelectObject(_mDC, vPen);
+	DeleteObject(SelectObject(_mDC, GetStockObject(HOLLOW_BRUSH)));
+	DeleteObject(SelectObject(_mDC, vPen));
 	SetTextColor(_mDC, RGB(0, 0, 0));
 
 	Ellipse(_mDC, 5, 5, 95, 95);
@@ -262,10 +262,12 @@ void Vertex::DrawVertex(HDC _mDC)
 	// Если эта вершина является выбранной, нарисуем внутри синюю окружность
 	if (IsSelected()) {
 		vPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
-		SelectObject(_mDC, vPen);
-		SelectObject(_mDC, vBrush);
+		DeleteObject(SelectObject(_mDC, vPen));
+		DeleteObject(SelectObject(_mDC, vBrush));
 		Ellipse(_mDC, 12, 12, 88, 88);
 	}
+
+	DeleteObject(vPen);
 }
 
 void Vertex::UpdateInfoPanels() {
@@ -511,8 +513,8 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				v -> DrawVertex(memVDC);
 
 				// Выберем перо для рисования линии
-				SelectObject(memFDC, linePen);
-				SelectObject(memVDC, linePen);
+				DeleteObject(SelectObject(memFDC, linePen));
+				DeleteObject(SelectObject(memVDC, linePen));
 
 				// Проверим возможность соединиться
 				for (Vertex* v1 : vertices)
@@ -556,6 +558,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 						DrawLine(memVDC, startv.x, startv.y, pt1.x - vloc.x, pt1.y - vloc.y);										
 						
 						// Линия на второй вершине
+						DeleteObject(SelectObject(memVDC1, linePen));
 						POINT startv1 = intersectionPoints(POINT{ 50, 50 }, vloc - pt1 + 100, POINT{ 50, 50 }, 48)[0];
 						DrawLine(memVDC1, startv1.x, startv1.y, vloc.x - pt1.x + 50 + 50, vloc.y - pt1.y + 50 + 50);		
 						
