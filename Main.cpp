@@ -223,6 +223,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				{
 					if (selectedVertexID) Vertex::DeleteSelected();
 					SendMessageA(DeleteButtonWnd, WM_KILLFOCUS, NULL, NULL);
+					FieldInstance.Redraw();
 					break;
 				}
 			}

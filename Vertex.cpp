@@ -237,6 +237,10 @@ void Vertex::DeleteSelected() {
 
 void Vertex::DeleteVertex(UINT _id) {
 	Vertex* v = Vertex::GetVertex(_id);
+	for (UINT idx : v->GetConnections())
+	{
+		GetVertex(idx)->Disconnect(v->GetID());
+	}
 	int vec_idx = Vertex::GetVertexIdx(_id);
 	DestroyWindow(v -> GetWindow());
 	vertices.erase(vertices.begin() + vec_idx);
