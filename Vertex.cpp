@@ -539,25 +539,16 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right || dest.y + length >= parentRect.bottom) {
 					break;
 				}
-				BOOL toExitRMBHandling = FALSE;
 				for (Vertex* v2 : vertices) {
 					if (v  == v2) continue;
 					POINT vpt = v2 -> GetPT();
 					if (PointDistance(vpt, dest) > 100 + VERTICES_DISTANCE_ERROR) continue;
-					else
-					{
-						toExitRMBHandling = TRUE;
-						break;
-					}
+					else return DefWindowProc(hWnd, uMsg, wParam, lParam);
 				}
 
-				if (!toExitRMBHandling)
-				{
-					v->SetPT(dest);
-					MoveWindow(hWnd, v->GetPT().x, v->GetPT().y, 100, 100, FALSE);
-					FieldInstance.Redraw();
-				}
-
+				v -> SetPT(dest);
+				MoveWindow(hWnd, v -> GetPT().x, v -> GetPT().y, 100, 100, FALSE);
+				FieldInstance.Redraw();
 			}
 			//
 			//		Левая мышб для выделения и соединения
