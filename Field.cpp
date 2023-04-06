@@ -81,19 +81,6 @@ void Field::Redraw(BOOL _RedrawVertices)
 {
 	InvalidateRect(hWnd, NULL, FALSE);
 	UpdateWindow(hWnd);
-
-	HDC hDC = GetDC(hWnd);
-	HDC mDC = CreateCompatibleDC(hDC);
-	HBITMAP mBM = CreateCompatibleBitmap(hDC, rect.right, rect.bottom);
-	SelectObject(hDC, mBM);
-
-	DrawField(mDC, _RedrawVertices);
-
-	BitBlt(hDC, 0, 0, rect.right, rect.bottom, mDC, 0, 0, SRCCOPY);
-
-	ReleaseDC(hWnd, hDC);
-	DeleteDC(mDC);
-	DeleteBitmap(mBM);
 }
 
 void Field::FieldRegister(void) {
