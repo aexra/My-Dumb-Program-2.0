@@ -48,6 +48,7 @@ using namespace std;
 #define VertexName 16
 #define TransformPosition 17
 #define Weight 18
+#define OnClearAllClicked 19
 
 
 // vertice constants

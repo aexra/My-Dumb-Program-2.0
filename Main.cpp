@@ -219,6 +219,16 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					break;
 				}
 
+				case OnClearAllClicked:
+				{
+					for (Vertex* v : vertices)
+					{
+						Vertex::DeleteVertex(v->GetID());
+					}
+					FieldInstance.Redraw();
+					break;
+				}
+
 				case OnDeleteVertexClicked:
 				{
 					if (selectedVertexID) Vertex::DeleteSelected();
@@ -289,6 +299,7 @@ void MainWndAddMenus(HWND hWnd) {
 	AppendMenu(FileMenu, MF_STRING, OnLoadGraphClicked, L"Загрузить граф (CTRL+L)");
 	AppendMenu(FileMenu, MF_STRING, OnSaveClicked, L"Сохранить (CTRL+S)");
 	AppendMenu(FileMenu, MF_STRING, OnSaveAsClicked, L"Сохранить как (CTRL+ALT+S)");
+	AppendMenu(FileMenu, MF_STRING, OnClearAllClicked, L"Очистить всё");
 	AppendMenu(FileMenu, MF_SEPARATOR, NULL, NULL);
 	AppendMenu(FileMenu, MF_STRING, OnExitClicked, L"Выйти");
 
