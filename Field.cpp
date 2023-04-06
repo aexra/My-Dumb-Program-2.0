@@ -56,8 +56,6 @@ void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
 	{
 		for (Vertex* v : vertices)
 		{
-			/*InvalidateRect(v->GetWindow(), NULL, FALSE);
-			UpdateWindow(v->GetWindow());*/
 			v->RedrawVertex();
 		}
 	}
@@ -67,76 +65,18 @@ void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
 	{
 		Vertex* v1 = Vertex::GetVertex(vpair.first);
 		POINT C1 = v1->GetCenter();
-		//HDC vDC1 = GetDC(v1->GetWindow());
-		//HGDIOBJ old1 = SelectObject(vDC1, linePen);
 
 		for (UINT vid2 : vpair.second)
 		{
 			Vertex* v2 = Vertex::GetVertex(vid2);
 			POINT C2 = v2->GetCenter();
-			//HDC vDC2 = GetDC(v2->GetWindow());
-			//HGDIOBJ old2 = SelectObject(vDC2, linePen);
-
-			/*POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C1 + 50, POINT{ 50, 50 }, 48)[0];
-			DrawLine(vDC1, startv1.x, startv1.y, C2.x - C1.x + 50, C2.y - C1.y + 50);
-
-			POINT startv2 = intersectionPoints(POINT{ 50, 50 }, C1 - C2 + 50, POINT{ 50, 50 }, 48)[0];
-			DrawLine(vDC2, startv2.x, startv2.y, C1.x - C2.x + 50, C1.y - C2.y + 50);*/
-
 			DrawLine(_mDC, C1.x, C1.y, C2.x, C2.y);
 			
-			//SelectObject(vDC2, old2);
-			//ReleaseDC(v2->GetWindow(), vDC2);
 		}
-		//SelectObject(vDC1, old1);
-		//ReleaseDC(v1->GetWindow(), vDC1);
 	}
 	SelectObject(_mDC, oldf);
 }
-//void Field::DrawConnection(Vertex* _V1, Vertex* _V2, HDC mFDC)
-//{
-//	POINT C1 = _V1->GetCenter();
-//	POINT C2 = _V2->GetCenter();
-//	RECT r1 = _V1->GetRect();
-//	RECT r2 = _V2->GetRect();
-//	HDC VDC1 = GetDC(_V1->GetWindow());
-//	HDC VDC2 = GetDC(_V2->GetWindow());
-//	HDC mVDC1 = CreateCompatibleDC(VDC1);
-//	HDC mVDC2 = CreateCompatibleDC(VDC2);
-//	HBITMAP mVBM1 = CreateCompatibleBitmap(VDC1, 100, 100);
-//	HBITMAP mVBM2 = CreateCompatibleBitmap(VDC2, 100, 100);
-//	SelectObject(mVDC1, mVBM1);
-//	SelectObject(mVDC2, mVBM2);
-//
-//	_V1->DrawVertex(mVDC1);
-//	_V2->DrawVertex(mVDC2);
-//
-//	HGDIOBJ old1 = SelectObject(mVDC1, linePen);
-//	HGDIOBJ old2 = SelectObject(mVDC2, linePen);
-//	HGDIOBJ oldf = SelectObject(mFDC, linePen);
-//
-//	POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C1 + 50, POINT{ 50, 50 }, 48)[0];
-//	DrawLine(mVDC1, startv1.x, startv1.y, C2.x - C1.x + 50, C2.y - C1.y + 50);
-//
-//	POINT startv2 = intersectionPoints(POINT{ 50, 50 }, C1 - C2 + 50, POINT{ 50, 50 }, 48)[0];
-//	DrawLine(mVDC2, startv2.x, startv2.y, C1.x - C2.x + 50, C1.y - C2.y + 50);
-//
-//	DrawLine(mFDC, C1.x, C1.y, C2.x, C2.y);
-//
-//	SelectObject(mVDC1, old1);
-//	SelectObject(mVDC2, old2);
-//	SelectObject(mFDC, oldf);
-//
-//	BitBlt(VDC1, 0, 0, r1.right, r1.bottom, mVDC1, 0, 0, SRCCOPY);
-//	BitBlt(VDC2, 0, 0, r2.right, r2.bottom, mVDC2, 0, 0, SRCCOPY);
-//
-//	ReleaseDC(_V1->GetWindow(), VDC1);
-//	ReleaseDC(_V2->GetWindow(), VDC2);
-//	DeleteDC(mVDC1);
-//	DeleteDC(mVDC2);
-//	DeleteBitmap(mVBM1);
-//	DeleteBitmap(mVBM2);
-//}
+
 void Field::Redraw(BOOL _RedrawVertices)
 {
 	InvalidateRect(hWnd, NULL, FALSE);
