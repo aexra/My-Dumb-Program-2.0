@@ -280,7 +280,7 @@ void Vertex::DrawVertex(HDC _mDC)
 		Ellipse(_mDC, 12, 12, 88, 88);
 	}
 
-	// Отрисуем все соединения
+	// Отрисуем все соединения С этой вершиной
 	POINT C1 = GetCenter();
 	for (UINT idx : connections)
 	{
@@ -290,6 +290,12 @@ void Vertex::DrawVertex(HDC _mDC)
 		SelectObject(_mDC, linePen);
 		DrawLine(_mDC, startv1.x, startv1.y, C2.x - C1.x + 50, C2.y - C1.y + 50);
 	}
+
+	// Отрисуем все ДРУГИЕ соединения, проходящие через эту вершину
+	//
+	// TODO
+	//
+	//
 
 	SelectObject(_mDC, original);
 	DeleteObject(vPen);

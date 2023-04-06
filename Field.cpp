@@ -66,16 +66,16 @@ void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
 	for (pair<UINT, vector<UINT>> vpair : table)
 	{
 		Vertex* v1 = Vertex::GetVertex(vpair.first);
-		HDC vDC1 = GetDC(v1->GetWindow());
 		POINT C1 = v1->GetCenter();
-		HGDIOBJ old1 = SelectObject(vDC1, linePen);
+		//HDC vDC1 = GetDC(v1->GetWindow());
+		//HGDIOBJ old1 = SelectObject(vDC1, linePen);
 
 		for (UINT vid2 : vpair.second)
 		{
 			Vertex* v2 = Vertex::GetVertex(vid2);
-			HDC vDC2 = GetDC(v2->GetWindow());
-			HGDIOBJ old2 = SelectObject(vDC2, linePen);
 			POINT C2 = v2->GetCenter();
+			//HDC vDC2 = GetDC(v2->GetWindow());
+			//HGDIOBJ old2 = SelectObject(vDC2, linePen);
 
 			/*POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C1 + 50, POINT{ 50, 50 }, 48)[0];
 			DrawLine(vDC1, startv1.x, startv1.y, C2.x - C1.x + 50, C2.y - C1.y + 50);
@@ -85,11 +85,11 @@ void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
 
 			DrawLine(_mDC, C1.x, C1.y, C2.x, C2.y);
 			
-			SelectObject(vDC2, old2);
-			ReleaseDC(v2->GetWindow(), vDC2);
+			//SelectObject(vDC2, old2);
+			//ReleaseDC(v2->GetWindow(), vDC2);
 		}
-		SelectObject(vDC1, old1);
-		ReleaseDC(v1->GetWindow(), vDC1);
+		//SelectObject(vDC1, old1);
+		//ReleaseDC(v1->GetWindow(), vDC1);
 	}
 	SelectObject(_mDC, oldf);
 }
