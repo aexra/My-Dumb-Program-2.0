@@ -221,9 +221,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case OnClearAllClicked:
 				{
-					for (Vertex* v : vertices)
+					for (int i = vertices.size() - 1; i > -1; i--)
 					{
-						Vertex::DeleteVertex(v->GetID());
+						Vertex::DeleteVertex(vertices[i] -> GetID());
 					}
 					FieldInstance.Redraw();
 					break;
