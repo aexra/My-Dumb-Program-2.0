@@ -168,7 +168,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			POINT pt = {};
 			pt.x = GET_X_LPARAM(lParam) - 50;
 			pt.y = GET_Y_LPARAM(lParam) - 50;
-			if (vertices.size() < MAX_VERTICES && FieldInstance.IsPtInBorders(pt))
+			if (vertices.size() < MAX_VERTICES && FieldInstance.IsPtInBorders(pt+50))
 			{
 				if (FieldInstance.CheckVertexCollision(pt)) return 0;
 				UINT new_id = Vertex::GenerateID();
