@@ -258,10 +258,30 @@ RECT Vertex::GetRect()
 void Vertex::DrawVertex(HDC _mDC)
 {
 	RECT r = GetRect();
+	POINT C = GetCenter();
 	vPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
 	HGDIOBJ original = SelectObject(_mDC, vPen);
 
 	Rectangle(_mDC, 0, 0, r.right, r.bottom);
+
+	// Отрисуем все ДРУГИЕ соединения, проходящие через эту вершину
+	vector<pair<UINT, vector<UINT>>> table = GetUniqueConnectionsTable();
+	SelectObject(_mDC, linePen);
+	for (pair<UINT, vector<UINT>> para : table)
+	{
+		if (para.first == GetID()) continue;
+		Vertex* v1 = GetVertex(para.first);
+		POINT C1 = v1->GetCenter();
+		for (UINT idx : para.second)
+		{
+			if (idx == GetID()) continue;
+			Vertex* v2 = GetVertex(idx);
+			POINT C2 = v2->GetCenter();
+			DrawLine(_mDC, C1.x - C.x + 50, C1.y - C.y + 50, C2.x - C.x + 50, C2.y - C.y + 50);
+		}
+	}
+
+	SelectObject(_mDC, vPen);
 	Ellipse(_mDC, 12, 12, 88, 88);
 
 	vPen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
@@ -281,7 +301,6 @@ void Vertex::DrawVertex(HDC _mDC)
 	}
 
 	// Отрисуем все соединения С этой вершиной
-	POINT C = GetCenter();
 	SelectObject(_mDC, linePen);
 	for (UINT idx : connections)
 	{
@@ -289,25 +308,6 @@ void Vertex::DrawVertex(HDC _mDC)
 		POINT C2 = v2->GetCenter();
 		POINT startv1 = intersectionPoints(POINT{ 50, 50 }, C2 - C + 50, POINT{ 50, 50 }, 48)[0];
 		DrawLine(_mDC, startv1.x, startv1.y, C2.x - C.x + 50, C2.y - C.y + 50);
-	}
-
-	// Отрисуем все ДРУГИЕ соединения, проходящие через эту вершину
-	vector<pair<UINT, vector<UINT>>> table = GetUniqueConnectionsTable();
-	for (pair<UINT, vector<UINT>> para : table)
-	{
-		if (para.first == GetID()) continue;
-		Vertex* v1 = GetVertex(para.first);
-		POINT C1 = v1 -> GetCenter();
-		for (UINT idx : para.second)
-		{
-			if (idx == GetID()) continue;
-			Vertex* v2 = GetVertex(idx);
-			POINT C2 = v2 -> GetCenter();
-			vector<POINT> ints = intersectionPoints(C1 - C + 50, C2 - C + 50, POINT{50, 50}, 48);
-			if (ints.size() < 2) continue;
-			DrawLine(_mDC, ints[1].x, ints[1].y, C1.x - C.x, C1.y - C.y);
-			DrawLine(_mDC, ints[0].x, ints[0].y, C2.x - C.x, C2.y - C.y);
-		}
 	}
 
 	SelectObject(_mDC, original);
