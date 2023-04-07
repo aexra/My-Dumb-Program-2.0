@@ -489,27 +489,29 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 		case WM_LBUTTONUP:
 		{
 			isLMBPressed = false;
-			
-			/*InvalidateRect(FieldWnd, NULL, FALSE);
-			UpdateWindow(FieldWnd);*/
-			/*InvalidateRect(hWnd, NULL, FALSE);
-			UpdateWindow(hWnd);*/
-			if (prelinkedVertex != nullptr)
+			POINT cursor = { };
+			cursor.x = GET_X_LPARAM(lParam);
+			cursor.y = GET_Y_LPARAM(lParam);
+			for (Vertex* v1 : vertices)
 			{
-				InvalidateRect(prelinkedVertex -> GetWindow(), NULL, FALSE);
-				UpdateWindow(prelinkedVertex -> GetWindow());
-				
-				if (!isOrientedGraph)
+				if (prelinkedVertex != nullptr && v1 != v && v1->IsNear(cursor + v->GetPT()))
 				{
-					UINT conres = v->Connect(prelinkedVertex->GetID());	// здесь создаю conres чтобы проверить,
-					prelinkedVertex->Connect(v->GetID());							// удалось ли соединение
-					//MessageBoxA(hWnd, (conres == 0? "Ошибка соединения!" : "Соединены: " + v->GetName() + " и " + prelinkedVertex->GetName()).c_str(), "Попытка соединения вершин", MB_OK);
+					InvalidateRect(prelinkedVertex->GetWindow(), NULL, FALSE);
+					UpdateWindow(prelinkedVertex->GetWindow());
+
+					if (!isOrientedGraph)
+					{
+						UINT conres = v->Connect(prelinkedVertex->GetID());	// здесь создаю conres чтобы проверить,
+						prelinkedVertex->Connect(v->GetID());							// удалось ли соединение
+						//MessageBoxA(hWnd, (conres == 0? "Ошибка соединения!" : "Соединены: " + v->GetName() + " и " + prelinkedVertex->GetName()).c_str(), "Попытка соединения вершин", MB_OK);
+					}
+					else
+					{
+						MessageBoxA(MainWnd, "У разраба еще ручки не дошли сделать ориентированный вариант графа", "Ошибка!", MB_OK);
+					}
+					prelinkedVertex = nullptr;
+					break;
 				}
-				else
-				{
-					MessageBoxA(MainWnd, "У разраба еще ручки не дошли сделать ориентированный вариант графа", "Ошибка!", MB_OK);
-				}
-				prelinkedVertex = nullptr;
 			}
 			ReleaseCapture();	
 			FieldInstance.Redraw();
