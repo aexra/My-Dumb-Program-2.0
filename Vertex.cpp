@@ -30,9 +30,9 @@ HPEN vPen = { };
 HBRUSH vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 
 Vertex* prelinkedVertex = nullptr;
-
 int k = 0;
 
+RECT cursorline = { };
 POINT lastHit = { };
 
 
@@ -267,6 +267,9 @@ void Vertex::DrawVertex(HDC _mDC)
 	// Отрисуем все ДРУГИЕ соединения, проходящие через эту вершину
 	vector<pair<UINT, vector<UINT>>> table = GetUniqueConnectionsTable();
 	SelectObject(_mDC, linePen);
+	if (cursorline != RECT{ })
+		DrawLine(_mDC, cursorline.left - C.x + 50, cursorline.top - C.y + 50,
+			cursorline.right - C.x + 50, cursorline.bottom - C.y + 50);
 	for (pair<UINT, vector<UINT>> para : table)
 	{
 		if (para.first == GetID()) continue;
@@ -489,6 +492,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 		case WM_LBUTTONUP:
 		{
 			isLMBPressed = false;
+			cursorline = { };
 			POINT cursor = { };
 			cursor.x = GET_X_LPARAM(lParam);
 			cursor.y = GET_Y_LPARAM(lParam);
@@ -612,6 +616,13 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				HBITMAP memVBM = CreateCompatibleBitmap(VDC, vr.right, vr.bottom);
 				SelectObject(memVDC, memVBM);
 
+				// Отрисуем линии на вершинах, пересекаемых линией до курсора
+				POINT C = v->GetCenter();
+				cursorline.left = C.x;
+				cursorline.top = C.y;
+				cursorline.right = (vloc + cursor).x;
+				cursorline.bottom = (vloc + cursor).y;
+
 				// Отрисуем вершину
 				v -> DrawVertex(memVDC);
 
@@ -695,7 +706,6 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 						v1->RedrawVertex();
 					}
 				}
-
 				
 
 				// Отрисуем линию
