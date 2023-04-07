@@ -48,7 +48,7 @@ BOOL Field::IsPtInBorders(const POINT& _pt) {
 void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
 {
 	HGDIOBJ orig = SelectObject(_mDC, fPen);
-	Rectangle(_mDC, 0, 0, rect.right, rect.bottom);
+	Rectangle(_mDC, 0, 0, rect.right+1, rect.bottom+1);
 
 	vector<pair<UINT, vector<UINT>>> table = Vertex::GetUniqueConnectionsTable();
 

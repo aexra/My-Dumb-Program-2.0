@@ -267,7 +267,7 @@ void Vertex::DrawVertex(HDC _mDC)
 	// Отрисуем все ДРУГИЕ соединения, проходящие через эту вершину
 	vector<pair<UINT, vector<UINT>>> table = GetUniqueConnectionsTable();
 	SelectObject(_mDC, linePen);
-	if (cursorline != RECT{ })
+	if (cursorline != RECT{ } && prelinkedVertex == nullptr)
 		DrawLine(_mDC, cursorline.left - C.x + 50, cursorline.top - C.y + 50,
 			cursorline.right - C.x + 50, cursorline.bottom - C.y + 50);
 	for (pair<UINT, vector<UINT>> para : table)
@@ -631,6 +631,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				HGDIOBJ old1 = SelectObject(memVDC, linePen);
 
 				// Проверим возможность соединиться
+				BOOL toNullPrelinkedVertex = TRUE;
 				for (Vertex* v1 : vertices)
 				{
 					if (*v1 == *v) continue;
@@ -639,6 +640,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 					OutputDebugStringA((to_string(v1.IsNear(cursor + vloc)) + "\n").c_str());*/
 					if (v1 -> IsNear(cursor + vloc))
 					{
+						toNullPrelinkedVertex = FALSE;
 
 						// Фикс бага отображения линии при быстрой смене фокуса
 						if (prelinkedVertex != nullptr && prelinkedVertex != v1) 
@@ -706,7 +708,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 						v1->RedrawVertex();
 					}
 				}
-				
+				if (toNullPrelinkedVertex) prelinkedVertex = nullptr;
 
 				// Отрисуем линию
 				DrawLine(memFDC, vloc.x + 50, vloc.y + 50, cursor.x + vloc.x, cursor.y + vloc.y);
