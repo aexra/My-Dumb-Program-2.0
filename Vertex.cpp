@@ -129,7 +129,7 @@ POINT Vertex::GetCenter()
 	_pt.y = pt.y + 50;
 	return _pt;
 }
-POINT	 Vertex::GetPT() {
+POINT&	 Vertex::GetPT() {
 	return pt;
 }
 POINT	 Vertex::SetPT(POINT _pt) {
@@ -380,9 +380,9 @@ void Vertex::UpdateInfoPanels() {
 	string x = to_string(v->GetPT().x);
 	string y = to_string(v->GetPT().y);
 
-	GetWindowTextA(VertexXEditWnd, BUFFER, 4);
+	GetWindowTextA(VertexXEditWnd, BUFFER, 5);
 	if (BUFFER != x) SetWindowTextA(VertexXEditWnd, x.c_str());
-	GetWindowTextA(VertexYEditWnd, BUFFER, 4);
+	GetWindowTextA(VertexYEditWnd, BUFFER, 5);
 	if (BUFFER != y) SetWindowTextA(VertexYEditWnd, y.c_str());
 
 	EnableWindow(VertexXEditWnd, 1);

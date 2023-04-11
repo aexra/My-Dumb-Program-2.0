@@ -176,6 +176,30 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 							UpdateWindow(v->GetWindow());
 							break;
 						}
+						case TransformPositionX:
+						{
+							Vertex* v = Vertex::GetSelected();
+							if (v == nullptr) break;
+							GetWindowTextA(VertexXEditWnd, BUFFER, 5);
+							string sx = BUFFER;
+							if (sx == "" || sx == "1") sx = "1";
+							
+							v->GetPT().x = stoi(sx);
+							MoveWindow(v->GetWindow(), v->GetPT().x, v->GetPT().y, 100, 100, TRUE);
+							break;
+						}
+						case TransformPositionY:
+						{
+							Vertex* v = Vertex::GetSelected();
+							if (v == nullptr) break;
+							GetWindowTextA(VertexYEditWnd, BUFFER, 5);
+							string sy = BUFFER;
+							if (sy == "" || sy == "0") sy = "1";
+
+							v->GetPT().y = stoi(sy);
+							MoveWindow(v->GetWindow(), v->GetPT().x, v->GetPT().y, 100, 100, TRUE);
+							break;
+						}
 					}
 					break;
 				}

@@ -35,7 +35,7 @@ public:
 	FLOAT						GetWeight();
 	FLOAT						SetWeight(FLOAT _weight);
 	POINT						GetCenter();
-	POINT						GetPT();
+	POINT&					GetPT();
 	POINT						SetPT(POINT _pt);
 	HWND&					GetWindow();
 	HWND&					SetWindow(HWND& _hWnd);
