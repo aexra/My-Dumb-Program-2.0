@@ -27,6 +27,8 @@ extern CHAR BUFFER[40];
 extern POINT OnFieldCursorPos;
 extern HPEN linePen;
 extern HPEN fPen;
+extern BOOL isEditingX;
+extern BOOL isEditingY;
 
 HPEN vPen = { };
 HBRUSH vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
@@ -377,13 +379,18 @@ void Vertex::UpdateInfoPanels() {
 	if (string(BUFFER) != v -> GetName())
 		SendMessageA(VertexNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v -> GetName().c_str());
 
-	string x = to_string(v->GetPT().x);
-	string y = to_string(v->GetPT().y);
-
-	GetWindowTextA(VertexXEditWnd, BUFFER, 5);
-	if (BUFFER != x) SetWindowTextA(VertexXEditWnd, x.c_str());
-	GetWindowTextA(VertexYEditWnd, BUFFER, 5);
-	if (BUFFER != y) SetWindowTextA(VertexYEditWnd, y.c_str());
+	if (!isEditingX)
+	{
+		GetWindowTextA(VertexXEditWnd, BUFFER, 5);
+		string x = to_string(v->GetPT().x);
+		if (BUFFER != x) SetWindowTextA(VertexXEditWnd, x.c_str());
+	}
+	if (!isEditingY)
+	{
+		GetWindowTextA(VertexYEditWnd, BUFFER, 5);
+		string y = to_string(v->GetPT().y);
+		if (BUFFER != y) SetWindowTextA(VertexYEditWnd, y.c_str());
+	}
 
 	EnableWindow(VertexXEditWnd, 1);
 	EnableWindow(VertexYEditWnd, 1);

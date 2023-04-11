@@ -48,6 +48,8 @@ Field FieldInstance(NULL);
 BOOL isLMBPressed = false;
 BOOL isRMBPressed = false;
 BOOL isOrientedGraph = false;
+BOOL isEditingX = false;
+BOOL isEditingY = false;
 vector<Vertex*> vertices = { };
 UINT selectedVertexID = { };
 selection_mode selmode = mode1;
@@ -198,6 +200,40 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 							v->GetPT().y = stoi(sy);
 							MoveWindow(v->GetWindow(), v->GetPT().x, v->GetPT().y, 100, 100, TRUE);
+							break;
+						}
+					}
+					break;
+				}
+				case WM_SETFOCUS:
+				{
+					switch(LOWORD(wParam))
+					{
+						case TransformPositionX:
+						{
+							isEditingX = true;
+							break;
+						}
+						case TransformPositionY:
+						{
+							isEditingY = true;
+							break;
+						}
+					}
+					break;
+				}
+				case EN_KILLFOCUS:
+				{
+					switch (LOWORD(wParam))
+					{
+						case TransformPositionX:
+						{
+							isEditingX = false;
+							break;
+						}
+						case TransformPositionY:
+						{
+							isEditingY = false;
 							break;
 						}
 					}
