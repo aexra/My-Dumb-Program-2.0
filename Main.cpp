@@ -28,6 +28,8 @@ HWND IsOrientedWnd = { };
 HWND IsWeightedWnd = { };
 HWND VertexNameStaticWnd = { };
 HWND VertexNameEditWnd = { };
+HWND VertexXEditWnd = { };
+HWND VertexYEditWnd = { };
 HWND TransformPositionWnd = { };
 HWND WeightWnd = { };
 HWND DeleteButtonWnd = { };
@@ -137,15 +139,20 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			PAINTSTRUCT ps;
 			HDC hDC;
 			RECT r;
+			INT bkcol = 240;
 
 			hDC = BeginPaint(hWnd, &ps);
-			hBrush = CreateSolidBrush(RGB(255, 255, 255));
+
+			hBrush = CreateSolidBrush(RGB(bkcol, bkcol, bkcol));
+			HGDIOBJ old = SelectObject(hDC, hBrush);
 			GetClientRect(hWnd, &r);
 
+			// инфопанель
 			Rectangle(hDC, r.right - 231, 10, r.right - 10, r.bottom - 10);
 
 			EndPaint(hWnd, &ps);
 
+			DeleteObject(SelectObject(hDC, old));
 			DeleteObject(hBrush);
 
 			break;
@@ -343,8 +350,14 @@ void MainWndAddWidgets(HWND hWnd) {
 	SendMessageA(VertexNameStaticWnd, WM_SETFONT, (WPARAM)textf, 0);
 	SendMessageA(VertexNameEditWnd, WM_SETFONT, (WPARAM)textf, 0);
 
-	TransformPositionWnd = CreateWindowA("static", "Позиция: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)TransformPosition, NULL, NULL);
+	TransformPositionWnd = CreateWindowA("static", "Позиция:          x             y", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, NULL, NULL, NULL);
 	SendMessageA(TransformPositionWnd, WM_SETFONT, (WPARAM)textf, 0);
+
+	y += 28;
+	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86, y, 50, 28, hWnd, (HMENU)TransformPositionX, NULL, NULL);
+	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 50 + 10, y, 50, 28, hWnd, (HMENU)TransformPositionY, NULL, NULL);
+	SendMessageA(VertexXEditWnd, WM_SETFONT, (WPARAM)textf, 0);
+	SendMessageA(VertexYEditWnd, WM_SETFONT, (WPARAM)textf, 0);
 
 	WeightWnd = CreateWindowA("static", "Вес: ", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)Weight, NULL, NULL);
 	SendMessageA(WeightWnd, WM_SETFONT, (WPARAM)textf, 0);

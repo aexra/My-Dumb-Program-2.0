@@ -46,9 +46,11 @@ using namespace std;
 #define IsOriented 14
 #define IsWeighted 15
 #define VertexName 16
-#define TransformPosition 17
+//#define  17
 #define Weight 18
 #define OnClearAllClicked 19
+#define TransformPositionX 20
+#define TransformPositionY 21
 
 
 // vertice constants

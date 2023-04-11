@@ -19,6 +19,8 @@ extern HWND IsOrientedWnd;
 extern HWND IsWeightedWnd;
 extern HWND VertexNameEditWnd;
 extern HWND TransformPositionWnd;
+extern HWND VertexXEditWnd;
+extern HWND VertexYEditWnd;
 extern HWND WeightWnd;
 extern HWND FieldWnd;
 extern CHAR BUFFER[40];
@@ -355,10 +357,11 @@ void Vertex::UpdateInfoPanels() {
 			// Сделаем edit пустым
 			SendMessageA(VertexNameEditWnd, WM_SETTEXT, NULL, (LPARAM)string("").c_str());
 		
-		GetWindowTextA(TransformPositionWnd, BUFFER, 30);
-		if (string(BUFFER) != "Позиция: ")
-			SendMessageA(TransformPositionWnd, WM_SETTEXT, NULL, (LPARAM)string("Позиция: ").c_str());
-		
+		SetWindowTextA(VertexXEditWnd, "");
+		SetWindowTextA(VertexYEditWnd, "");
+		EnableWindow(VertexXEditWnd, 0);
+		EnableWindow(VertexYEditWnd, 0);
+
 		GetWindowTextA(WeightWnd, BUFFER, 30);
 		if (string(BUFFER) != "Вес: ")
 			SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: ").c_str());
@@ -374,10 +377,16 @@ void Vertex::UpdateInfoPanels() {
 	if (string(BUFFER) != v -> GetName())
 		SendMessageA(VertexNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v -> GetName().c_str());
 
-	GetWindowTextA(TransformPositionWnd, BUFFER, 30);
-	string trueLine = "Позиция: (" + to_string(v->GetPT().x) + "; " + to_string(v->GetPT().y) + ")";
-	if (string(BUFFER) != trueLine)
-		SendMessageA(TransformPositionWnd, WM_SETTEXT, NULL, (LPARAM)trueLine.c_str());
+	string x = to_string(v->GetPT().x);
+	string y = to_string(v->GetPT().y);
+
+	GetWindowTextA(VertexXEditWnd, BUFFER, 4);
+	if (BUFFER != x) SetWindowTextA(VertexXEditWnd, x.c_str());
+	GetWindowTextA(VertexYEditWnd, BUFFER, 4);
+	if (BUFFER != y) SetWindowTextA(VertexYEditWnd, y.c_str());
+
+	EnableWindow(VertexXEditWnd, 1);
+	EnableWindow(VertexYEditWnd, 1);
 
 	GetWindowTextA(WeightWnd, BUFFER, 30);
 	if (string(BUFFER) != "Вес: " + to_string(v -> GetWeight()))
