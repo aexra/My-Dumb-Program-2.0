@@ -162,7 +162,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			switch (HIWORD(wParam))
 			{
-				case EN_UPDATE:
+				case EN_CHANGE:
 				{
 					switch(LOWORD(wParam))
 					{
