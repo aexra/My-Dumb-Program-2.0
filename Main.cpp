@@ -381,14 +381,16 @@ void MainWndAddMenus(HWND hWnd) {
 
 void MainWndAddWidgets(HWND hWnd) {
 	RECT r;
+	RECT fr;
 	HWND nhwnd;
 	INT y = 11;
 
 	GetClientRect(hWnd, &r);
 	FieldWnd = CreateWindow(FIELD_WC, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, 10, 10, r.right - 250, r.bottom - 20, hWnd, (HMENU)FieldID, NULL, NULL);
 	FieldInstance.SetWindow(FieldWnd);
+	GetClientRect(FieldWnd, &fr);
 	CreateWindowA("static", "Используйте <ЛКМ> для создания и соединения вершин, а <ПКМ> для их перемещения", WS_CHILD | WS_VISIBLE | SS_CENTER,
-		10+1, r.bottom-20-20+9, r.right-250-2, 20, hWnd, NULL, NULL, NULL);
+		1, fr.bottom-20, fr.right-2, 20-2, FieldWnd, NULL, NULL, NULL);
 
 	nhwnd = CreateWindowA("static", "Инспектор", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y, 218, 28, hWnd, NULL, NULL, NULL);
 	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)titlef, 0);
