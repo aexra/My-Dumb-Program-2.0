@@ -186,7 +186,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 							string sx = BUFFER;
 							if (sx == "" || sx == "1") sx = "1";
 							
-							v->GetPT().x = stoi(sx);
+							v->GetPT().x = min(stoi(sx), FieldInstance.GetRect().right - FieldInstance.GetRect().left - 101);
 							MoveWindow(v->GetWindow(), v->GetPT().x, v->GetPT().y, 100, 100, TRUE);
 							break;
 						}
@@ -198,7 +198,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 							string sy = BUFFER;
 							if (sy == "" || sy == "0") sy = "1";
 
-							v->GetPT().y = stoi(sy);
+							v->GetPT().y = min(stoi(sy), FieldInstance.GetRect().bottom - FieldInstance.GetRect().top - 101);
 							MoveWindow(v->GetWindow(), v->GetPT().x, v->GetPT().y, 100, 100, TRUE);
 							break;
 						}
