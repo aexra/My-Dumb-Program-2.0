@@ -188,6 +188,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 							
 							v->GetPT().x = min(stoi(sx), FieldInstance.GetRect().right - FieldInstance.GetRect().left - 101);
 							MoveWindow(v->GetWindow(), v->GetPT().x, v->GetPT().y, 100, 100, TRUE);
+							FieldInstance.Redraw();
 							break;
 						}
 						case TransformPositionY:
@@ -200,6 +201,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 							v->GetPT().y = min(stoi(sy), FieldInstance.GetRect().bottom - FieldInstance.GetRect().top - 101);
 							MoveWindow(v->GetWindow(), v->GetPT().x, v->GetPT().y, 100, 100, TRUE);
+							FieldInstance.Redraw();
 							break;
 						}
 					}
