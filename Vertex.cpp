@@ -366,7 +366,7 @@ void Vertex::UpdateInfoPanels() {
 	// Если не выделена ни одна вершина, все поля должны быть пустыми
 	if (!selectedVertexID) {
 		// Сделаем edit переименования неактивным
-		EnableWindow(VertexNameEditWnd, FALSE);
+		EnableWindow(VertexNameEditWnd, 0);
 		// Проверим, не пустая ли она уже
 		GetWindowTextA(VertexNameEditWnd, BUFFER, 30);
 		if (string(BUFFER) != "")
@@ -388,7 +388,7 @@ void Vertex::UpdateInfoPanels() {
 	Vertex* v = Vertex::GetSelected();
 	
 	// Сделаем активным поле переименования и вот всё что выше делали
-	EnableWindow(VertexNameEditWnd, TRUE);
+	EnableWindow(VertexNameEditWnd, 1);
 	GetWindowTextA(VertexNameEditWnd, BUFFER, 30);
 	if (string(BUFFER) != v -> GetName())
 		SendMessageA(VertexNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v -> GetName().c_str());

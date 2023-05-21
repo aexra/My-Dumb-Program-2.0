@@ -184,6 +184,14 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SetBkColor(hdc, col);
 			return (INT_PTR)fbkb;
 		}
+		case WM_CTLCOLORSTATIC:
+		{
+			HDC hdc = (HDC)wParam;
+			COLORREF col = vRGB(tmr->GetPalette().fbk);
+			SetTextColor(hdc, vRGB(tmr->GetPalette().text));
+			SetBkColor(hdc, col);
+			return (INT_PTR)fbkb;
+		}
 		case WM_COMMAND:
 		{
 			switch (HIWORD(wParam))
@@ -453,12 +461,12 @@ void MainWndAddWidgets(HWND hWnd) {
 	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=offset, 0), NULL, V3(190, offset, 0), textsp);
 	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 0));
 	new STATIC(hWnd, "Имя:", V3(r.right - 230, y += offset, 0), NULL, V3(120, offset, 0), textsp);
-	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 230 + 122, y, 97, offset, hWnd, (HMENU)VertexName, NULL, NULL);
+	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE, r.right - 230 + 122, y, 97, offset, hWnd, (HMENU)VertexName, NULL, NULL);
 	new STATIC(hWnd, "Позиция:      X      Y", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 0), textsp);
 	y += offset;
 	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86, y, 50, offset, hWnd, (HMENU)TransformPositionX, NULL, NULL);
 	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 50 + 10, y, 50, offset, hWnd, (HMENU)TransformPositionY, NULL, NULL);
-	WeightWnd = CreateWindowA("static", "Вес: ", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 229, y += offset, 218, offset, hWnd, (HMENU)Weight, NULL, NULL);
+	WeightWnd = CreateWindowA("static", "Вес: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += offset, 218, offset, hWnd, (HMENU)Weight, NULL, NULL);
 	y += offset;
 	DeleteButtonWnd = CreateWindowA("button", "УДАЛИТЬ ВЕРШИНУ", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += offset, 218, offset, hWnd, (HMENU)OnDeleteVertexClicked, NULL, NULL);
 }
