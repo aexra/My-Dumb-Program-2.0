@@ -28,7 +28,7 @@ void Static::GenWnd(HWND _hParWnd)
 		7, 7, transform.size.x - 14, transform.size.y - 14, wnd, NULL, NULL, NULL);
 	defaultStaticProc_LIBVAR = (WNDPROC)GetWindowLongPtrA(placeholder, GWLP_WNDPROC);
 	SetWindowLongPtrA(placeholder, GWLP_WNDPROC, (LONG_PTR)PlaceholderProc);
-	HFONT hf = CreateFont(params.charHeight, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Comic Sans MS");
+	HFONT hf = CreateFont(params.charHeight, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, params.font.c_str());
 	SendMessage(placeholder, WM_SETFONT, (WPARAM)hf, 0);
 }
 
