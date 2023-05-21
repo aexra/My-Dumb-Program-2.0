@@ -470,9 +470,9 @@ void MainWndAddWidgets(HWND hWnd) {
 
 	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, 0), NULL, V3(219, offset, 0), inspsp);
 	GraphNameWnd = new STATIC(hWnd, "NewGraph.graph", V3(r.right-230, y+=offset, 0), NULL, V3(219, offset+4, 24), titlesp);
-	new STATIC(hWnd, "Ориентация:", V3(r.right-230, y+=offset+4, 0), NULL, V3(185, offset, 24), textsp); 	/*st->Disable();*/
+	new STATIC(hWnd, "Ориентированный:", V3(r.right-230, y+=offset+4, 0), NULL, V3(185, offset, 24), textsp); 	/*st->Disable();*/
 	IsOrientedWnd = new FLAG(hWnd, "txt", V3(r.right - 230 + 180 + 5, y, 0), V3(offset, offset, 3));
-	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=offset, 0), NULL, V3(185, offset, 24), textsp);
+	new STATIC(hWnd, "Взвешенный:", V3(r.right-230, y+=offset, 0), NULL, V3(185, offset, 24), textsp);
 	IsWeightedWnd = new FLAG(hWnd, "txt", V3(r.right - 230 + 180 + 5, y, 0), V3(offset, offset, 3));
 	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 0), titlesp);
 	new STATIC(hWnd, "Имя:", V3(r.right - 230, y += offset, 0), NULL, V3(120, offset, 24), textsp);
