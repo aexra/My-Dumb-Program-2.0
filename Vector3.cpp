@@ -7,7 +7,7 @@ Vector3::Vector3()
 	Invalidate();
 	Len();
 }
-Vector3::Vector3(DOUBLE _x, DOUBLE _y, DOUBLE _z)
+Vector3::Vector3(long _x, long _y, long _z)
 {
 	x = _x;
 	y = _y;
