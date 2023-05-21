@@ -8,7 +8,7 @@ Static::Static(HWND _hParWnd, string _Text, V3 _Position, UINT_PTR _nIDEvent, V3
 {
 	text = _Text;
 	params = _Params;
-	params.bdWidth = max(_Size.z, 3);
+	params.charHeight = _Size.z;
 	transform.position = _Position;
 	nIDEvent = _nIDEvent;
 	transform.size = _Size;

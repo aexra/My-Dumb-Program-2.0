@@ -9,11 +9,6 @@
 /* GLOBAL VARIABLES */
 
 
-// FONTS
-HFONT titlef = CreateFontA(24, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Comic Sans MS");
-HFONT textf = CreateFontA(21, 9, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Calibri");
-
-
 // BRUSHES
 HBRUSH SysGrey = (HBRUSH)COLOR_WINDOW;
 HBRUSH TitleBrush = CreateSolidBrush(RGB(180, 180, 180));
@@ -23,7 +18,7 @@ HBRUSH TheChosenOne = (HBRUSH)HOLLOW_BRUSH;
 // WINDOWS
 HWND MainWnd = { };
 HWND FieldWnd = { };
-HWND GraphNameWnd = { };
+STATIC* GraphNameWnd = { };
 HWND IsOrientedWnd = { };
 HWND IsWeightedWnd = { };
 HWND VertexNameStaticWnd = { };
@@ -395,40 +390,18 @@ void MainWndAddWidgets(HWND hWnd) {
 	CreateWindowA("static", "Используйте <ЛКМ> для создания и соединения вершин, а <ПКМ> для их перемещения", WS_CHILD | WS_VISIBLE | SS_CENTER,
 		1, fr.bottom-20, fr.right-2, 20-2, FieldWnd, NULL, NULL, NULL);
 
-	nhwnd = CreateWindowA("static", "Инспектор", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y, 218, 28, hWnd, NULL, NULL, NULL);
-	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)titlef, 0);
-
-	GraphNameWnd = CreateWindowA("static", "NewGraph.graph", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)GraphName, NULL, NULL);
-	SendMessageA(GraphNameWnd, WM_SETFONT, (WPARAM)titlef, 0);
-
-	IsOrientedWnd = CreateWindowA("static", "Ориентированный: false", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)IsOriented, NULL, NULL);
-	SendMessageA(IsOrientedWnd, WM_SETFONT, (WPARAM)textf, 0);
-
-	IsWeightedWnd = CreateWindowA("static", "Взвешенный: false", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)IsWeighted, NULL, NULL);
-	SendMessageA(IsWeightedWnd, WM_SETFONT, (WPARAM)textf, 0);
-
-	nhwnd = CreateWindowA("static", "Вершина", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, NULL, NULL, NULL);
-	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)titlef, 0);
-
-	VertexNameStaticWnd = CreateWindowA("static", "Обозначение: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 109, 28, hWnd, NULL, NULL, NULL);
-	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 229 + 109, y, 109, 28, hWnd, (HMENU)VertexName, NULL, NULL);
-	SendMessageA(VertexNameStaticWnd, WM_SETFONT, (WPARAM)textf, 0);
-	SendMessageA(VertexNameEditWnd, WM_SETFONT, (WPARAM)textf, 0);
-
-	TransformPositionWnd = CreateWindowA("static", "Позиция:          x             y", WS_CHILD | WS_VISIBLE, r.right - 229, y += 28, 218, 28, hWnd, NULL, NULL, NULL);
-	SendMessageA(TransformPositionWnd, WM_SETFONT, (WPARAM)textf, 0);
-
+	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, 0), NULL, V3(219, 28, 0));
+	GraphNameWnd = new STATIC(hWnd, "NewGraph.graph", V3(r.right-230, y+=28, 0), NULL, V3(219, 28, 0));
+	new STATIC(hWnd, "Ориентация:", V3(r.right-230, y+=28, 0), NULL, V3(190, 28, 0)); 	/*st->Disable();*/
+	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=28, 0), NULL, V3(190, 28, 0));
+	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += 28, 0), NULL, V3(219, 28, 0));
+	new STATIC(hWnd, "Обозначение:", V3(r.right - 230, y += 28, 0), NULL, V3(120, 28, 0));
+	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 230 + 122, y, 97, 28, hWnd, (HMENU)VertexName, NULL, NULL);
+	new STATIC(hWnd, "Позиция:      X      Y", V3(r.right - 230, y += 28, 0), NULL, V3(219, 28, 0));
 	y += 28;
 	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86, y, 50, 28, hWnd, (HMENU)TransformPositionX, NULL, NULL);
 	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 50 + 10, y, 50, 28, hWnd, (HMENU)TransformPositionY, NULL, NULL);
-	SendMessageA(VertexXEditWnd, WM_SETFONT, (WPARAM)textf, 0);
-	SendMessageA(VertexYEditWnd, WM_SETFONT, (WPARAM)textf, 0);
-
 	WeightWnd = CreateWindowA("static", "Вес: ", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)Weight, NULL, NULL);
-	SendMessageA(WeightWnd, WM_SETFONT, (WPARAM)textf, 0);
-
 	y += 28;
-
 	DeleteButtonWnd = CreateWindowA("button", "УДАЛИТЬ ВЕРШИНУ", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += 28, 218, 28, hWnd, (HMENU)OnDeleteVertexClicked, NULL, NULL);
-	SendMessageA(nhwnd, WM_SETFONT, (WPARAM)CreateFontA(24, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, "Comic Sans MS"), 0);
 }
