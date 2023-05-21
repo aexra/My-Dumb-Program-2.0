@@ -319,6 +319,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					tmr->SetLight();
 					DeleteObject(linePen);
 					linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
+					InvalidateRect(MainWnd, NULL, FALSE);
 					break;
 				}
 
@@ -327,6 +328,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					tmr->SetDark();
 					DeleteObject(linePen);
 					linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
+					InvalidateRect(MainWnd, NULL, FALSE);
 					break;
 				}
 			}
