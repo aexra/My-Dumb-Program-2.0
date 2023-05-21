@@ -21,8 +21,8 @@ HBRUSH fbkb;
 HWND MainWnd = { };
 HWND FieldWnd = { };
 STATIC* GraphNameWnd = { };
-HWND IsOrientedWnd = { };
-HWND IsWeightedWnd = { };
+FLAG* IsOrientedWnd = { };
+FLAG* IsWeightedWnd = { };
 HWND VertexNameStaticWnd = { };
 HWND VertexNameEditWnd = { };
 HWND VertexXEditWnd = { };
@@ -463,8 +463,9 @@ void MainWndAddWidgets(HWND hWnd) {
 
 	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, 0), NULL, V3(219, offset, 0), inspsp);
 	GraphNameWnd = new STATIC(hWnd, "NewGraph.graph", V3(r.right-230, y+=offset, 0), NULL, V3(219, offset+4, 24), titlesp);
-	new STATIC(hWnd, "Ориентация:", V3(r.right-230, y+=offset+4, 0), NULL, V3(190, offset, 24), textsp); 	/*st->Disable();*/
-	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=offset, 0), NULL, V3(190, offset, 24), textsp);
+	new STATIC(hWnd, "Ориентация:", V3(r.right-230, y+=offset+4, 0), NULL, V3(185, offset, 24), textsp); 	/*st->Disable();*/
+	IsOrientedWnd = new FLAG(hWnd, "txt", V3(r.right - 230 + 180 + 5, y, 0), V3(offset, offset, 3));
+	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=offset, 0), NULL, V3(185, offset, 24), textsp);
 	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 0), titlesp);
 	new STATIC(hWnd, "Имя:", V3(r.right - 230, y += offset, 0), NULL, V3(120, offset, 24), textsp);
 	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE, r.right - 230 + 122, y, 97, offset, hWnd, (HMENU)VertexName, NULL, NULL);
