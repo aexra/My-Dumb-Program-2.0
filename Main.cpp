@@ -301,6 +301,18 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					FieldInstance.Redraw();
 					break;
 				}
+
+				case OnLightThemeClicked:
+				{
+
+					break;
+				}
+
+				case OnDarkThemeClicked:
+				{
+
+					break;
+				}
 			}
 
 			break;
