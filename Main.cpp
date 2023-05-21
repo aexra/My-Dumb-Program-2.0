@@ -72,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { 0 };
 
-	linePen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
+	linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().link));
 
 	//hThread2 = CreateThread(NULL, 0, LineDrawerThreadProc, (LPVOID)THREAD2, 0, NULL);
 

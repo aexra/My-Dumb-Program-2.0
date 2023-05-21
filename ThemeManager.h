@@ -13,8 +13,9 @@ struct PALETTE
 	V3 link;
 	V3 vbk;
 	V3 vbd;
+	V3 selection;
 }
-const dark {
+const dark{
 	V3(20, 20, 20),
 	V3(36, 35, 35),
 	V3(255, 255, 255),
@@ -22,7 +23,8 @@ const dark {
 	V3(46, 43, 43),
 	V3(135, 127, 127),
 	V3(94, 91, 91),
-	V3(255, 255, 255)
+	V3(200, 200, 200),
+	V3(100, 149, 237)
 },
 const light{
 

@@ -4,6 +4,7 @@
 #include "Lib.h"
 #include "Vector2.h"
 #include "ExtraOverloads.h"
+#include "ThemeManager.h"
 
 
 extern vector<Vertex*> vertices;
@@ -30,6 +31,7 @@ extern HPEN linePen;
 extern HPEN fPen;
 extern BOOL isEditingX;
 extern BOOL isEditingY;
+extern ThemeManager* tmr;
 
 HPEN vPen = { };
 HBRUSH vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
@@ -262,12 +264,20 @@ RECT Vertex::GetRect()
 
 void Vertex::DrawVertex(HDC _mDC)
 {
+	PALETTE pal = tmr->GetPalette();
 	RECT r = GetRect();
 	POINT C = GetCenter();
-	vPen = CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
-	HGDIOBJ original = SelectObject(_mDC, vPen);
+	vBrush = CreateSolidBrush(vRGB(pal.fbk));
+	vPen = CreatePen(PS_SOLID, 10, vRGB(pal.fbk));
+	HGDIOBJ oldp = SelectObject(_mDC, vPen);
+	HGDIOBJ oldb = SelectObject(_mDC, vBrush);
 
 	Rectangle(_mDC, 0, 0, r.right, r.bottom);
+
+	vBrush = CreateSolidBrush(vRGB(pal.vbk));
+	vPen = CreatePen(PS_SOLID, 10, vRGB(pal.vbd));
+	DeleteObject(SelectObject(_mDC, vPen));
+	DeleteObject(SelectObject(_mDC, vBrush));
 
 	// Отрисуем все ДРУГИЕ соединения, проходящие через эту вершину
 	vector<pair<UINT, vector<UINT>>> table = GetUniqueConnectionsTable();
@@ -292,17 +302,18 @@ void Vertex::DrawVertex(HDC _mDC)
 	SelectObject(_mDC, vPen);
 	Ellipse(_mDC, 12, 12, 88, 88);
 
-	vPen = CreatePen(PS_SOLID, 5, RGB(89, 89, 89));
-	DeleteObject(SelectObject(_mDC, GetStockObject(HOLLOW_BRUSH)));
+	vPen = CreatePen(PS_SOLID, 5, vRGB(pal.vbd));
 	DeleteObject(SelectObject(_mDC, vPen));
-	SetTextColor(_mDC, RGB(0, 0, 0));
+	SetTextColor(_mDC, vRGB(pal.text));
+	SetBkColor(_mDC, vRGB(pal.vbk));
 
 	Ellipse(_mDC, 5, 5, 95, 95);
 	DrawTextA(_mDC, (GetName()).c_str(), -1, &r, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
 	// Если эта вершина является выбранной, нарисуем внутри синюю окружность
 	if (IsSelected()) {
-		vPen = CreatePen(PS_SOLID, 10, RGB(100, 149, 237));
+		vPen = CreatePen(PS_SOLID, 10, vRGB(pal.selection));
+		vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 		DeleteObject(SelectObject(_mDC, vPen));
 		DeleteObject(SelectObject(_mDC, vBrush));
 		Ellipse(_mDC, 12, 12, 88, 88);
@@ -318,8 +329,10 @@ void Vertex::DrawVertex(HDC _mDC)
 		DrawLine(_mDC, startv1.x, startv1.y, C2.x - C.x + 50, C2.y - C.y + 50);
 	}
 
-	SelectObject(_mDC, original);
+	SelectObject(_mDC, oldp);
+	SelectObject(_mDC, oldb);
 	DeleteObject(vPen);
+	DeleteObject(vBrush);
 }
 
 void Vertex::RedrawVertex()
