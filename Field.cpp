@@ -50,7 +50,22 @@ BOOL Field::IsPtInBorders(const POINT& _pt) {
 }
 void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
 {
+	HBRUSH hBrush;
+	HPEN hPen;
+	PALETTE pal = tmr->GetPalette();
+	hPen = CreatePen(PS_SOLID, 2, vRGB(pal.fbd));
+	hBrush = CreateSolidBrush(vRGB(pal.fbk));
+
+	HGDIOBJ oldp = SelectObject(_mDC, hPen);
+	HGDIOBJ oldb = SelectObject(_mDC, hBrush);
+
 	Rectangle(_mDC, 0, 0, rect.right+1, rect.bottom+1);
+
+	DeleteObject(SelectObject(_mDC, oldp));
+	DeleteObject(SelectObject(_mDC, oldb));
+
+	DeleteObject(hPen);
+	DeleteObject(hBrush);
 
 	vector<pair<UINT, vector<UINT>>> table = Vertex::GetUniqueConnectionsTable();
 
@@ -103,12 +118,10 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 		case WM_PAINT:
 		{
-			PALETTE pal = tmr->GetPalette();
 			HDC hdc;
 			RECT r;
 			PAINTSTRUCT ps;
-			HBRUSH hBrush;
-			HPEN hPen;
+			
 
 			GetClientRect(hWnd, &r);
 
@@ -118,25 +131,14 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			HBITMAP mBM = CreateCompatibleBitmap(hdc, r.right, r.bottom);
 			SelectObject(mDC, mBM);
 
-			hPen = CreatePen(PS_SOLID, 2, vRGB(pal.fbd));
-			hBrush = CreateSolidBrush(vRGB(pal.fbk));
-
-			HGDIOBJ oldp = SelectObject(mDC, hPen);
-			HGDIOBJ oldb = SelectObject(mDC, hBrush);
+			
 
 			FieldInstance.DrawField(mDC);
-
-			DeleteObject(SelectObject(mDC, oldp));
-			DeleteObject(SelectObject(mDC, oldb));
 
 			BitBlt(hdc, 0, 0, r.right, r.bottom, mDC, 0, 0, SRCCOPY);
 
 			EndPaint(hWnd, &ps);
 
-			DeleteObject(hBrush);
-			DeleteObject(hPen);
-			DeleteObject(oldp);
-			DeleteObject(oldb);
 			DeleteDC(mDC);
 			DeleteBitmap(mBM);
 			break;

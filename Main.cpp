@@ -72,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { 0 };
 
-	linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().link));
+	linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
 
 	//hThread2 = CreateThread(NULL, 0, LineDrawerThreadProc, (LPVOID)THREAD2, 0, NULL);
 
@@ -316,13 +316,17 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case OnLightThemeClicked:
 				{
-
+					tmr->SetLight();
+					DeleteObject(linePen);
+					linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
 					break;
 				}
 
 				case OnDarkThemeClicked:
 				{
-
+					tmr->SetDark();
+					DeleteObject(linePen);
+					linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
 					break;
 				}
 			}
