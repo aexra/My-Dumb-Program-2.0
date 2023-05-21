@@ -29,7 +29,7 @@ HWND VertexXEditWnd = { };
 HWND VertexYEditWnd = { };
 HWND TransformPositionWnd = { };
 HWND WeightWnd = { };
-HWND DeleteButtonWnd = { };
+BUTTON* DeleteButtonWnd = { };
 HWND myAbsolutelyCoolestTipEver = { };
 
 
@@ -331,8 +331,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case OnDeleteVertexClicked:
 				{
-					if (selectedVertexID) Vertex::DeleteSelected();
-					SendMessageA(DeleteButtonWnd, WM_KILLFOCUS, NULL, NULL);
+					if (!selectedVertexID) break;
+					Vertex::DeleteSelected();
 					FieldInstance.Redraw();
 					break;
 				}
@@ -455,18 +455,17 @@ void MainWndAddWidgets(HWND hWnd) {
 	textsp.bdWidth = 0;
 	textsp.alignh = aligns::left;
 
-	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, 0), NULL, V3(219, offset, 0));
-	GraphNameWnd = new STATIC(hWnd, "NewGraph.graph", V3(r.right-230, y+=offset, 0), NULL, V3(219, offset, 0));
-	new STATIC(hWnd, "Ориентация:", V3(r.right-230, y+=offset, 0), NULL, V3(190, offset, 0), textsp); 	/*st->Disable();*/
-	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=offset, 0), NULL, V3(190, offset, 0), textsp);
-	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 0));
-	new STATIC(hWnd, "Имя:", V3(r.right - 230, y += offset, 0), NULL, V3(120, offset, 0), textsp);
+	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, 0), NULL, V3(219, offset, 0), inspsp);
+	GraphNameWnd = new STATIC(hWnd, "NewGraph.graph", V3(r.right-230, y+=offset, 0), NULL, V3(219, offset+4, 24), titlesp);
+	new STATIC(hWnd, "Ориентация:", V3(r.right-230, y+=offset+4, 0), NULL, V3(190, offset, 24), textsp); 	/*st->Disable();*/
+	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=offset, 0), NULL, V3(190, offset, 24), textsp);
+	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 0), titlesp);
+	new STATIC(hWnd, "Имя:", V3(r.right - 230, y += offset, 0), NULL, V3(120, offset, 24), textsp);
 	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE, r.right - 230 + 122, y, 97, offset, hWnd, (HMENU)VertexName, NULL, NULL);
-	new STATIC(hWnd, "Позиция:      X      Y", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 0), textsp);
-	y += offset;
-	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86, y, 50, offset, hWnd, (HMENU)TransformPositionX, NULL, NULL);
+	new STATIC(hWnd, "Позиция:      X      Y", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 24), textsp);
+	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86, y+=offset, 50, offset, hWnd, (HMENU)TransformPositionX, NULL, NULL);
 	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 50 + 10, y, 50, offset, hWnd, (HMENU)TransformPositionY, NULL, NULL);
 	WeightWnd = CreateWindowA("static", "Вес: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += offset, 218, offset, hWnd, (HMENU)Weight, NULL, NULL);
-	y += offset;
-	DeleteButtonWnd = CreateWindowA("button", "УДАЛИТЬ ВЕРШИНУ", WS_CHILD | WS_VISIBLE | SS_CENTER, r.right - 229, y += offset, 218, offset, hWnd, (HMENU)OnDeleteVertexClicked, NULL, NULL);
+	DeleteButtonWnd = new BUTTON(hWnd, "УДАЛИТЬ ВЕРШИНУ", V3(r.right - 230, y += offset, 0), OnDeleteVertexClicked, V3(219, offset, 0));
+	DeleteButtonWnd->Disable();
 }

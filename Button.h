@@ -85,6 +85,7 @@ public:
 	void Enable();
 	void Show();
 	void Hide();
+	BOOL IsDisabled();
 
 	// public static methods
 	static LRESULT CALLBACK ButtonProc(HWND, UINT, WPARAM, LPARAM);

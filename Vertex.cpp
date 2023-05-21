@@ -32,6 +32,7 @@ extern HPEN fPen;
 extern BOOL isEditingX;
 extern BOOL isEditingY;
 extern ThemeManager* tmr;
+extern BUTTON* DeleteButtonWnd;
 
 HPEN vPen = { };
 HBRUSH vBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
@@ -377,6 +378,8 @@ void Vertex::UpdateInfoPanels() {
 		SetWindowTextA(VertexYEditWnd, "");
 		EnableWindow(VertexXEditWnd, 0);
 		EnableWindow(VertexYEditWnd, 0);
+		if (!DeleteButtonWnd->IsDisabled())
+			DeleteButtonWnd->Disable();
 
 		GetWindowTextA(WeightWnd, BUFFER, 30);
 		if (string(BUFFER) != "Вес: ")
@@ -406,6 +409,8 @@ void Vertex::UpdateInfoPanels() {
 		if (BUFFER != y) SetWindowTextA(VertexYEditWnd, y.c_str());
 	}
 
+	if (DeleteButtonWnd->IsDisabled())
+		DeleteButtonWnd->Enable();
 	EnableWindow(VertexXEditWnd, 1);
 	EnableWindow(VertexYEditWnd, 1);
 

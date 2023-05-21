@@ -62,6 +62,11 @@ void Button::Hide()
 	ShowWindow(placeholder, 0);
 }
 
+BOOL Button::IsDisabled()
+{
+	return (state == states::disabled? 1 : 0);
+}
+
 void Button::Press()
 {
 	state = pressed;
