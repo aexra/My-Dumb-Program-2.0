@@ -2,6 +2,7 @@
 #include "Field.h"
 #include "Vertex.h"
 #include "Lib.h"
+#include "ThemeManager.h"
 
 
 
@@ -52,8 +53,13 @@ CHAR BUFFER[40];
 HPEN linePen = { };
 
 
+// THEME MANAGER SINGLETON
+ThemeManager* tmr;
+
+
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 	InitLib();
+	tmr = ThemeManager::GetInstance();
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
@@ -133,17 +139,23 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_PAINT:
 		{
+			PALETTE pal = tmr->GetPalette();
 			HBRUSH hBrush;
 			PAINTSTRUCT ps;
 			HDC hDC;
 			RECT r;
-			INT bkcol = 240;
 
 			hDC = BeginPaint(hWnd, &ps);
 
-			hBrush = CreateSolidBrush(RGB(bkcol, bkcol, bkcol));
+			hBrush = CreateSolidBrush(vRGB(pal.bk));
 			HGDIOBJ old = SelectObject(hDC, hBrush);
 			GetClientRect(hWnd, &r);
+
+			// Фон окна
+			Rectangle(hDC, r.left, r.top, r.right, r.bottom);
+
+			hBrush = CreateSolidBrush(vRGB(pal.fbk));
+			DeleteObject(SelectObject(hDC, hBrush));
 
 			// инфопанель
 			Rectangle(hDC, r.right - 231, 10, r.right - 10, r.bottom - 10);

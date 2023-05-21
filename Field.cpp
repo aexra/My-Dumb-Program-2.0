@@ -3,6 +3,7 @@
 #include "Main.h"
 #include "Lib.h"
 #include "ExtraOverloads.h"
+#include "ThemeManager.h"
 
 extern Field						FieldInstance;
 extern vector<Vertex*>	vertices;
@@ -10,6 +11,7 @@ extern UINT					selectedVertexID;
 extern BOOL					isRMBPressed;
 extern BOOL					isLMBPressed;
 extern HPEN					linePen;
+extern ThemeManager*	tmr;
 
 HPEN								fPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 HBRUSH							fBrush = CreateSolidBrush(RGB(255, 255, 255));
@@ -48,7 +50,6 @@ BOOL Field::IsPtInBorders(const POINT& _pt) {
 }
 void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
 {
-	HGDIOBJ orig = SelectObject(_mDC, fPen);
 	Rectangle(_mDC, 0, 0, rect.right+1, rect.bottom+1);
 
 	vector<pair<UINT, vector<UINT>>> table = Vertex::GetUniqueConnectionsTable();
@@ -102,6 +103,7 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 		case WM_PAINT:
 		{
+			PALETTE pal = tmr->GetPalette();
 			HDC hdc;
 			RECT r;
 			PAINTSTRUCT ps;
@@ -111,15 +113,21 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			GetClientRect(hWnd, &r);
 
 			hdc = BeginPaint(hWnd, &ps);
-
-			hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
-			hBrush = CreateSolidBrush(RGB(255, 255, 255));
 			
 			HDC mDC = CreateCompatibleDC(hdc);
 			HBITMAP mBM = CreateCompatibleBitmap(hdc, r.right, r.bottom);
 			SelectObject(mDC, mBM);
 
+			hPen = CreatePen(PS_SOLID, 2, vRGB(pal.fbd));
+			hBrush = CreateSolidBrush(vRGB(pal.fbk));
+
+			HGDIOBJ oldp = SelectObject(mDC, hPen);
+			HGDIOBJ oldb = SelectObject(mDC, hBrush);
+
 			FieldInstance.DrawField(mDC);
+
+			DeleteObject(SelectObject(mDC, oldp));
+			DeleteObject(SelectObject(mDC, oldb));
 
 			BitBlt(hdc, 0, 0, r.right, r.bottom, mDC, 0, 0, SRCCOPY);
 
@@ -127,6 +135,8 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
+			DeleteObject(oldp);
+			DeleteObject(oldb);
 			DeleteDC(mDC);
 			DeleteBitmap(mBM);
 			break;

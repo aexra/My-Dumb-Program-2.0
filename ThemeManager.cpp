@@ -4,7 +4,7 @@ ThemeManager* ThemeManager::p_instance = nullptr;
 
 ThemeManager::ThemeManager()
 {
-
+	palette = (theme == 0 ? dark : light);
 }
 
 ThemeManager* ThemeManager::GetInstance()

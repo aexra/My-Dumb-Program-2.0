@@ -14,7 +14,7 @@ struct PALETTE
 	V3 vbk;
 	V3 vbd;
 }
-dark {
+const dark {
 	V3(20, 20, 20),
 	V3(36, 35, 35),
 	V3(255, 255, 255),
@@ -24,7 +24,7 @@ dark {
 	V3(94, 91, 91),
 	V3(255, 255, 255)
 },
-light{
+const light{
 
 }
 ;
@@ -34,10 +34,10 @@ class ThemeManager
 private:
 	static ThemeManager* p_instance;
 	BOOL theme = 0; // 0 = dark, 1 = light
-	PALETTE palette = (theme == 0? dark : light);
+	PALETTE palette;
 	ThemeManager();
 public:
-	ThemeManager* GetInstance();
+	static ThemeManager* GetInstance();
 	void SetLight();
 	void SetDark();
 	BOOL GetTheme();
