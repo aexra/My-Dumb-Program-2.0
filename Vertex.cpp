@@ -23,7 +23,7 @@ extern HWND VertexNameEditWnd;
 extern HWND TransformPositionWnd;
 extern HWND VertexXEditWnd;
 extern HWND VertexYEditWnd;
-extern HWND WeightWnd;
+extern STATIC* WeightWnd;
 extern HWND FieldWnd;
 extern CHAR BUFFER[40];
 extern POINT OnFieldCursorPos;
@@ -381,9 +381,8 @@ void Vertex::UpdateInfoPanels() {
 		if (!DeleteButtonWnd->IsDisabled())
 			DeleteButtonWnd->Disable();
 
-		GetWindowTextA(WeightWnd, BUFFER, 30);
-		if (string(BUFFER) != "Вес: ")
-			SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: ").c_str());
+		if (WeightWnd->GetText() != "Вес: ")
+			WeightWnd->SetText("Вес: ");
 		return;
 	}
 
@@ -414,9 +413,8 @@ void Vertex::UpdateInfoPanels() {
 	EnableWindow(VertexXEditWnd, 1);
 	EnableWindow(VertexYEditWnd, 1);
 
-	GetWindowTextA(WeightWnd, BUFFER, 30);
-	if (string(BUFFER) != "Вес: " + to_string(v -> GetWeight()))
-		SendMessageA(WeightWnd, WM_SETTEXT, NULL, (LPARAM)string("Вес: " + to_string(v -> GetWeight())).c_str());
+	if (WeightWnd->GetText() != "Вес: " + to_string(v->GetWeight()))
+		WeightWnd->SetText("Вес: " + to_string(v->GetWeight()));
 }
 
 vector<pair<UINT, vector<UINT>>> Vertex::GetUniqueConnectionsTable()

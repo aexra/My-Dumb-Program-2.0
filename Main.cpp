@@ -29,7 +29,7 @@ HWND VertexNameEditWnd = { };
 HWND VertexXEditWnd = { };
 HWND VertexYEditWnd = { };
 HWND TransformPositionWnd = { };
-HWND WeightWnd = { };
+STATIC* WeightWnd = { };
 BUTTON* DeleteButtonWnd = { };
 HWND myAbsolutelyCoolestTipEver = { };
 
@@ -477,7 +477,7 @@ void MainWndAddWidgets(HWND hWnd) {
 	SendMessage(VertexXEditWnd, WM_SETFONT, (WPARAM)hf, 0);
 	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 50 + 10, y, 50, offset, hWnd, (HMENU)TransformPositionY, NULL, NULL);
 	SendMessage(VertexYEditWnd, WM_SETFONT, (WPARAM)hf, 0);
-	WeightWnd = CreateWindowA("static", "Вес: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += offset, 218, offset, hWnd, (HMENU)Weight, NULL, NULL);
+	WeightWnd = new STATIC(hWnd, "Вес: ", V3(r.right - 230, y += offset, 0), NULL, V3(218, offset, 0), textsp);
 	DeleteButtonWnd = new BUTTON(hWnd, "УДАЛИТЬ ВЕРШИНУ", V3(r.right - 230, y += offset, 0), OnDeleteVertexClicked, V3(219, offset, 0), btp);
 	DeleteButtonWnd->Disable();
 }
