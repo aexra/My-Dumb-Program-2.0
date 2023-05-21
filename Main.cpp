@@ -451,9 +451,15 @@ void MainWndAddWidgets(HWND hWnd) {
 		1, fr.bottom-20, fr.right-2, 20-2, FieldWnd, NULL, NULL, NULL);
 
 	STATICPARAMS inspsp, titlesp, textsp;
+	BUTTONPARAMS btp;
 
 	textsp.bdWidth = 0;
 	textsp.alignh = aligns::left;
+
+	btp.bdDisCol = V3(56, 10, 10);
+	btp.bdDefCol = V3(99, 16, 16);
+	btp.bdHovCol = V3(124, 21, 21);
+	btp.bdPreCol = V3(156, 25, 25);
 
 	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, 0), NULL, V3(219, offset, 0), inspsp);
 	GraphNameWnd = new STATIC(hWnd, "NewGraph.graph", V3(r.right-230, y+=offset, 0), NULL, V3(219, offset+4, 24), titlesp);
@@ -466,6 +472,6 @@ void MainWndAddWidgets(HWND hWnd) {
 	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86, y+=offset, 50, offset, hWnd, (HMENU)TransformPositionX, NULL, NULL);
 	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 50 + 10, y, 50, offset, hWnd, (HMENU)TransformPositionY, NULL, NULL);
 	WeightWnd = CreateWindowA("static", "Вес: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += offset, 218, offset, hWnd, (HMENU)Weight, NULL, NULL);
-	DeleteButtonWnd = new BUTTON(hWnd, "УДАЛИТЬ ВЕРШИНУ", V3(r.right - 230, y += offset, 0), OnDeleteVertexClicked, V3(219, offset, 0));
+	DeleteButtonWnd = new BUTTON(hWnd, "УДАЛИТЬ ВЕРШИНУ", V3(r.right - 230, y += offset, 0), OnDeleteVertexClicked, V3(219, offset, 0), btp);
 	DeleteButtonWnd->Disable();
 }
