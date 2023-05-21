@@ -578,7 +578,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 				dest.x = vp.x + ptCursor.x - (length) / 2;
 				dest.y = vp.y + ptCursor.y - (width) / 2;
 
-				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right || dest.y + length >= parentRect.bottom) {
+				if (dest.x <= 0 || dest.y <= 0 || dest.x + width >= parentRect.right || dest.y + length >= parentRect.bottom - 20) {
 					break;
 				}
 				for (Vertex* v2 : vertices) {

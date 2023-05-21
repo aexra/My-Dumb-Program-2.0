@@ -45,7 +45,7 @@ BOOL	Field::CheckVertexCollision(const POINT& _pt) {
 }
 BOOL Field::IsPtInBorders(const POINT& _pt) {
 	RECT r = GetRect();
-	BOOL result = (_pt.x > 60 && _pt.x < r.right - 60 && _pt.y > 60 && _pt.y < r.bottom - 60);
+	BOOL result = (_pt.x > 60 && _pt.x < r.right - 60 && _pt.y > 60 && _pt.y < r.bottom - 70);
 	return result;
 }
 void Field::DrawField(HDC _mDC, BOOL _RedrawVertices)
