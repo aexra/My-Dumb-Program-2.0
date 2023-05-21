@@ -466,10 +466,11 @@ void MainWndAddWidgets(HWND hWnd) {
 	new STATIC(hWnd, "Ориентация:", V3(r.right-230, y+=offset+4, 0), NULL, V3(185, offset, 24), textsp); 	/*st->Disable();*/
 	IsOrientedWnd = new FLAG(hWnd, "txt", V3(r.right - 230 + 180 + 5, y, 0), V3(offset, offset, 3));
 	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=offset, 0), NULL, V3(185, offset, 24), textsp);
+	IsWeightedWnd = new FLAG(hWnd, "txt", V3(r.right - 230 + 180 + 5, y, 0), V3(offset, offset, 3));
 	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 0), titlesp);
 	new STATIC(hWnd, "Имя:", V3(r.right - 230, y += offset, 0), NULL, V3(120, offset, 24), textsp);
 	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE, r.right - 230 + 122, y, 97, offset, hWnd, (HMENU)VertexName, NULL, NULL);
-	new STATIC(hWnd, "Позиция:      X      Y", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 24), textsp);
+	new STATIC(hWnd, "Позиция:        X      Y", V3(r.right - 230, y += offset, 0), NULL, V3(219, offset, 24), textsp);
 	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86, y+=offset, 50, offset, hWnd, (HMENU)TransformPositionX, NULL, NULL);
 	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 50 + 10, y, 50, offset, hWnd, (HMENU)TransformPositionY, NULL, NULL);
 	WeightWnd = CreateWindowA("static", "Вес: ", WS_CHILD | WS_VISIBLE, r.right - 229, y += offset, 218, offset, hWnd, (HMENU)Weight, NULL, NULL);

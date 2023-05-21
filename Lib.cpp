@@ -29,6 +29,7 @@ void InitLib()
 
 	WNDCLASS wc = { };
 	RegisterClass(&(wc = NewWindowClass(EDIT_WC, Edit::EditProc, (HBRUSH)GetStockObject(HOLLOW_BRUSH))));
+	RegisterClass(&(wc = NewWindowClass(FLAG_WC, Flag::FlagProc, (HBRUSH)GetStockObject(HOLLOW_BRUSH))));
 	RegisterClass(&(wc = NewWindowClass(BUTTON_WC, Button::ButtonProc, (HBRUSH)GetStockObject(HOLLOW_BRUSH))));
 	RegisterClass(&(wc = NewWindowClass(STATIC_WC, Static::StaticProc, (HBRUSH)GetStockObject(HOLLOW_BRUSH))));
 	RegisterClass(&(wc = NewWindowClass(VBOX_WC, NULL)));

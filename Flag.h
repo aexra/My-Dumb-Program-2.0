@@ -5,7 +5,7 @@
 #define FLAG_DEFAULT_SIZE V3(80, 30, 3)
 #define FLAG_DEFAULT_BDC V3(102, 102, 102)
 #define FLAG_DEFAULT_BHC V3(112, 112, 112)
-#define FLAG_DEFAULT_BFC V3(0, 128, 0)
+#define FLAG_DEFAULT_BFC V3(255, 255, 255)
 #define FLAG_DEFAULT_BKGND V3(41, 41, 41)
 #define FLAG_DEFAULT_BKGNDH V3(48, 48, 48)
 #define FLAG_DEFAULT_BKGNDF V3(56, 56, 56)
@@ -52,6 +52,7 @@ private:
 	static void OnCreate(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 public:
+	BOOL is = 0;
 
 	//public methods
 	Flag(

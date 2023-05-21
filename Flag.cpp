@@ -134,11 +134,13 @@ LRESULT Flag::FlagProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				obj->state = focused;
 				obj->params.bdWidth++;
+				obj->is = true;
 			}
 			else
 			{
 				obj->state = hovered;
 				obj->params.bdWidth--;
+				obj->is = false;
 			}
 		}
 		break;
