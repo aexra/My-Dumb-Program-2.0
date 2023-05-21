@@ -29,6 +29,7 @@ HWND VertexYEditWnd = { };
 HWND TransformPositionWnd = { };
 HWND WeightWnd = { };
 HWND DeleteButtonWnd = { };
+HWND myAbsolutelyCoolestTipEver = { };
 
 
 // ENUMERATORS
@@ -320,6 +321,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					DeleteObject(linePen);
 					linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
 					InvalidateRect(MainWnd, NULL, FALSE);
+					InvalidateRect(myAbsolutelyCoolestTipEver, NULL, FALSE);
 					break;
 				}
 
@@ -329,6 +331,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					DeleteObject(linePen);
 					linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
 					InvalidateRect(MainWnd, NULL, FALSE);
+					InvalidateRect(myAbsolutelyCoolestTipEver, NULL, FALSE);
 					break;
 				}
 			}
@@ -421,7 +424,7 @@ void MainWndAddWidgets(HWND hWnd) {
 	FieldWnd = CreateWindow(FIELD_WC, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, 10, 10, r.right - 250, r.bottom - 20, hWnd, (HMENU)FieldID, NULL, NULL);
 	FieldInstance.SetWindow(FieldWnd);
 	GetClientRect(FieldWnd, &fr);
-	CreateWindowA("static", "Используйте <ЛКМ> для создания и соединения вершин, а <ПКМ> для их перемещения", WS_CHILD | WS_VISIBLE | SS_CENTER,
+	myAbsolutelyCoolestTipEver = CreateWindowA("static", "Используйте <ЛКМ> для создания и соединения вершин, а <ПКМ> для их перемещения", WS_CHILD | WS_VISIBLE | SS_CENTER,
 		1, fr.bottom-20, fr.right-2, 20-2, FieldWnd, NULL, NULL, NULL);
 
 	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, 0), NULL, V3(219, 28, 0));
