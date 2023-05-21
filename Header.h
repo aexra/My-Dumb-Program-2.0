@@ -21,6 +21,7 @@
 #include <math.h>
 #include <tchar.h>
 #include <shellapi.h>
+#include <map>
 
 using namespace std;
 

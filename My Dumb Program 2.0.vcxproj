@@ -134,6 +134,7 @@
     <ClInclude Include="ExtraOverloads.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="Lib.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Static.h" />
     <ClInclude Include="Transform.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Edit.cpp" />
     <ClCompile Include="ExtraOverloads.cpp" />
     <ClCompile Include="Field.cpp" />
+    <ClCompile Include="Lib.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Static.cpp" />
     <ClCompile Include="Transform.cpp" />
