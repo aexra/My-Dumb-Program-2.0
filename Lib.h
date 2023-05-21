@@ -14,6 +14,7 @@ enum class aligns { left, center, right, top, bottom};
 #endif
 
 #define EDIT_WC L"MyCustomEditControl"
+#define FLAG_WC L"MyCustomFlagControl"
 #define BUTTON_WC L"MyCustomButtonControl"
 #define STATIC_WC L"MyCustomStaticControl"
 #define VBOX_WC L"MyCustomVBoxControl"
@@ -24,6 +25,7 @@ enum class aligns { left, center, right, top, bottom};
 #include "Transform.h"
 #include "Control.h"
 #include "Edit.h"
+#include "Flag.h"
 #include "Button.h"
 #include "Static.h"
 
