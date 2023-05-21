@@ -142,6 +142,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			PALETTE pal = tmr->GetPalette();
 			HBRUSH hBrush;
+			HPEN hPen;
 			PAINTSTRUCT ps;
 			HDC hDC;
 			RECT r;
@@ -159,12 +160,17 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			DeleteObject(SelectObject(hDC, hBrush));
 
 			// инфопанель
+			hPen = CreatePen(PS_SOLID, 1, vRGB(pal.fbd));
+			HGDIOBJ oldp = SelectObject(hDC, hPen);
 			Rectangle(hDC, r.right - 231, 10, r.right - 10, r.bottom - 10);
 
 			EndPaint(hWnd, &ps);
 
+
 			DeleteObject(SelectObject(hDC, old));
+			DeleteObject(SelectObject(hDC, oldp));
 			DeleteObject(hBrush);
+			DeleteObject(hPen);
 
 			break;
 		}
@@ -427,11 +433,11 @@ void MainWndAddWidgets(HWND hWnd) {
 	myAbsolutelyCoolestTipEver = CreateWindowA("static", "Используйте <ЛКМ> для создания и соединения вершин, а <ПКМ> для их перемещения", WS_CHILD | WS_VISIBLE | SS_CENTER,
 		1, fr.bottom-20, fr.right-2, 20-2, FieldWnd, NULL, NULL, NULL);
 
-	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, 0), NULL, V3(219, 28, 0));
-	GraphNameWnd = new STATIC(hWnd, "NewGraph.graph", V3(r.right-230, y+=28, 0), NULL, V3(219, 28, 0));
+	new STATIC(hWnd, "ИНСПЕКТОР", V3(r.right-230, y, -1), NULL, V3(219, 28, 0));
+	GraphNameWnd = new STATIC(hWnd, "NewGraph.graph", V3(r.right-230, y+=28, 2), NULL, V3(219, 28, 0));
 	new STATIC(hWnd, "Ориентация:", V3(r.right-230, y+=28, 0), NULL, V3(190, 28, 0)); 	/*st->Disable();*/
 	new STATIC(hWnd, "Взвешенность:", V3(r.right-230, y+=28, 0), NULL, V3(190, 28, 0));
-	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += 28, 0), NULL, V3(219, 28, 0));
+	new STATIC(hWnd, "ВЕРШИНА", V3(r.right - 230, y += 28, 2), NULL, V3(219, 28, 0));
 	new STATIC(hWnd, "Обозначение:", V3(r.right - 230, y += 28, 0), NULL, V3(120, 28, 0));
 	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | WS_DISABLED, r.right - 230 + 122, y, 97, 28, hWnd, (HMENU)VertexName, NULL, NULL);
 	new STATIC(hWnd, "Позиция:      X      Y", V3(r.right - 230, y += 28, 0), NULL, V3(219, 28, 0));

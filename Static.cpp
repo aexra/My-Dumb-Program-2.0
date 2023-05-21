@@ -3,12 +3,14 @@
 map<HWND, Static*> Static::objmap = { };
 extern BOOL isLMBPressed_LIBVAR;
 extern WNDPROC defaultStaticProc_LIBVAR;
+extern ThemeManager* tmr;
 
 Static::Static(HWND _hParWnd, string _Text, V3 _Position, UINT_PTR _nIDEvent, V3 _Size, STATICPARAMS _Params)
 {
 	text = _Text;
 	params = _Params;
 	params.charHeight = _Size.z;
+	params.bdWidth = (_Position.z != -1? _Position.z : 3);
 	transform.position = _Position;
 	nIDEvent = _nIDEvent;
 	transform.size = _Size;
@@ -89,11 +91,13 @@ void Static::Redraw()
 	if (laststate == state) return;
 	else laststate = state;
 
+	PALETTE plt = tmr->GetPalette();
+
 	HDC hDC = GetDC(wnd);
 	HDC mDC = CreateCompatibleDC(hDC);
 	HBITMAP mBM = CreateCompatibleBitmap(hDC, transform.size.x, transform.size.y);
-	HBRUSH hBrush = CreateSolidBrush(vRGB(MAIN_BK_COL));
-	HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(MAIN_BK_COL));
+	HBRUSH hBrush = CreateSolidBrush(vRGB(plt.fbk));
+	HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(plt.fbk));
 	SelectObject(mDC, mBM);
 
 	HGDIOBJ oldb = SelectObject(mDC, hBrush);

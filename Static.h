@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Lib.h"
+#include "ThemeManager.h"
 
 #define STATIC_DEFAULT_SIZE V3(80, 30, 3)
 #define STATIC_DEFAULT_BORDER V3(102, 102, 102)
