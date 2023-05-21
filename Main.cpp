@@ -454,6 +454,12 @@ void MainWndAddWidgets(HWND hWnd) {
 	STATICPARAMS inspsp, titlesp, textsp;
 	BUTTONPARAMS btp;
 
+	inspsp.bdDefCol += 15;
+	inspsp.bkCol = V3(9, 37, 46);
+
+	titlesp.bkCol = tmr->GetPalette().fbk;
+	titlesp.bdWidth = 2;
+
 	textsp.bdWidth = 0;
 	textsp.alignh = aligns::left;
 
