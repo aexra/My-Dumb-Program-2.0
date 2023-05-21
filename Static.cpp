@@ -10,7 +10,6 @@ Static::Static(HWND _hParWnd, string _Text, V3 _Position, UINT_PTR _nIDEvent, V3
 	text = _Text;
 	params = _Params;
 	params.charHeight = _Size.z;
-	params.bdWidth = (_Position.z != -1? _Position.z : 3);
 	transform.position = _Position;
 	nIDEvent = _nIDEvent;
 	transform.size = _Size;
@@ -108,7 +107,8 @@ void Static::Redraw()
 	{
 	case enabled:
 		hBrush = CreateSolidBrush(vRGB(params.bkCol));
-		hPen = CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdDefCol));
+		hPen = (params.bdWidth != 0? CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdDefCol))
+			: (HPEN)GetStockObject(NULL_PEN));
 		SetBkColor(mDC, vRGB(params.bkCol));
 		SetTextColor(mDC, vRGB(params.textCol));
 		break;
