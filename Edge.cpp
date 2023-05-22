@@ -13,6 +13,7 @@ Edge::Edge(Vertex* _Begin, Vertex* _End)
 	btn = new BUTTON(FieldWnd, "x", V3(crossPos.x, crossPos.y, 0),
 		lastID++);
 	//btn->Hide();
+	MessageBoxA(NULL, (to_string(crossPos.x) + "--" + to_string(crossPos.y)).c_str(), "a", MB_OK);
 }
 POINT Edge::RecalcPosition()
 {
