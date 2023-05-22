@@ -1,24 +1,37 @@
 #include "Edge.h"
 
-vector<Edge> Edge::edges = { };
+extern HWND FieldWnd;
+
+vector<Edge*> Edge::edges = { };
+ULONG Edge::lastID = 800;
 
 Edge::Edge(Vertex* _Begin, Vertex* _End)
 {
 	begin = _Begin;
 	end = _End;
 	RecalcPosition();
+	btn = new BUTTON(FieldWnd, "x", V3(crossPos.x, crossPos.y, 0),
+		lastID++);
+	btn->Hide();
 }
-
 POINT Edge::RecalcPosition()
 {
 	crossPos.x = abs(begin->GetCenter().x - end->GetCenter().x);
 	crossPos.y = abs(begin->GetCenter().y - end->GetCenter().y);
 	return crossPos;
 }
-
 POINT Edge::getpt(BOOL toRecalc)
 {
 	return (toRecalc? RecalcPosition() : crossPos);
+}
+BUTTON* Edge::getbtn()
+{
+	return btn;
+}
+void Edge::DeleteEdge(Edge* e)
+{
+	BUTTON::DeleteButton(e->btn);
+	delete e;
 }
 
 bool operator==(const Edge& a, const Edge& b)
