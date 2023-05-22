@@ -429,7 +429,7 @@ void MainWndAddMenus(HWND hWnd) {
 	AppendMenu(WhatMenu, MF_STRING, OnInfoClicked, L"Справка");
 	AppendMenu(WhatMenu, MF_STRING, OnGitSourceClicked, L"Git Source");
 
-	AppendMenu(RootMenu, MF_POPUP, (UINT_PTR)ThemeMenu, L"Изменить тему");
+	AppendMenu(RootMenu, MF_POPUP | MF_DISABLED, (UINT_PTR)ThemeMenu, L"Изменить тему");
 
 	AppendMenu(ThemeMenu, MF_STRING, OnLightThemeClicked, L"Светлая тема");
 	AppendMenu(ThemeMenu, MF_STRING, OnDarkThemeClicked, L"Темная тема");
