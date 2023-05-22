@@ -24,7 +24,7 @@ public:
 	static void DeleteEdge(Edge* p_e);
 };
 
-bool operator==(const Edge& a, const Edge& b);
-bool operator!=(const Edge& a, const Edge& b);
-bool operator==(const Edge& a, const pair<Vertex*, Vertex*>& b);
-bool operator!=(const Edge& a, const pair<Vertex*, Vertex*>& b);
+//bool operator==(const Edge& a, const Edge& b);
+//bool operator!=(const Edge& a, const Edge& b);
+//bool operator==(const Edge& a, const pair<Vertex*, Vertex*>& b);
+//bool operator!=(const Edge& a, const pair<Vertex*, Vertex*>& b);

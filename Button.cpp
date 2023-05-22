@@ -186,7 +186,7 @@ LRESULT Button::PlaceholderProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			return CallWindowProc(defaultStaticProc_LIBVAR, hWnd, uMsg, wParam, lParam);
 	}
 }
-void Button::DeleteButton(BUTTON* btn)
+void Button::DeleteButton(Button* btn)
 {
 	DestroyWindow(btn->wnd);
 	DestroyWindow(btn->placeholder);

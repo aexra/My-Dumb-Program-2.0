@@ -90,7 +90,7 @@ public:
 	// public static methods
 	static LRESULT CALLBACK ButtonProc(HWND, UINT, WPARAM, LPARAM);
 	static LRESULT CALLBACK PlaceholderProc(HWND, UINT, WPARAM, LPARAM);
-	static void DeleteButton(BUTTON* btn);
+	static void DeleteButton(Button* btn);
 protected:
 
 };

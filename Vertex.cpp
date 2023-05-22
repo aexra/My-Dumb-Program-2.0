@@ -5,7 +5,7 @@
 #include "Vector2.h"
 #include "ExtraOverloads.h"
 #include "ThemeManager.h"
-
+#include "Edge.h"
 
 extern vector<Vertex*> vertices;
 extern UINT selectedVertexID;
@@ -168,6 +168,7 @@ UINT Vertex::Connect(UINT _id) {
 	if (find(this->connections.begin(), this->connections.end(), _id) == this->connections.end())
 	{
 		this->connections.push_back(_id);
+		Edge::edges.push_back(new Edge(this, Vertex::GetVertex(_id)));
 		FieldInstance.Redraw();
 		return _id;
 	}
