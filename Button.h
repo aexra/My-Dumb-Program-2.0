@@ -80,7 +80,7 @@ public:
 		V3 _Size = BUTTON_DEFAULT_SIZE,
 		BUTTONPARAMS _Params = BUTTON_DEFAULT_PARAMS
 	);
-	BOOL MoveControl(V3);
+	//BOOL MoveControl(V3);
 	void Disable();
 	void Enable();
 	void Show();

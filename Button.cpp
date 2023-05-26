@@ -32,13 +32,6 @@ void Button::GenWnd(HWND _hParWnd)
 	SendMessage(placeholder, WM_SETFONT, (WPARAM)hf, 0);
 }
 
-BOOL Button::MoveControl(V3 _To)
-{
-	transform.Translate(_To);
-	MoveWindow(wnd, _To.x, _To.y, transform.size.x, transform.size.y, TRUE);
-	return 1; 
-}
-
 void Button::Disable()
 {
 	state = disabled;
@@ -81,7 +74,11 @@ void Button::CommandHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	BUTTON* obj = objmap[hWnd];
-	if (wParam == REDRAW_IDT) this->Redraw();
+	if (wParam == REDRAW_IDT) 
+	{
+		InvalidateRect(obj->GetWindow(), NULL, TRUE);
+		//this->Redraw();
+	}
 	else if (wParam == UNPRESS_IDT)
 	{
 		if (isLMBPressed_LIBVAR) return;
@@ -102,7 +99,11 @@ void Button::Redraw()
 	if (laststate == state) return;
 	else laststate = state;
 
-	HDC hDC = GetDC(wnd);
+	PAINTSTRUCT ps;
+
+	//HDC hDC = GetDC(wnd);
+	HDC hDC = BeginPaint(wnd, &ps);
+
 	HDC mDC = CreateCompatibleDC(hDC);
 	HBITMAP mBM = CreateCompatibleBitmap(hDC, transform.size.x, transform.size.y);
 	HBRUSH hBrush = CreateSolidBrush(vRGB(MAIN_BK_COL));
@@ -162,7 +163,9 @@ void Button::Redraw()
 	SelectObject(mDC, oldp);
 	SelectObject(mDC, oldb);
 
-	ReleaseDC(wnd, hDC);
+	//ReleaseDC(wnd, hDC);
+	EndPaint(wnd, &ps);
+
 	DeleteDC(mDC);
 	DeleteBitmap(mBM);
 	DeleteObject(hBrush);
@@ -200,6 +203,11 @@ LRESULT Button::ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 	{
 		if (obj) obj->CommandHandler(hWnd, wParam, lParam);
+		break;
+	}
+	case WM_PAINT:
+	{
+		if (obj) obj->Redraw();
 		break;
 	}
 	case WM_TIMER:
