@@ -111,8 +111,8 @@ void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 		GetCursorPos(&pt);
 		GetWindowRect(hWnd, &r);
 		if (PtInRect(&r, pt))
-			obj->state = hovered;
-		else obj->state = enabled;
+			state = hovered;
+		else state = enabled;
 		KillTimer(hWnd, UNPRESS_IDT);
 	}
 }
