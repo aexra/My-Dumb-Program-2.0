@@ -168,7 +168,6 @@ UINT Vertex::Connect(UINT _id) {
 	if (find(this->connections.begin(), this->connections.end(), _id) == this->connections.end())
 	{
 		this->connections.push_back(_id);
-		Edge::edges.push_back(new Edge(this, Vertex::GetVertex(_id)));
 		FieldInstance.Redraw();
 		return _id;
 	}
@@ -541,6 +540,7 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 					{
 						UINT conres = v->Connect(prelinkedVertex->GetID());	// здесь создаю conres чтобы проверить,
 						prelinkedVertex->Connect(v->GetID());							// удалось ли соединение
+						Edge::edges.push_back(new Edge(v, prelinkedVertex));
 						//MessageBoxA(hWnd, (conres == 0? "Ошибка соединения!" : "Соединены: " + v->GetName() + " и " + prelinkedVertex->GetName()).c_str(), "Попытка соединения вершин", MB_OK);
 					}
 					else
