@@ -12,8 +12,9 @@ Edge::Edge(Vertex* _Begin, Vertex* _End)
 	BUTTONPARAMS btp;
 	btp.alignv = aligns::center;
 	btp.visibleRadius = 10;
+	btp.textCol = V3(190, 14, 14);
 	btn = new BUTTON(FieldWnd, "X", V3(crossPos.x, crossPos.y, 0),
-		id = (lastID++), V3(30, 30, 0));
+		id = (lastID++), V3(30, 30, 0), btp);
 	RecalcPosition();
 	//btn->Hide();
 	//MessageBoxA(NULL, (to_string(crossPos.x) + "--" + to_string(crossPos.y)).c_str(), "a", MB_OK);
