@@ -3,7 +3,7 @@
 #include "Vertex.h"
 #include "Lib.h"
 #include "ThemeManager.h"
-
+#include "Edge.h"
 
 
 
@@ -322,6 +322,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case OnClearAllClicked:
 				{
+					for (Edge* e : Edge::edges)
+					{
+						Edge::DeleteEdge(e);
+					}
 					for (int i = vertices.size() - 1; i > -1; i--)
 					{
 						Vertex::DeleteVertex(vertices[i] -> GetID());
