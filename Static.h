@@ -40,7 +40,6 @@ private:
 	// private methods
 	void CommandHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);
 	void TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam);
-	void Redraw();
 	void GenWnd(HWND _hParWnd);
 	void UpdateAligning();
 

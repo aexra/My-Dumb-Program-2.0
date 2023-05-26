@@ -79,21 +79,16 @@ void Static::CommandHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 void Static::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-	STATIC* obj = objmap[hWnd];
 	if (wParam == REDRAW_IDT)
 	{
 		if (laststate != state)
 		{
 			laststate = state;
-			obj->Invalidate();
+			Invalidate();
 		}
 	}
 }
 
-void Static::Redraw()
-{
-	
-}
 void Static::SetAlignV(aligns _Al)
 {
 	params.alignv = _Al;

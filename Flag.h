@@ -41,6 +41,7 @@ private:
 	// private flags
 	enum states { inactive, hovered, focused };
 	states state;
+	states laststate = focused;
 
 	// private methods
 	void CommandHandler(HWND hWnd, WPARAM wParam, LPARAM lParam);

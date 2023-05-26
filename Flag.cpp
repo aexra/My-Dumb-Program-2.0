@@ -27,12 +27,20 @@ void Flag::CommandHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 void Flag::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-	if (wParam == REDRAW_IDT) this->Redraw();
+	if (wParam == REDRAW_IDT)
+	{
+		if (laststate != state)
+		{
+			laststate = state;
+			Invalidate();
+		}
+	}
 }
 
 void Flag::Redraw()
 {
-	HDC hDC = GetDC(wnd);
+	PAINTSTRUCT ps;
+	HDC hDC = BeginPaint(wnd, &ps);
 	HDC mDC = CreateCompatibleDC(hDC);
 	HBITMAP mBM = CreateCompatibleBitmap(hDC, transform.size.x, transform.size.y);
 	HBRUSH hBrush = CreateSolidBrush(vRGB(MAIN_BK_COL));
@@ -69,7 +77,7 @@ void Flag::Redraw()
 	SelectObject(mDC, oldp);
 	SelectObject(mDC, oldb);
 
-	ReleaseDC(wnd, hDC);
+	EndPaint(wnd, &ps);
 	DeleteDC(mDC);
 	DeleteBitmap(mBM);
 	DeleteObject(hBrush);
@@ -92,6 +100,11 @@ LRESULT Flag::FlagProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 	{
 		if (obj) obj->CommandHandler(hWnd, wParam, lParam);
+		break;
+	}
+	case WM_PAINT:
+	{
+		obj->Redraw();
 		break;
 	}
 	case WM_TIMER:

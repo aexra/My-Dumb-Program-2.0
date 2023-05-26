@@ -79,12 +79,11 @@ void Button::CommandHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-	BUTTON* obj = objmap[hWnd];
 	if (wParam == REDRAW_IDT)
 	{
-		if (obj->params.visibleRadius != 0)
+		if (params.visibleRadius != 0)
 		{
-			INT vr = obj->params.visibleRadius;
+			INT vr = params.visibleRadius;
 			RECT r = { };
 			POINT pt = { };
 			GetCursorPos(&pt);
@@ -94,14 +93,14 @@ void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			r.right += vr;
 			r.bottom += vr;
 			if (PtInRect(&r, pt))
-				obj->Show();
+				Show();
 			else
-				obj->Hide();
+				Hide();
 		}
-		if (obj->state != obj->laststate)
+		if (state != laststate)
 		{
-			obj->laststate = obj->state;
-			obj->Invalidate();
+			laststate = state;
+			Invalidate();
 		}
 	}
 	else if (wParam == UNPRESS_IDT)
