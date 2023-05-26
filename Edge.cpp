@@ -13,12 +13,12 @@ Edge::Edge(Vertex* _Begin, Vertex* _End)
 	btn = new BUTTON(FieldWnd, "x", V3(crossPos.x, crossPos.y, 0),
 		lastID++);
 	//btn->Hide();
-	MessageBoxA(NULL, (to_string(crossPos.x) + "--" + to_string(crossPos.y)).c_str(), "a", MB_OK);
+	//MessageBoxA(NULL, (to_string(crossPos.x) + "--" + to_string(crossPos.y)).c_str(), "a", MB_OK);
 }
 POINT Edge::RecalcPosition()
 {
-	crossPos.x = abs(begin->GetCenter().x - end->GetCenter().x) / 2;
-	crossPos.y = abs(begin->GetCenter().y - end->GetCenter().y) / 2;
+	crossPos.x = abs(begin->GetCenter().x + end->GetCenter().x) / 2;
+	crossPos.y = abs(begin->GetCenter().y + end->GetCenter().y) / 2;
 	return crossPos;
 }
 POINT Edge::getpt(BOOL toRecalc)
