@@ -149,16 +149,11 @@ LRESULT Button::ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (obj) obj->CommandHandler(hWnd, wParam, lParam);
 		break;
 	}
-	case WM_MOVE:
+	/*case WM_MOVE:
 	{
 		if (obj) obj->Invalidate();
 		break;
-	}
-	case WM_SIZE:
-	{
-		if (obj) obj->Invalidate();
-		break;
-	}
+	}*/
 	case WM_PAINT:
 	{
 		PAINTSTRUCT ps;

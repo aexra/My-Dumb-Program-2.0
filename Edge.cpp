@@ -23,6 +23,7 @@ POINT Edge::RecalcPosition()
 	crossPos.x = abs(begin->GetCenter().x + end->GetCenter().x) / 2 - btn->transform.size.x / 2;
 	crossPos.y = abs(begin->GetCenter().y + end->GetCenter().y) / 2 - btn->transform.size.y / 2;
 	btn->MoveControl(V3(crossPos.x, crossPos.y, 0));
+	btn->Invalidate();
 	return crossPos;
 }
 POINT Edge::getpt(BOOL toRecalc)

@@ -54,9 +54,9 @@ using namespace std;
 #define TransformPositionY 21
 
 
-// vertice constants
+// vertices constants
 #define MAX_VERTICES 30
-#define VERTICES_DISTANCE_ERROR 17
+#define VERTICES_DISTANCE_ERROR 40
 #define VERTICES_LINKING_RANGE 100
 
 // TIMERS
