@@ -402,8 +402,9 @@ void Vertex::UpdateInfoPanels() {
 	GetWindowTextA(VertexNameEditWnd, BUFFER, 30);
 	string name = v->GetName();
 	if (string(BUFFER) != name)
+	{
 		SetWindowTextA(VertexNameEditWnd, name.c_str());
-
+	}
 	if (!isEditingX)
 	{
 		GetWindowTextA(VertexXEditWnd, BUFFER, 5);

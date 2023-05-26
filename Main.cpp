@@ -6,7 +6,6 @@
 #include "Edge.h"
 
 
-
 /* GLOBAL VARIABLES */
 
 
