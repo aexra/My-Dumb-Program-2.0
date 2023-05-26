@@ -421,9 +421,9 @@ void MainWndAddMenus(HWND hWnd) {
 	AppendMenu(RootMenu, MF_POPUP, (UINT_PTR)FileMenu, L"Файл");
 
 	AppendMenu(FileMenu, MF_STRING, OnNewClicked, L"Новый граф (CTRL+N)");
-	AppendMenu(FileMenu, MF_STRING, OnLoadGraphClicked, L"Загрузить граф (CTRL+L)");
-	AppendMenu(FileMenu, MF_STRING, OnSaveClicked, L"Сохранить (CTRL+S)");
-	AppendMenu(FileMenu, MF_STRING, OnSaveAsClicked, L"Сохранить как (CTRL+ALT+S)");
+	AppendMenu(FileMenu, MF_STRING | MF_DISABLED, OnLoadGraphClicked, L"Загрузить граф (CTRL+L)");
+	AppendMenu(FileMenu, MF_STRING | MF_DISABLED, OnSaveClicked, L"Сохранить (CTRL+S)");
+	AppendMenu(FileMenu, MF_STRING | MF_DISABLED, OnSaveAsClicked, L"Сохранить как (CTRL+ALT+S)");
 	AppendMenu(FileMenu, MF_STRING, OnClearAllClicked, L"Очистить всё");
 	AppendMenu(FileMenu, MF_SEPARATOR, NULL, NULL);
 	AppendMenu(FileMenu, MF_STRING, OnExitClicked, L"Выйти");
