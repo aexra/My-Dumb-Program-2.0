@@ -1,8 +1,10 @@
 #include "Button.h"
+#include "ThemeManager.h"
 
 map<HWND, Button*> Button::objmap = { };
 extern BOOL isLMBPressed_LIBVAR;
 extern WNDPROC defaultStaticProc_LIBVAR;
+extern ThemeManager* tmr;
 
 Button::Button(HWND _hParWnd, string _Text, V3 _Position, UINT_PTR _nIDEvent, V3 _Size, BUTTONPARAMS _Params)
 {
@@ -155,6 +157,7 @@ LRESULT Button::ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}*/
 	case WM_PAINT:
 	{
+		PALETTE plt = tmr->GetPalette();
 		PAINTSTRUCT ps;
 		HDC hDC = BeginPaint(obj->GetWindow(), &ps);
 		TRANSFORM transform = obj->transform;
@@ -162,8 +165,8 @@ LRESULT Button::ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		HDC mDC = CreateCompatibleDC(hDC);
 		HBITMAP mBM = CreateCompatibleBitmap(hDC, transform.size.x, transform.size.y);
-		HBRUSH hBrush = CreateSolidBrush(vRGB(MAIN_BK_COL));
-		HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(MAIN_BK_COL));
+		HBRUSH hBrush = CreateSolidBrush(vRGB(plt.fbk));
+		HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(plt.fbk));
 		SelectObject(mDC, mBM);
 
 		HGDIOBJ oldb = SelectObject(mDC, hBrush);

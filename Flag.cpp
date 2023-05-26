@@ -1,6 +1,8 @@
 #include "Flag.h"
+#include "ThemeManager.h"
 
 map<HWND, Flag*> Flag::objmap = { };
+extern ThemeManager* tmr;
 
 Flag::Flag(HWND _hParWnd, string _UnfocusedText, V3 _Position, V3 _Size, FLAGPARAMS _Params)
 {
@@ -39,12 +41,13 @@ void Flag::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 void Flag::Redraw()
 {
+	PALETTE plt = tmr->GetPalette();
 	PAINTSTRUCT ps;
 	HDC hDC = BeginPaint(wnd, &ps);
 	HDC mDC = CreateCompatibleDC(hDC);
 	HBITMAP mBM = CreateCompatibleBitmap(hDC, transform.size.x, transform.size.y);
-	HBRUSH hBrush = CreateSolidBrush(vRGB(MAIN_BK_COL));
-	HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(MAIN_BK_COL));
+	HBRUSH hBrush = CreateSolidBrush(vRGB(plt.fbk));
+	HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(plt.fbk));
 	SelectObject(mDC, mBM);
 
 	HGDIOBJ oldb = SelectObject(mDC, hBrush);
