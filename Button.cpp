@@ -84,7 +84,7 @@ void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	{
 		if (obj->params.visibleRadius != 0)
 		{
-			OutputDebugStringA("хуй\n");
+			OutputDebugStringA("давай работай\n");
 			INT vr = obj->params.visibleRadius;
 			RECT r = { };
 			POINT pt = { };
