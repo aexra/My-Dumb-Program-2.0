@@ -322,9 +322,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case OnClearAllClicked:
 				{
-					for (Edge* e : Edge::edges)
+					for (int i = Edge::edges.size() - 1; i > -1; i--)
 					{
-						Edge::DeleteEdge(e);
+						Edge::DeleteEdge(Edge::edges[i]);
 					}
 					for (int i = vertices.size() - 1; i > -1; i--)
 					{
