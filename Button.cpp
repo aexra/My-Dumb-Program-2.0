@@ -82,6 +82,23 @@ void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	BUTTON* obj = objmap[hWnd];
 	if (wParam == REDRAW_IDT)
 	{
+		if (obj->params.visibleRadius != 0)
+		{
+			OutputDebugStringA("υσι\n");
+			INT vr = obj->params.visibleRadius;
+			RECT r = { };
+			POINT pt = { };
+			GetCursorPos(&pt);
+			GetWindowRect(hWnd, &r);
+			r.left -= vr;
+			r.top -= vr;
+			r.right += vr;
+			r.bottom += vr;
+			if (PtInRect(&r, pt))
+				ShowWindow(obj->GetWindow(), 1);
+			else
+				ShowWindow(obj->GetWindow(), 0);
+		}
 		if (obj->state != obj->laststate)
 		{
 			obj->laststate = obj->state;

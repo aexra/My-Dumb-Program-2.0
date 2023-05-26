@@ -11,6 +11,7 @@ Edge::Edge(Vertex* _Begin, Vertex* _End)
 	end = _End;
 	BUTTONPARAMS btp;
 	btp.alignv = aligns::center;
+	btp.visibleRadius = 10;
 	btn = new BUTTON(FieldWnd, "X", V3(crossPos.x, crossPos.y, 0),
 		id = (lastID++), V3(30, 30, 0));
 	RecalcPosition();

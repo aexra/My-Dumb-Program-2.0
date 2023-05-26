@@ -31,6 +31,7 @@ struct BUTTONPARAMS
 	aligns alignh = aligns::center;
 	states startstate = enabled;
 	INT charHeight = 0;
+	INT visibleRadius = 0;
 	V3 bdDefCol = BUTTON_DEFAULT_BDC;
 	V3 bdHovCol = BUTTON_DEFAULT_BDC + 60;
 	V3 bdPreCol = BUTTON_DEFAULT_BDC + 100;
