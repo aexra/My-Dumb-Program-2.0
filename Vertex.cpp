@@ -400,8 +400,9 @@ void Vertex::UpdateInfoPanels() {
 	// Сделаем активным поле переименования и вот всё что выше делали
 	EnableWindow(VertexNameEditWnd, 1);
 	GetWindowTextA(VertexNameEditWnd, BUFFER, 30);
-	if (string(BUFFER) != v -> GetName())
-		SendMessageA(VertexNameEditWnd, WM_SETTEXT, NULL, (LPARAM)v -> GetName().c_str());
+	string name = v->GetName();
+	if (string(BUFFER) != name)
+		SetWindowTextA(VertexNameEditWnd, name.c_str());
 
 	if (!isEditingX)
 	{
