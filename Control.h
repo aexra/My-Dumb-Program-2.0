@@ -34,6 +34,10 @@ public:
 		transform.Translate(_To);
 		return MoveWindow(wnd, _To.x, _To.y, transform.size.x, transform.size.y, TRUE);
 	}
+	BOOL Invalidate(void)
+	{
+		return InvalidateRect(wnd, NULL, FALSE);
+	}
 protected:
 	HWND wnd;
 	string text;

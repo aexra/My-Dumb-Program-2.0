@@ -67,6 +67,7 @@ HWND Button::GetPlaceholder()
 void Button::Press()
 {
 	state = pressed;
+	Invalidate();
 	SetTimer(wnd, UNPRESS_IDT, UNPRESS_DURATION, NULL);
 	SendMessageA(GetParent(wnd), WM_COMMAND, nIDEvent, NULL);
 }
@@ -79,10 +80,13 @@ void Button::CommandHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	BUTTON* obj = objmap[hWnd];
-	if (wParam == REDRAW_IDT) 
+	if (wParam == REDRAW_IDT)
 	{
-		//InvalidateRect(obj->GetWindow(), NULL, FALSE);
-		this->Redraw();
+		if (obj->state != obj->laststate)
+		{
+			obj->laststate = obj->state;
+			obj->Invalidate();
+		}
 	}
 	else if (wParam == UNPRESS_IDT)
 	{
@@ -95,93 +99,11 @@ void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			obj->state = hovered;
 		else obj->state = enabled;
 		KillTimer(hWnd, UNPRESS_IDT);
-		//MessageBoxA(NULL, (to_string(pt.x) + " - " + to_string(pt.y) + " - " + to_string(r.left) + " - " + to_string(r.top)).c_str(), "cap", MB_OK);
 	}
 }
-
-void Button::Redraw()
-{
-	if (laststate == state) return;
-	else laststate = state;
-
-	PAINTSTRUCT ps;
-
-	HDC hDC = GetDC(wnd);
-	//HDC hDC = BeginPaint(wnd, &ps);
-
-	HDC mDC = CreateCompatibleDC(hDC);
-	HBITMAP mBM = CreateCompatibleBitmap(hDC, transform.size.x, transform.size.y);
-	HBRUSH hBrush = CreateSolidBrush(vRGB(MAIN_BK_COL));
-	HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(MAIN_BK_COL));
-	SelectObject(mDC, mBM);
-
-	HGDIOBJ oldb = SelectObject(mDC, hBrush);
-	HGDIOBJ oldp = SelectObject(mDC, hPen);
-	Rectangle(mDC, 0, 0, transform.size.x, transform.size.y);
-
-	SetWindowLongA(placeholder, GWL_STYLE, WS_CHILD | WS_VISIBLE |
-		(params.alignh == aligns::center ? SS_CENTER : params.alignh == aligns::left ? SS_LEFT : SS_RIGHT) |
-		(params.alignv == aligns::center ? BS_CENTER : params.alignv == aligns::top ? BS_TOP : BS_BOTTOM));
-
-	switch (state)
-	{
-	case enabled:
-		hBrush = CreateSolidBrush(vRGB(params.bkCol));
-		hPen = CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdDefCol));
-		SetBkColor(mDC, vRGB(params.bkCol));
-		SetTextColor(mDC, vRGB(params.textCol));
-		break;
-	case hovered:
-		hBrush = CreateSolidBrush(vRGB(params.bkHovCol));
-		hPen = CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdHovCol));
-		SetBkColor(mDC, vRGB(params.bkHovCol));
-		SetTextColor(mDC, vRGB(params.textHovCol));
-		break;
-	case pressed:
-		hBrush = CreateSolidBrush(vRGB(params.bkPreCol));
-		hPen = CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdPreCol));
-		SetBkColor(mDC, vRGB(params.bkPreCol));
-		SetTextColor(mDC, vRGB(params.textPreCol));
-		break;
-	case invalid:
-		hBrush = CreateSolidBrush(vRGB(params.bkCol));
-		hPen = CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdInvCol));
-		SetBkColor(mDC, vRGB(params.bkCol));
-		SetTextColor(mDC, vRGB(params.textCol));
-		break;
-	default:
-		hBrush = CreateSolidBrush(vRGB(params.bkDisCol));
-		hPen = CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdDisCol));
-		SetBkColor(mDC, vRGB(params.bkDisCol));
-		SetTextColor(mDC, vRGB(params.textDisCol));
-		break;
-	}
-
-	DeleteObject(SelectObject(mDC, hBrush));
-	DeleteObject(SelectObject(mDC, hPen));
-
-	RoundRect(mDC, 2, 2, transform.size.x - 2, transform.size.y - 2, 13, 13);
-
-	BitBlt(hDC, 0, 0, transform.size.x, transform.size.y, mDC, 0, 0, SRCCOPY);
-	InvalidateRect(placeholder, NULL, FALSE);
-
-	SelectObject(mDC, oldp);
-	SelectObject(mDC, oldb);
-
-	ReleaseDC(wnd, hDC);
-	//EndPaint(wnd, &ps);
-
-	DeleteDC(mDC);
-	DeleteBitmap(mBM);
-	DeleteObject(hBrush);
-	DeleteObject(hPen);
-	DeleteObject(oldp);
-	DeleteObject(oldb);
-}
-
 void Button::OnCreate(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-	//SetTimer(hWnd, REDRAW_IDT, REDRAW_RATE, NULL);
+	SetTimer(hWnd, REDRAW_IDT, REDRAW_RATE, NULL);
 }
 LRESULT Button::PlaceholderProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -208,11 +130,6 @@ LRESULT Button::ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 	{
 		if (obj) obj->CommandHandler(hWnd, wParam, lParam);
-		break;
-	}
-	case WM_MOVE:
-	{
-		if (obj) InvalidateRect(obj->GetWindow(), NULL, FALSE);
 		break;
 	}
 	case WM_PAINT:
@@ -322,6 +239,8 @@ LRESULT Button::ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			TrackMouseEvent(&tme);
 
 			if (obj->state != pressed && obj->state != disabled && obj->state != invalid) obj->state = hovered;
+
+			if (obj->laststate == obj->state) break;
 		}
 		break;
 	}
