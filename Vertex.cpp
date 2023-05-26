@@ -373,10 +373,19 @@ void Vertex::UpdateInfoPanels() {
 			// Сделаем edit пустым
 			SendMessageA(VertexNameEditWnd, WM_SETTEXT, NULL, (LPARAM)string("").c_str());
 		
-		SetWindowTextA(VertexXEditWnd, "");
-		SetWindowTextA(VertexYEditWnd, "");
-		EnableWindow(VertexXEditWnd, 0);
-		EnableWindow(VertexYEditWnd, 0);
+		GetWindowTextA(VertexXEditWnd, BUFFER, 30);
+		if (string(BUFFER) != "")
+		{
+			SetWindowTextA(VertexXEditWnd, "");
+			EnableWindow(VertexXEditWnd, 0);
+		}
+		GetWindowTextA(VertexYEditWnd, BUFFER, 30);
+		if (string(BUFFER) != "")
+		{
+			SetWindowTextA(VertexYEditWnd, "");
+			EnableWindow(VertexYEditWnd, 0);
+		}
+
 		if (!DeleteButtonWnd->IsDisabled())
 			DeleteButtonWnd->Disable();
 
