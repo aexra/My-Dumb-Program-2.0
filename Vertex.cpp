@@ -607,6 +607,9 @@ LRESULT CALLBACK Vertex::VertexWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 
 				v -> SetPT(dest);
 				MoveWindow(hWnd, v -> GetPT().x, v -> GetPT().y, 100, 100, FALSE);
+				for (Edge* e : Edge::edges)
+					if (e->begin == v || e->end == v)
+						e->RecalcPosition();
 				FieldInstance.Redraw();
 			}
 			//
