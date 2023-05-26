@@ -94,9 +94,9 @@ void Button::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			r.right += vr;
 			r.bottom += vr;
 			if (PtInRect(&r, pt))
-				ShowWindow(obj->GetWindow(), 1);
+				obj->Show();
 			else
-				ShowWindow(obj->GetWindow(), 0);
+				obj->Hide();
 		}
 		if (obj->state != obj->laststate)
 		{
