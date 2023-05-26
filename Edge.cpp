@@ -12,7 +12,7 @@ Edge::Edge(Vertex* _Begin, Vertex* _End)
 	BUTTONPARAMS btp;
 	btp.alignv = aligns::center;
 	btn = new BUTTON(FieldWnd, "X", V3(crossPos.x, crossPos.y, 0),
-		lastID++, V3(30, 30, 0));
+		id = (lastID++), V3(30, 30, 0));
 	RecalcPosition();
 	//btn->Hide();
 	//MessageBoxA(NULL, (to_string(crossPos.x) + "--" + to_string(crossPos.y)).c_str(), "a", MB_OK);
@@ -38,6 +38,7 @@ void Edge::DeleteEdge(Edge* e)
 	e->end->Disconnect(e->begin->GetID());
 	BUTTON::DeleteButton(e->btn);
 	delete e;
+	InvalidateRect(FieldWnd, NULL, FALSE);
 }
 
 //bool operator==(const Edge& a, const Edge& b)

@@ -9,9 +9,9 @@ class Edge
 private:
 	POINT crossPos;
 	BUTTON* btn;
-	ULONG id;
 	static ULONG lastID;
 public:
+	ULONG id;
 	Vertex* begin;
 	Vertex* end;
 

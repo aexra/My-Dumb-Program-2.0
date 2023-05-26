@@ -4,6 +4,7 @@
 #include "Lib.h"
 #include "ExtraOverloads.h"
 #include "ThemeManager.h"
+#include "Edge.h"
 
 extern Field						FieldInstance;
 extern vector<Vertex*>	vertices;
@@ -141,6 +142,19 @@ LRESULT CALLBACK Field::FieldWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 			DeleteDC(mDC);
 			DeleteBitmap(mBM);
+			break;
+		}
+
+		case WM_COMMAND:
+		{
+			for (Edge* e : Edge::edges)
+			{
+				if (e->id == wParam)
+				{
+					Edge::DeleteEdge(e);
+					break;
+				}
+			}
 			break;
 		}
 
