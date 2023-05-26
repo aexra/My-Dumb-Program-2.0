@@ -1,6 +1,8 @@
 #include "ThemeManager.h"
+#include "Lib.h"
 
 ThemeManager* ThemeManager::p_instance = nullptr;
+extern HBRUSH fbkb;
 
 ThemeManager::ThemeManager()
 {
@@ -17,11 +19,15 @@ ThemeManager* ThemeManager::GetInstance()
 void ThemeManager::SetLight()
 {
 	palette = light;
+	DeleteObject(fbkb);
+	fbkb = CreateSolidBrush(vRGB(dark.fbk));
 }
 
 void ThemeManager::SetDark()
 {
 	palette = dark;
+	DeleteObject(fbkb);
+	fbkb = CreateSolidBrush(vRGB(light.fbk));
 }
 
 BOOL ThemeManager::GetTheme()

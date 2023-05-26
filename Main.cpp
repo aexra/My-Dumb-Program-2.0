@@ -15,7 +15,7 @@ HBRUSH fbkb;
 
 
 // FONTS
-HFONT hf = CreateFont(0, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Comic Sans MS");
+HFONT hf = CreateFont(28, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Comic Sans MS");
 
 
 // WINDOWS
@@ -63,7 +63,7 @@ ThemeManager* tmr;
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 	InitLib();
 	tmr = ThemeManager::GetInstance();
-	fbkb = CreateSolidBrush(vRGB(tmr->GetPalette().fbk));;
+	tmr->SetDark();
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
@@ -347,6 +347,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					tmr->SetLight();
 					DeleteObject(linePen);
 					linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
+					SendMessage(MainWnd, WM_CTLCOLOREDIT, 0, 0);
+					SendMessage(MainWnd, WM_CTLCOLORSTATIC, 0, 0);
 					InvalidateRect(MainWnd, NULL, FALSE);
 					InvalidateRect(myAbsolutelyCoolestTipEver, NULL, FALSE);
 					break;
@@ -357,6 +359,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					tmr->SetDark();
 					DeleteObject(linePen);
 					linePen = CreatePen(PS_SOLID, 5, vRGB(tmr->GetPalette().vbd));
+					SendMessage(MainWnd, WM_CTLCOLOREDIT, 0, 0);
+					SendMessage(MainWnd, WM_CTLCOLORSTATIC, 0, 0);
 					InvalidateRect(MainWnd, NULL, FALSE);
 					InvalidateRect(myAbsolutelyCoolestTipEver, NULL, FALSE);
 					break;
