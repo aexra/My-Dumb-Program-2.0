@@ -134,6 +134,7 @@ void Button::DeleteButton(Button* btn)
 {
 	DestroyWindow(btn->wnd);
 	DestroyWindow(btn->placeholder);
+	DeleteObject(btn->hPlaceholderBKBrush);
 	delete btn;
 }
 LRESULT Button::ButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
