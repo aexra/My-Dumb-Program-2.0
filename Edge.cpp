@@ -34,6 +34,8 @@ BUTTON* Edge::getbtn()
 }
 void Edge::DeleteEdge(Edge* e)
 {
+	e->begin->Disconnect(e->end->GetID());
+	e->end->Disconnect(e->begin->GetID());
 	BUTTON::DeleteButton(e->btn);
 	delete e;
 }
