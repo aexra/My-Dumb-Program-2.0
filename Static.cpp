@@ -79,59 +79,20 @@ void Static::CommandHandler(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 void Static::TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
+	STATIC* obj = objmap[hWnd];
 	if (wParam == REDRAW_IDT)
 	{
-		Redraw();
+		if (laststate != state)
+		{
+			laststate = state;
+			obj->Invalidate();
+		}
 	}
 }
 
 void Static::Redraw()
 {
-	if (laststate == state) return;
-	else laststate = state;
-
-	PALETTE plt = tmr->GetPalette();
-
-	HDC hDC = GetDC(wnd);
-	HDC mDC = CreateCompatibleDC(hDC);
-	HBITMAP mBM = CreateCompatibleBitmap(hDC, transform.size.x, transform.size.y);
-	HBRUSH hBrush = CreateSolidBrush(vRGB(plt.fbk));
-	HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(plt.fbk));
-	SelectObject(mDC, mBM);
-
-	HGDIOBJ oldb = SelectObject(mDC, hBrush);
-	HGDIOBJ oldp = SelectObject(mDC, hPen);
-	Rectangle(mDC, 0, 0, transform.size.x, transform.size.y);
-
-	switch (state)
-	{
-	case enabled:
-		hBrush = CreateSolidBrush(vRGB(params.bkCol));
-		hPen = (params.bdWidth != 0? CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdDefCol))
-			: (HPEN)GetStockObject(NULL_PEN));
-		SetBkColor(mDC, vRGB(params.bkCol));
-		SetTextColor(mDC, vRGB(params.textCol));
-		break;
-	}
-
-	DeleteObject(SelectObject(mDC, hBrush));
-	DeleteObject(SelectObject(mDC, hPen));
-
-	RoundRect(mDC, 2, 2, transform.size.x - 2, transform.size.y - 2, 13, 13);
-
-	BitBlt(hDC, 0, 0, transform.size.x, transform.size.y, mDC, 0, 0, SRCCOPY);
-	InvalidateRect(placeholder, NULL, FALSE);
-
-	SelectObject(mDC, oldp);
-	SelectObject(mDC, oldb);
-
-	ReleaseDC(wnd, hDC);
-	DeleteDC(mDC);
-	DeleteBitmap(mBM);
-	DeleteObject(hBrush);
-	DeleteObject(hPen);
-	DeleteObject(oldp);
-	DeleteObject(oldb);
+	
 }
 void Static::SetAlignV(aligns _Al)
 {
@@ -142,6 +103,10 @@ void Static::SetAlignH(aligns _Al)
 {
 	params.alignh = _Al;
 	UpdateAligning();
+}
+HWND Static::GetPlaceholder()
+{
+	return placeholder;
 }
 void Static::OnCreate(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
@@ -166,6 +131,58 @@ LRESULT Static::StaticProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 	{
 		if (obj) obj->CommandHandler(hWnd, wParam, lParam);
+		break;
+	}
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		PALETTE plt = tmr->GetPalette();
+		HWND wnd = obj->GetWindow();
+		HWND placeholder = obj->GetPlaceholder();
+		TRANSFORM& transform = obj->transform;
+		states& state = obj->state;
+		STATICPARAMS& params = obj->params;
+
+		HDC hDC = BeginPaint(wnd, &ps);
+		HDC mDC = CreateCompatibleDC(hDC);
+		HBITMAP mBM = CreateCompatibleBitmap(hDC, transform.size.x, transform.size.y);
+		HBRUSH hBrush = CreateSolidBrush(vRGB(plt.fbk));
+		HPEN hPen = CreatePen(BS_SOLID, 0, vRGB(plt.fbk));
+		SelectObject(mDC, mBM);
+
+		HGDIOBJ oldb = SelectObject(mDC, hBrush);
+		HGDIOBJ oldp = SelectObject(mDC, hPen);
+		Rectangle(mDC, 0, 0, transform.size.x, transform.size.y);
+
+		switch (state)
+		{
+		case enabled:
+			hBrush = CreateSolidBrush(vRGB(params.bkCol));
+			hPen = (params.bdWidth != 0 ? CreatePen(BS_SOLID, params.bdWidth, vRGB(params.bdDefCol))
+				: (HPEN)GetStockObject(NULL_PEN));
+			SetBkColor(mDC, vRGB(params.bkCol));
+			SetTextColor(mDC, vRGB(params.textCol));
+			break;
+		}
+
+		DeleteObject(SelectObject(mDC, hBrush));
+		DeleteObject(SelectObject(mDC, hPen));
+
+		RoundRect(mDC, 2, 2, transform.size.x - 2, transform.size.y - 2, 13, 13);
+
+		BitBlt(hDC, 0, 0, transform.size.x, transform.size.y, mDC, 0, 0, SRCCOPY);
+		InvalidateRect(placeholder, NULL, FALSE);
+
+		SelectObject(mDC, oldp);
+		SelectObject(mDC, oldb);
+
+		EndPaint(wnd, &ps);
+		DeleteDC(mDC);
+		DeleteBitmap(mBM);
+		DeleteObject(hBrush);
+		DeleteObject(hPen);
+		DeleteObject(oldp);
+		DeleteObject(oldb);
 		break;
 	}
 	case WM_TIMER:

@@ -68,6 +68,7 @@ public:
 	void Hide();
 	void SetAlignV(aligns _Al);
 	void SetAlignH(aligns _Al);
+	HWND GetPlaceholder();
 
 	// public static methods
 	static LRESULT CALLBACK StaticProc(HWND, UINT, WPARAM, LPARAM);
