@@ -36,7 +36,6 @@ BOOL Button::MoveControl(V3 _To)
 {
 	transform.Translate(_To);
 	MoveWindow(wnd, _To.x, _To.y, transform.size.x, transform.size.y, TRUE);
-	MoveWindow(placeholder, _To.x + 7, _To.y + 7, transform.size.x-14, transform.size.y-14, TRUE);
 	return 1; 
 }
 
