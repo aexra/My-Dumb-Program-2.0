@@ -86,6 +86,7 @@ public:
 	void Show();
 	void Hide();
 	BOOL IsDisabled();
+	HWND GetPlaceholder();
 
 	// public static methods
 	static LRESULT CALLBACK ButtonProc(HWND, UINT, WPARAM, LPARAM);
