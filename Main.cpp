@@ -9,6 +9,10 @@
 /* GLOBAL VARIABLES */
 
 
+// Default EditBox Window Procedure
+WNDPROC wpOldEditProc;
+
+
 // BRUSHES
 HBRUSH fbkb;
 
@@ -479,15 +483,19 @@ void MainWndAddWidgets(HWND hWnd) {
 	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_CENTER, r.right - 230 + 72, y, 219 - 72 - 2, offset, hWnd, (HMENU)VertexName, NULL, NULL);
 	SendMessage(VertexNameEditWnd, WM_SETFONT, (WPARAM)hf, 0);
 	SendMessage(VertexNameEditWnd, EM_SETLIMITTEXT, 7, 0);
+	wpOldEditProc = (WNDPROC)GetWindowLongPtr(VertexNameEditWnd, GWLP_WNDPROC);
+	SetWindowLongPtr(VertexNameEditWnd, GWLP_WNDPROC, (LONG_PTR)CustomEditProc);
 	new STATIC(hWnd, "Позиция:", V3(r.right - 230, y += offset, 0), NULL, V3(98, offset, 24), textsp);
 	new STATIC(hWnd, "X", V3(r.right - 230 + 98 + 10, y, 0), NULL, V3(offset-6, offset, 24), textsp);
 	new STATIC(hWnd, "Y", V3(r.right - 230 + 98 + 10 + offset + 10 + 6 + 14, y, 0), NULL, V3(offset-6, offset, 24), textsp);
 	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 92, y+=offset, 60, offset, hWnd, (HMENU)TransformPositionX, NULL, NULL);
 	SendMessage(VertexXEditWnd, WM_SETFONT, (WPARAM)hf, 0);
 	SendMessage(VertexXEditWnd, EM_SETLIMITTEXT, 4, 0);
+	SetWindowLongPtr(VertexXEditWnd, GWLP_WNDPROC, (LONG_PTR)CustomEditProc);
 	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 60 + 10, y, 60, offset, hWnd, (HMENU)TransformPositionY, NULL, NULL);
 	SendMessage(VertexYEditWnd, WM_SETFONT, (WPARAM)hf, 0);
 	SendMessage(VertexYEditWnd, EM_SETLIMITTEXT, 4, 0);
+	SetWindowLongPtr(VertexYEditWnd, GWLP_WNDPROC, (LONG_PTR)CustomEditProc);
 	WeightWnd = new STATIC(hWnd, "Вес: ", V3(r.right - 230, y += offset, 0), NULL, V3(218, offset, 0), textsp);
 	DeleteButtonWnd = new BUTTON(hWnd, "УДАЛИТЬ ВЕРШИНУ", V3(r.right - 230, y += offset, 0), OnDeleteVertexClicked, V3(219, offset, 0), btp);
 	DeleteButtonWnd->Disable();
@@ -504,4 +512,20 @@ void TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 	}
+}
+
+LRESULT CALLBACK CustomEditProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_KEYDOWN:
+	{
+		if (wParam == VK_RETURN)
+		{
+			SetFocus(MainWnd);
+			return 0;
+		}
+	}
+	}
+	CallWindowProc(wpOldEditProc, hWnd, msg, wParam, lParam);
 }

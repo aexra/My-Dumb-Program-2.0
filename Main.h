@@ -18,6 +18,8 @@ WNDCLASS NewWindowClass(HBRUSH, HCURSOR, HINSTANCE, HICON, LPCWSTR, WNDPROC);
 // Обработчик таймеров
 void TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
+// Решение проблемы со снятием фокуса с эдит-боксов по нажатию на энтер.
+LRESULT CALLBACK CustomEditProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // Добавление меню для главного окна
 void MainWndAddMenus(HWND);
