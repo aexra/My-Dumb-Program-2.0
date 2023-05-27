@@ -4,3 +4,6 @@
 
 ## Сборки
 Last Stable: [0.1.1](https://github.com/EvilPrincess/My-Dumb-Program-2.0/blob/master/Builds/0.1.1.exe)
+
+## Скриншоты
+![alt text](https://github.com/EvilPrincess/My-Dumb-Program-2.0/blob/master/Builds/preview.jpg)
