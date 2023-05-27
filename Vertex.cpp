@@ -202,6 +202,7 @@ void Vertex::Select() {
 	InvalidateRect(hWnd, NULL, FALSE);
 	UpdateWindow(hWnd);
 	UpdateInfoPanels();
+	SetWindowTextA(VertexNameEditWnd, this->name.c_str());
 }
 void Vertex::Deselect() {
 	isSelected = false;
@@ -372,19 +373,6 @@ void Vertex::UpdateInfoPanels() {
 		if (string(BUFFER) != "")
 			// Сделаем edit пустым
 			SendMessageA(VertexNameEditWnd, WM_SETTEXT, NULL, (LPARAM)string("").c_str());
-		
-		GetWindowTextA(VertexXEditWnd, BUFFER, 30);
-		if (string(BUFFER) != "")
-		{
-			SetWindowTextA(VertexXEditWnd, "");
-			EnableWindow(VertexXEditWnd, 0);
-		}
-		GetWindowTextA(VertexYEditWnd, BUFFER, 30);
-		if (string(BUFFER) != "")
-		{
-			SetWindowTextA(VertexYEditWnd, "");
-			EnableWindow(VertexYEditWnd, 0);
-		}
 
 		if (!DeleteButtonWnd->IsDisabled())
 			DeleteButtonWnd->Disable();
@@ -399,32 +387,44 @@ void Vertex::UpdateInfoPanels() {
 	
 	// Сделаем активным поле переименования и вот всё что выше делали
 	EnableWindow(VertexNameEditWnd, 1);
-	GetWindowTextA(VertexNameEditWnd, BUFFER, 30);
-	string name = v->GetName();
-	if (string(BUFFER) != name)
-	{
-		SetWindowTextA(VertexNameEditWnd, name.c_str());
-	}
-	if (!isEditingX)
-	{
-		GetWindowTextA(VertexXEditWnd, BUFFER, 5);
-		string x = to_string(v->GetPT().x);
-		if (BUFFER != x) SetWindowTextA(VertexXEditWnd, x.c_str());
-	}
-	if (!isEditingY)
-	{
-		GetWindowTextA(VertexYEditWnd, BUFFER, 5);
-		string y = to_string(v->GetPT().y);
-		if (BUFFER != y) SetWindowTextA(VertexYEditWnd, y.c_str());
-	}
 
 	if (DeleteButtonWnd->IsDisabled())
 		DeleteButtonWnd->Enable();
-	EnableWindow(VertexXEditWnd, 1);
-	EnableWindow(VertexYEditWnd, 1);
 
 	if (WeightWnd->GetText() != "Вес: " + to_string(v->GetWeight()))
 		WeightWnd->SetText("Вес: " + to_string(v->GetWeight()));
+}
+void Vertex::UpdateCoordinates()
+{
+	if (!selectedVertexID)
+	{
+		GetWindowTextA(VertexXEditWnd, BUFFER, 30);
+		if (string(BUFFER) != "") SetWindowTextA(VertexXEditWnd, "");
+
+		GetWindowTextA(VertexYEditWnd, BUFFER, 30);
+		if (string(BUFFER) != "") SetWindowTextA(VertexYEditWnd, "");
+
+		EnableWindow(VertexYEditWnd, 0);
+		EnableWindow(VertexXEditWnd, 0);
+	}
+	else
+	{
+		Vertex* v = Vertex::GetSelected();
+		if (!isEditingX)
+		{
+			GetWindowTextA(VertexXEditWnd, BUFFER, 5);
+			string x = to_string(v->GetPT().x);
+			if (BUFFER != x) SetWindowTextA(VertexXEditWnd, x.c_str());
+		}
+		if (!isEditingY)
+		{
+			GetWindowTextA(VertexYEditWnd, BUFFER, 5);
+			string y = to_string(v->GetPT().y);
+			if (BUFFER != y) SetWindowTextA(VertexYEditWnd, y.c_str());
+		}
+		EnableWindow(VertexXEditWnd, 1);
+		EnableWindow(VertexYEditWnd, 1);
+	}
 }
 
 vector<pair<UINT, vector<UINT>>> Vertex::GetUniqueConnectionsTable()

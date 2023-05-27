@@ -15,6 +15,10 @@ WNDCLASS NewWindowClass(HBRUSH, HCURSOR, HINSTANCE, HICON, LPCWSTR, WNDPROC);
 //DWORD WINAPI LineDrawerThreadProc(LPVOID lParam);
 
 
+// Обработчик таймеров
+void TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam);
+
+
 // Добавление меню для главного окна
 void MainWndAddMenus(HWND);
 

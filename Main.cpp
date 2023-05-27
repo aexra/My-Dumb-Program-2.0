@@ -239,7 +239,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					}
 					break;
 				}
-				case WM_SETFOCUS:
+				case EN_SETFOCUS:
 				{
 					switch(LOWORD(wParam))
 					{
@@ -371,14 +371,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case WM_TIMER:
 		{
-			switch (wParam)
-			{
-				case INFOPANEL_REFRESH_IDT:
-				{
-					Vertex::UpdateInfoPanels();
-					break;
-				}
-			}
+			TimerManager(hWnd, wParam, lParam);
 			break;
 		}
 
@@ -485,14 +478,30 @@ void MainWndAddWidgets(HWND hWnd) {
 	new STATIC(hWnd, "Имя:", V3(r.right - 230, y += offset, 0), NULL, V3(70, offset, 24), textsp);
 	VertexNameEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_CENTER, r.right - 230 + 72, y, 219 - 72 - 2, offset, hWnd, (HMENU)VertexName, NULL, NULL);
 	SendMessage(VertexNameEditWnd, WM_SETFONT, (WPARAM)hf, 0);
+	SendMessage(VertexNameEditWnd, EM_SETLIMITTEXT, 7, 0);
 	new STATIC(hWnd, "Позиция:", V3(r.right - 230, y += offset, 0), NULL, V3(98, offset, 24), textsp);
 	new STATIC(hWnd, "X", V3(r.right - 230 + 98 + 10, y, 0), NULL, V3(offset-6, offset, 24), textsp);
-	new STATIC(hWnd, "Y", V3(r.right - 230 + 98 + 10 + offset + 10 + 6, y, 0), NULL, V3(offset-6, offset, 24), textsp);
-	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 92, y+=offset, 50, offset, hWnd, (HMENU)TransformPositionX, NULL, NULL);
+	new STATIC(hWnd, "Y", V3(r.right - 230 + 98 + 10 + offset + 10 + 6 + 14, y, 0), NULL, V3(offset-6, offset, 24), textsp);
+	VertexXEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 92, y+=offset, 60, offset, hWnd, (HMENU)TransformPositionX, NULL, NULL);
 	SendMessage(VertexXEditWnd, WM_SETFONT, (WPARAM)hf, 0);
-	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 50 + 10, y, 50, offset, hWnd, (HMENU)TransformPositionY, NULL, NULL);
+	SendMessage(VertexXEditWnd, EM_SETLIMITTEXT, 4, 0);
+	VertexYEditWnd = CreateWindowA("edit", "", WS_CHILD | WS_VISIBLE | ES_NUMBER, r.right - 229 + 86 + 60 + 10, y, 60, offset, hWnd, (HMENU)TransformPositionY, NULL, NULL);
 	SendMessage(VertexYEditWnd, WM_SETFONT, (WPARAM)hf, 0);
+	SendMessage(VertexYEditWnd, EM_SETLIMITTEXT, 4, 0);
 	WeightWnd = new STATIC(hWnd, "Вес: ", V3(r.right - 230, y += offset, 0), NULL, V3(218, offset, 0), textsp);
 	DeleteButtonWnd = new BUTTON(hWnd, "УДАЛИТЬ ВЕРШИНУ", V3(r.right - 230, y += offset, 0), OnDeleteVertexClicked, V3(219, offset, 0), btp);
 	DeleteButtonWnd->Disable();
+}
+
+void TimerManager(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+	switch (wParam)
+	{
+		case INFOPANEL_REFRESH_IDT:
+		{
+			Vertex::UpdateInfoPanels();
+			Vertex::UpdateCoordinates();
+			break;
+		}
+	}
 }

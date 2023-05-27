@@ -60,6 +60,7 @@ public:
 	static void				DeleteVertex(UINT _id);
 	static void				DeleteSelected();
 	static void				UpdateInfoPanels();
+	static void				UpdateCoordinates();
 	static vector<pair<UINT, vector<UINT>>> GetUniqueConnectionsTable();
 
 	static void				VertexRegister(void);
